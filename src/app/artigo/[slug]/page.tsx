@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -9,6 +10,7 @@ import {
   sectionMeta,
 } from "@/data/articles";
 import { formatDateLong } from "@/lib/format";
+import { getSectionImage } from "@/lib/images";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -33,6 +35,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const related = getLatestArticles(4).filter((a) => a.slug !== article.slug);
   const section = sectionMeta[article.section];
+  const image = article.image ?? getSectionImage(article.section);
 
   return (
     <article>
@@ -66,10 +69,16 @@ export default async function ArticlePage({ params }: Props) {
         </div>
       </header>
 
-      <div
-        className={`story-media mx-auto mt-10 max-w-content min-h-[280px] bg-gradient-to-br ${article.imageGradient} md:min-h-[420px]`}
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.12),transparent_45%)]" />
+      <div className="relative mx-auto mt-10 min-h-[280px] max-w-content overflow-hidden bg-ink-soft md:min-h-[420px]">
+        <Image
+          src={image}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 
       <div className="mx-auto grid max-w-content gap-12 px-5 py-12 lg:grid-cols-12">
