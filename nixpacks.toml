@@ -1,11 +1,6 @@
+# Keep as fallback if Dockerfile is disabled in the dashboard.
+[variables]
+NIXPACKS_NODE_VERSION = "20"
+
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-9_x", "openssl"]
-
-[phases.install]
-cmds = ["npm ci"]
-
-[phases.build]
-cmds = ["npm run build"]
-
-[start]
-cmd = "npx prisma db push && npm run start"
