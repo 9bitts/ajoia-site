@@ -2,9 +2,12 @@ import { createReadStream, existsSync, statSync } from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
 import { Readable } from "stream";
-import { getUploadDir } from "@/lib/upload";
+import { getUploadDir } from "@/lib/upload-dir";
 
 type Params = { params: Promise<{ path: string[] }> };
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET(_req: Request, { params }: Params) {
   const { path: parts } = await params;

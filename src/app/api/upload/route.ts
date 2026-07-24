@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { saveUploadedImage } from "@/lib/upload";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -29,6 +31,7 @@ export async function POST(req: Request) {
   }
 
   try {
+    const { saveUploadedImage } = await import("@/lib/upload");
     const url = await saveUploadedImage(file);
     return NextResponse.json({ url });
   } catch {

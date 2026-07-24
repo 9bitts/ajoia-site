@@ -5,21 +5,11 @@ import { StoryCard } from "@/components/StoryCard";
 import {
   getArticlesByAuthor,
   getColumnistBySlug,
-  getColumnistSlugs,
 } from "@/lib/articles";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamic = "force-dynamic";
-
-export async function generateStaticParams() {
-  try {
-    const slugs = await getColumnistSlugs();
-    return slugs.map((slug) => ({ slug }));
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

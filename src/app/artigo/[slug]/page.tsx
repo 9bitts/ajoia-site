@@ -6,7 +6,6 @@ import { StoryCard } from "@/components/StoryCard";
 import {
   getArticleBySlug,
   getLatestArticles,
-  getPublishedSlugs,
 } from "@/lib/articles";
 import { formatDateLong } from "@/lib/format";
 import { sectionMeta } from "@/lib/sections";
@@ -14,15 +13,6 @@ import { sectionMeta } from "@/lib/sections";
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamic = "force-dynamic";
-
-export async function generateStaticParams() {
-  try {
-    const slugs = await getPublishedSlugs();
-    return slugs.map((slug) => ({ slug }));
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

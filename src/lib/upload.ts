@@ -1,12 +1,11 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
-import sharp from "sharp";
+import { getUploadDir } from "@/lib/upload-dir";
 
-export function getUploadDir() {
-  return process.env.UPLOAD_DIR || path.join(process.cwd(), "public", "uploads");
-}
+export { getUploadDir };
 
 export async function saveUploadedImage(file: File) {
+  const sharp = (await import("sharp")).default;
   const bytes = Buffer.from(await file.arrayBuffer());
   const compressed = await sharp(bytes)
     .rotate()
