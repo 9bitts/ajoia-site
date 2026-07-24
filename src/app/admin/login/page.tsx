@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { BrandLogo } from "@/components/BrandLogo";
 import { LoginForm } from "@/components/admin/LoginForm";
 
 export default async function AdminLoginPage() {
@@ -9,7 +10,8 @@ export default async function AdminLoginPage() {
 
   return (
     <div className="mx-auto max-w-md py-8">
-      <p className="text-[11px] uppercase tracking-[0.22em] text-mist-dim">
+      <BrandLogo href="/" size="lg" priority />
+      <p className="mt-6 text-[11px] uppercase tracking-[0.22em] text-mist-dim">
         Redação
       </p>
       <h1 className="mt-2 font-display text-4xl text-white">Entrar</h1>

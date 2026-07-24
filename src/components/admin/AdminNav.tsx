@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export async function AdminNav() {
   const session = await auth();
@@ -9,9 +10,12 @@ export async function AdminNav() {
     <header className="border-b border-white/10 bg-ink/90 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4">
         <div className="flex items-center gap-6">
-          <Link href="/admin" className="font-display text-xl text-white">
-            Ajoia Admin
-          </Link>
+          <div className="flex items-center gap-3">
+            <BrandLogo href="/admin" size="sm" />
+            <span className="hidden text-[10px] uppercase tracking-[0.18em] text-mist-dim sm:inline">
+              Admin
+            </span>
+          </div>
           <nav className="hidden items-center gap-4 text-xs uppercase tracking-[0.16em] text-mist-muted sm:flex">
             <Link href="/admin" className="hover:text-white">
               Artigos

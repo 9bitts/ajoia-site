@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 import { ColumnistRail } from "@/components/ColumnistRail";
 import { HeroFeature } from "@/components/HeroFeature";
 import { Newsletter } from "@/components/Newsletter";
@@ -26,9 +27,9 @@ export default async function HomePage() {
 
   if (!lead) {
     return (
-      <div className="mx-auto max-w-content px-5 py-24 text-center">
-        <h1 className="font-display text-4xl text-white">Ajoia Brasil</h1>
-        <p className="mt-4 text-mist-muted">
+      <div className="mx-auto flex max-w-content flex-col items-center px-5 py-24 text-center">
+        <BrandLogo href="/" size="lg" priority />
+        <p className="mt-6 text-mist-muted">
           Nenhuma notícia publicada ainda. Acesse o admin para publicar.
         </p>
         <Link href="/admin" className="btn-primary mt-8 inline-flex text-xs uppercase tracking-[0.14em]">

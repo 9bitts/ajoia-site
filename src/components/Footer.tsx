@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 import {
   institutionalLinks,
   navSections,
@@ -10,12 +11,10 @@ export function Footer() {
     <footer className="mt-24 border-t border-white/10 bg-gradient-to-b from-ink-elevated to-black">
       <div className="mx-auto grid max-w-content gap-12 px-5 py-16 md:grid-cols-12">
         <div className="md:col-span-5">
-          <p className="font-display text-4xl tracking-[0.04em] text-white">
-            {siteConfig.shortName}
-          </p>
+          <BrandLogo href="/" size="lg" />
           <p className="mt-4 max-w-md text-sm leading-relaxed text-mist-muted">
-            {siteConfig.tagline}. Compromisso com os fatos, ética profissional e
-            liberdade de expressão.
+            Compromisso com os fatos, ética profissional e liberdade de
+            expressão.
           </p>
           <p className="mt-6 text-xs uppercase tracking-[0.18em] text-mist-dim">
             Sede · {siteConfig.city}

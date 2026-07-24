@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import {
   institutionalLinks,
   navSections,
@@ -53,17 +54,7 @@ export function Header() {
       <div className="hairline" />
 
       <div className="mx-auto flex max-w-content items-center justify-between gap-6 px-5 py-4">
-        <Link href="/" className="group min-w-0">
-          <div className="flex items-baseline gap-3">
-            <span className="font-display text-3xl tracking-[0.04em] text-white transition-colors group-hover:text-mist md:text-4xl">
-              {siteConfig.shortName}
-            </span>
-            <span className="hidden h-8 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent sm:block" />
-            <span className="hidden max-w-[220px] text-[10px] uppercase leading-relaxed tracking-[0.16em] text-mist-dim sm:block">
-              {siteConfig.tagline}
-            </span>
-          </div>
-        </Link>
+        <BrandLogo href="/" size="md" priority />
 
         <div className="flex items-center gap-3">
           <Link
