@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useLayoutEffect, useState } from "react";
 
-const STORAGE_KEY = "ajoia-intro-seen";
 const INTRO_MS = 3200;
 
 type Phase = "play" | "exit" | "done";
@@ -15,9 +14,8 @@ export function IntroSplash() {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const seen = sessionStorage.getItem(STORAGE_KEY);
 
-    if (seen || reduceMotion) {
+    if (reduceMotion) {
       setPhase("done");
       return;
     }
@@ -26,7 +24,6 @@ export function IntroSplash() {
 
     const exitTimer = window.setTimeout(() => setPhase("exit"), INTRO_MS);
     const doneTimer = window.setTimeout(() => {
-      sessionStorage.setItem(STORAGE_KEY, "1");
       document.documentElement.classList.remove("intro-lock");
       setPhase("done");
     }, INTRO_MS + 900);
