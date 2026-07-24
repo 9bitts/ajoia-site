@@ -9,23 +9,38 @@ import {
   getArticlesBySection,
   getFeaturedArticles,
   getLatestArticles,
-} from "@/data/articles";
+} from "@/lib/articles";
 import { missao, siteConfig } from "@/data/site";
 
-export default function HomePage() {
-  const featured = getFeaturedArticles();
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const featured = await getFeaturedArticles();
   const lead = featured[0];
   const side = featured.slice(1, 4);
-  const latest = getLatestArticles(6);
-  const politica = getArticlesBySection("politica");
-  const cidade = getArticlesBySection("cidade");
-  const opiniao = getArticlesBySection("opiniao");
-  const estado = getArticlesBySection("estado");
+  const latest = await getLatestArticles(6);
+  const politica = await getArticlesBySection("politica");
+  const cidade = await getArticlesBySection("cidade");
+  const opiniao = await getArticlesBySection("opiniao");
+  const estado = await getArticlesBySection("estado");
+
+  if (!lead) {
+    return (
+      <div className="mx-auto max-w-content px-5 py-24 text-center">
+        <h1 className="font-display text-4xl text-white">Ajoia Brasil</h1>
+        <p className="mt-4 text-mist-muted">
+          Nenhuma notícia publicada ainda. Acesse o admin para publicar.
+        </p>
+        <Link href="/admin" className="btn-primary mt-8 inline-flex text-xs uppercase tracking-[0.14em]">
+          Ir ao admin
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <>
       <Ticker />
-
       <HeroFeature lead={lead} side={side} />
 
       <section className="mx-auto max-w-content px-5 py-14">
@@ -59,7 +74,10 @@ export default function HomePage() {
               {missao}
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
-              <Link href="/quem-somos" className="btn-primary text-xs uppercase tracking-[0.14em]">
+              <Link
+                href="/quem-somos"
+                className="btn-primary text-xs uppercase tracking-[0.14em]"
+              >
                 Quem somos
               </Link>
               <Link href="/diretrizes" className="btn-ghost">

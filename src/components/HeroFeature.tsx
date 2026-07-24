@@ -1,32 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Article } from "@/data/articles";
-import { sectionMeta } from "@/data/articles";
+import type { PublicArticle } from "@/lib/articles";
 import { formatDate } from "@/lib/format";
-import { getSectionImage } from "@/lib/images";
+import { sectionMeta } from "@/lib/sections";
 
 type Props = {
-  lead: Article;
-  side: Article[];
+  lead: PublicArticle;
+  side: PublicArticle[];
 };
 
 export function HeroFeature({ lead, side }: Props) {
   const section = sectionMeta[lead.section];
-  const image = lead.image ?? getSectionImage(lead.section);
+  const image = lead.image;
 
   return (
     <section className="mx-auto grid max-w-content gap-8 px-5 pt-10 lg:grid-cols-12 lg:gap-10 lg:pt-14">
       <div className="animate-fade-up lg:col-span-8">
         <Link href={`/artigo/${lead.slug}`} className="group block">
           <div className="relative flex min-h-[420px] flex-col justify-end overflow-hidden bg-ink-soft md:min-h-[520px]">
-            <Image
-              src={image}
-              alt=""
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 66vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-            />
+            {image && (
+              <Image
+                src={image}
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+              />
+            )}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/20" />
             <div className="relative z-10 p-6 pt-16 md:p-10 md:pt-24">
               {lead.breaking && (

@@ -1,19 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Article } from "@/data/articles";
-import { sectionMeta } from "@/data/articles";
+import type { PublicArticle } from "@/lib/articles";
 import { formatDate } from "@/lib/format";
-import { getSectionImage } from "@/lib/images";
+import { sectionMeta } from "@/lib/sections";
 
 type Props = {
-  article: Article;
+  article: PublicArticle;
   size?: "sm" | "md" | "lg";
   showDek?: boolean;
 };
 
 export function StoryCard({ article, size = "md", showDek = false }: Props) {
   const section = sectionMeta[article.section];
-  const image = article.image ?? getSectionImage(article.section);
+  const image = article.image;
 
   return (
     <article className="group">
@@ -27,17 +26,19 @@ export function StoryCard({ article, size = "md", showDek = false }: Props) {
                 : "aspect-[16/10]"
           }`}
         >
-          <Image
-            src={image}
-            alt=""
-            fill
-            sizes={
-              size === "lg"
-                ? "(max-width: 1024px) 100vw, 60vw"
-                : "(max-width: 768px) 100vw, 33vw"
-            }
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-          />
+          {image && (
+            <Image
+              src={image}
+              alt=""
+              fill
+              sizes={
+                size === "lg"
+                  ? "(max-width: 1024px) 100vw, 60vw"
+                  : "(max-width: 768px) 100vw, 33vw"
+              }
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          )}
           <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
             <span className="text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">
               {section.label}

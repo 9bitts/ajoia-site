@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { columnists } from "@/data/columnists";
+import { getColumnists } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "Colunistas",
@@ -8,7 +8,11 @@ export const metadata: Metadata = {
     "Conheça os jornalistas e colunistas da Ajoia Brasil — associação de jornalistas independentes e afiliados.",
 };
 
-export default function ColumnistsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function ColumnistsPage() {
+  const columnists = await getColumnists();
+
   return (
     <div className="mx-auto max-w-content px-5 py-12 md:py-16">
       <header className="max-w-2xl">

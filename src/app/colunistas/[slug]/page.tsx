@@ -2,18 +2,28 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { StoryCard } from "@/components/StoryCard";
-import { getArticlesByAuthor } from "@/data/articles";
-import { columnists, getColumnist } from "@/data/columnists";
+import {
+  getArticlesByAuthor,
+  getColumnistBySlug,
+  getColumnistSlugs,
+} from "@/lib/articles";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return columnists.map((c) => ({ slug: c.slug }));
+export const dynamic = "force-dynamic";
+
+export async function generateStaticParams() {
+  try {
+    const slugs = await getColumnistSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const columnist = getColumnist(slug);
+  const columnist = await getColumnistBySlug(slug);
   if (!columnist) return { title: "Colunista" };
   return {
     title: columnist.name,
@@ -23,10 +33,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ColumnistPage({ params }: Props) {
   const { slug } = await params;
-  const columnist = getColumnist(slug);
+  const columnist = await getColumnistBySlug(slug);
   if (!columnist) notFound();
 
-  const posts = getArticlesByAuthor(columnist.slug);
+  const posts = await getArticlesByAuthor(columnist.slug);
 
   return (
     <div className="mx-auto max-w-content px-5 py-12 md:py-16">

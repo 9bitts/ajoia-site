@@ -4,23 +4,29 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { StoryCard } from "@/components/StoryCard";
 import {
-  articles,
-  getArticle,
+  getArticleBySlug,
   getLatestArticles,
-  sectionMeta,
-} from "@/data/articles";
+  getPublishedSlugs,
+} from "@/lib/articles";
 import { formatDateLong } from "@/lib/format";
-import { getSectionImage } from "@/lib/images";
+import { sectionMeta } from "@/lib/sections";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return articles.map((article) => ({ slug: article.slug }));
+export const dynamic = "force-dynamic";
+
+export async function generateStaticParams() {
+  try {
+    const slugs = await getPublishedSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getArticleBySlug(slug);
   if (!article) return { title: "Artigo" };
   return {
     title: article.title,
@@ -30,12 +36,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  const related = getLatestArticles(4).filter((a) => a.slug !== article.slug);
+  const related = (await getLatestArticles(4)).filter(
+    (a) => a.slug !== article.slug
+  );
   const section = sectionMeta[article.section];
-  const image = article.image ?? getSectionImage(article.section);
+  const image = article.image;
 
   return (
     <article>
@@ -70,14 +78,16 @@ export default async function ArticlePage({ params }: Props) {
       </header>
 
       <div className="relative mx-auto mt-10 min-h-[280px] max-w-content overflow-hidden bg-ink-soft md:min-h-[420px]">
-        <Image
-          src={image}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
+        {image && (
+          <Image
+            src={image}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        )}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 

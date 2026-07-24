@@ -1,15 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { StoryCard } from "@/components/StoryCard";
-import { getLatestArticles } from "@/data/articles";
+import { getLatestArticles } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "Últimas",
   description: "Todas as publicações recentes da Ajoia Brasil.",
 };
 
-export default function UltimasPage() {
-  const list = getLatestArticles(24);
+export const dynamic = "force-dynamic";
+
+export default async function UltimasPage() {
+  const list = await getLatestArticles(24);
 
   return (
     <div className="mx-auto max-w-content px-5 py-12 md:py-16">

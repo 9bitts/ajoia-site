@@ -1,4 +1,4 @@
-import type { SectionSlug } from "@/data/articles";
+import type { SectionSlug } from "@/lib/sections";
 
 export const sectionImages: Record<SectionSlug, string> = {
   politica: "/images/sections/politica.jpg",

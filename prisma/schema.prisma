@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  COLUMNIST
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  slug         String    @unique
+  role         Role      @default(COLUMNIST)
+  bio          String    @default("")
+  roleLabel    String    @default("Colunista")
+  featured     Boolean   @default(false)
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  articles     Article[]
+}
+
+model Article {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  dek         String        @default("")
+  body        String
+  section     String
+  status      ArticleStatus @default(DRAFT)
+  featured    Boolean       @default(false)
+  breaking    Boolean       @default(false)
+  imageUrl    String?
+  authorId    String
+  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([section])
+  @@index([authorId])
+}

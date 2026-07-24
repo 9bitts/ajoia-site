@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Manrope, Source_Serif_4 } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { SiteChrome } from "@/components/SiteChrome";
 import { siteConfig } from "@/data/site";
 import "./globals.css";
 
@@ -48,9 +49,9 @@ export default function RootLayout({
         className={`${sans.variable} ${display.variable} ${serif.variable} antialiased`}
       >
         <div className="site-shell min-h-screen">
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <SiteChrome header={<Header />} footer={<Footer />}>
+            {children}
+          </SiteChrome>
         </div>
       </body>
     </html>

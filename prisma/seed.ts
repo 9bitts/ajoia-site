@@ -1,29 +1,109 @@
-export type SectionSlug =
-  | "politica"
-  | "estado"
-  | "cidade"
-  | "mundo"
-  | "cultura"
-  | "opiniao"
-  | "editorial"
-  | "tema-livre";
+import "dotenv/config";
+import { PrismaClient, Role } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
-export type Article = {
-  slug: string;
-  title: string;
-  dek: string;
-  section: SectionSlug;
-  authorSlug: string;
-  authorName: string;
-  date: string;
-  featured?: boolean;
-  breaking?: boolean;
-  imageGradient: string;
-  image?: string;
-  body: string[];
-};
+const prisma = new PrismaClient();
 
-export const articles: Article[] = [
+const columnists = [
+  {
+    slug: "jose-aparecido-ribeiro",
+    name: "José Aparecido Ribeiro",
+    roleLabel: "Presidente · Opinião e Política",
+    bio: "Jornalista e presidente da Ajoia Brasil. Defensor da liberdade de imprensa, do rigor factual e da independência editorial.",
+    featured: true,
+    email: "jose.aparecido@ajoiabrasil.com.br",
+  },
+  {
+    slug: "marcia-casali",
+    name: "Márcia Casali",
+    roleLabel: "Cidade e Sociedade",
+    bio: "Cobertura de Belo Horizonte, causas sociais e histórias que revelam o cotidiano da capital mineira.",
+    featured: true,
+    email: "marcia.casali@ajoiabrasil.com.br",
+  },
+  {
+    slug: "edy-fernandes",
+    name: "Edy Fernandes",
+    roleLabel: "Tema Livre · Notícias do Dia",
+    bio: "Painel diário com datas, indicadores e o que importa acompanhar — com leveza e informação.",
+    featured: true,
+    email: "edy.fernandes@ajoiabrasil.com.br",
+  },
+  {
+    slug: "neimar-fernandes",
+    name: "Neimar Fernandes",
+    roleLabel: "Fundador · Editorial",
+    bio: "Um dos fundadores da associação. Atua na articulação institucional e na defesa do jornalismo independente.",
+    featured: true,
+    email: "neimar.fernandes@ajoiabrasil.com.br",
+  },
+  {
+    slug: "alexandre-siqueira",
+    name: "Alexandre Siqueira",
+    roleLabel: "Análise · Imprensa",
+    bio: "Autor de “Jornalismo: a um passo do abismo…”. Análise crítica sobre os rumos da imprensa brasileira.",
+    featured: false,
+    email: "alexandre.siqueira@ajoiabrasil.com.br",
+  },
+  {
+    slug: "dan-berg",
+    name: "Dan Berg",
+    roleLabel: "Cultura e Literatura",
+    bio: "Autor de “Sociedade dos Poetas Vivos”. Percorre tradição literária e formação cultural do País.",
+    featured: false,
+    email: "dan.berg@ajoiabrasil.com.br",
+  },
+  {
+    slug: "cristina-graeml",
+    name: "Cristina Graeml",
+    roleLabel: "Opinião",
+    bio: "Colunista com olhar crítico sobre política, liberdade de expressão e o debate público contemporâneo.",
+    featured: false,
+    email: "cristina.graeml@ajoiabrasil.com.br",
+  },
+  {
+    slug: "leandro-heringer",
+    name: "Leandro Heringer",
+    roleLabel: "Estado e Política",
+    bio: "Acompanha o cenário político mineiro e nacional com ênfase em responsabilidade pública.",
+    featured: false,
+    email: "leandro.heringer@ajoiabrasil.com.br",
+  },
+  {
+    slug: "walter-navarro",
+    name: "Walter Navarro",
+    roleLabel: "Economia e Negócios",
+    bio: "Análises sobre economia, mercado e os impactos das decisões públicas no cotidiano brasileiro.",
+    featured: false,
+    email: "walter.navarro@ajoiabrasil.com.br",
+  },
+  {
+    slug: "adriana-garcia",
+    name: "Adriana Garcia",
+    roleLabel: "Cultura",
+    bio: "Cobertura cultural, comportamento e os movimentos que moldam a sociedade.",
+    featured: false,
+    email: "adriana.garcia@ajoiabrasil.com.br",
+  },
+  {
+    slug: "jorge-bessa",
+    name: "Jorge Bessa",
+    roleLabel: "Mundo",
+    bio: "Cenário internacional e seus reflexos no Brasil, com leitura independente dos fatos.",
+    featured: false,
+    email: "jorge.bessa@ajoiabrasil.com.br",
+  },
+  {
+    slug: "silvia-faga",
+    name: "Sílvia Fagá",
+    roleLabel: "Opinião",
+    bio: "Textos de opinião com foco em cidadania, ética e o papel da imprensa na democracia.",
+    featured: false,
+    email: "silvia.faga@ajoiabrasil.com.br",
+  },
+];
+
+const articles = [
   {
     slug: "institutos-de-pesquisas-imprensa-e-maquina-estatal",
     title:
@@ -31,11 +111,9 @@ export const articles: Article[] = [
     dek: "Estudado pela ciência política como bandwagon effect, o efeito manada descreve a tendência de eleitores apoiarem quem aparenta estar à frente — enquanto outros desistem de votar.",
     section: "politica",
     authorSlug: "jose-aparecido-ribeiro",
-    authorName: "José Aparecido Ribeiro",
     date: "2026-07-23",
     featured: true,
     breaking: true,
-    imageGradient: "from-zinc-800 via-neutral-900 to-black",
     body: [
       "Vivemos uma época em que a disputa política deixou de acontecer apenas nas ruas, como era antigamente nos palanques. Hoje, ela ocorre, sobretudo, no campo da informação.",
       "Estudado pela ciência política e conhecido como bandwagon effect (efeito manada), o fenômeno descreve a tendência de eleitores apoiarem quem aparenta estar à frente, enquanto outros podem simplesmente desistir de votar.",
@@ -50,10 +128,9 @@ export const articles: Article[] = [
     dek: "Nascido da maior dor que uma família pode sentir — a perda de um filho —, o instituto transformou luto em propósito: proteger adolescentes e prevenir a violência.",
     section: "cidade",
     authorSlug: "marcia-casali",
-    authorName: "Márcia Casali",
     date: "2026-07-23",
     featured: true,
-    imageGradient: "from-stone-700 via-neutral-900 to-zinc-950",
+    breaking: false,
     body: [
       "O Instituto Rodrigo Castanheira nasceu da maior dor que uma família pode sentir: a perda de um filho. Rodrigo era apenas um adolescente quando, ao sair de uma festa, foi brutalmente espancado.",
       "Após lutar pela vida na UTI por 16 dias, ele não resistiu. A dor da perda, no entanto, deu lugar a um propósito transformador: a família decidiu erguer uma instituição dedicada à proteção de jovens e à prevenção da violência.",
@@ -67,10 +144,9 @@ export const articles: Article[] = [
     dek: "Datas comemorativas, temperatura e indicadores financeiros para começar o dia com o essencial.",
     section: "tema-livre",
     authorSlug: "edy-fernandes",
-    authorName: "Edy Fernandes",
     date: "2026-07-23",
     featured: true,
-    imageGradient: "from-slate-700 via-zinc-900 to-black",
+    breaking: false,
     body: [
       "Datas comemorativas de hoje: Dia do Guarda Rodoviário, Dia Mundial dos Mamíferos Marinhos, Dia do Limão, Dia do Confeito e Dia da Vovó Maravilhosa.",
       "Temperatura em Macapá-AP: mínima 25° e máxima 29°. Indicadores: Dólar comercial em queda de 0,43% (R$ 5,05); Euro em queda de 0,35% (R$ 5,76); Ibovespa em alta de 2,44% (177.547 pts); Bitcoin em queda de 1,24%.",
@@ -84,9 +160,9 @@ export const articles: Article[] = [
     dek: "Do Dia Mundial do Cérebro ao Ibovespa: o essencial do dia em um só lugar.",
     section: "tema-livre",
     authorSlug: "edy-fernandes",
-    authorName: "Edy Fernandes",
     date: "2026-07-22",
-    imageGradient: "from-neutral-700 via-zinc-900 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "Entre as datas: Dia do Cantor Lírico, Dia do Cientista Social, Dia Internacional da Manga, Dia Internacional do Trabalhador Doméstico, Dia Mundial do Cérebro e Dia da Paz e da Conciliação.",
       "Indicadores e clima seguem no radar diário da redação. Informação objetiva, sem narrativa embutida — o leitor decide o que fazer com os fatos.",
@@ -98,10 +174,9 @@ export const articles: Article[] = [
     dek: "Laudijane, mãe de Breno Filipe Sales, vive um drama duplo: a dor da perda do filho e uma grave batalha contra o câncer.",
     section: "cidade",
     authorSlug: "marcia-casali",
-    authorName: "Márcia Casali",
     date: "2026-07-22",
     featured: true,
-    imageGradient: "from-zinc-700 via-stone-900 to-black",
+    breaking: false,
     body: [
       "Laudijane, mãe de Breno Filipe Sales, vive um drama duplo — a dor da perda do filho e uma grave batalha contra o câncer. Após a morte de Breno em julho de 2022, ela ficou sete meses em depressão profunda, o que contribuiu para o desenvolvimento de um câncer de mama.",
       "Em outubro de 2025, descobriu metástase. A busca por Justiça se mistura à luta pela própria vida — e revela falhas que o poder público e a sociedade ainda não souberam enfrentar.",
@@ -114,10 +189,9 @@ export const articles: Article[] = [
     dek: "Quando relações internacionais viram instrumento de proselitismo ideológico, quem paga é a fábrica, o produtor e o trabalhador — não o gabinete.",
     section: "opiniao",
     authorSlug: "jose-aparecido-ribeiro",
-    authorName: "José Aparecido Ribeiro",
     date: "2026-07-17",
     featured: true,
-    imageGradient: "from-neutral-800 via-zinc-950 to-black",
+    breaking: false,
     body: [
       "O problema é que a conta da irresponsabilidade, das bravatas e insinuações, não chega ao gabinete presidencial. Ela chega à fábrica que perde encomendas, ao produtor rural que vê seu mercado ameaçado, ao empresário que suspende investimentos e ao trabalhador que teme receber uma carta de demissão.",
       "Quando um governante transforma relações internacionais em instrumento de proselitismo ideológico, é o povo que paga. E paga caro.",
@@ -132,10 +206,9 @@ export const articles: Article[] = [
     dek: "Jornalistas de todo o País e do exterior se unem em defesa da verdade factual e do rigor jornalístico.",
     section: "editorial",
     authorSlug: "neimar-fernandes",
-    authorName: "Neimar Fernandes",
     date: "2026-03-23",
     featured: true,
-    imageGradient: "from-stone-800 via-neutral-950 to-black",
+    breaking: false,
     body: [
       "Em um cenário marcado por desconfiança, polarização e questionamentos sobre a credibilidade da informação, jornalistas de diferentes regiões do Brasil e do exterior decidiram reagir.",
       "A resposta vem na forma de organização: nasce a Ajoia Brasil (Associação Brasileira de Jornalistas Independentes e Afiliados), com uma proposta clara de resgatar os pilares do jornalismo e recolocar no centro da atividade o compromisso com os fatos.",
@@ -151,9 +224,9 @@ export const articles: Article[] = [
     dek: "A degradação da mobilidade em BH deixou de ser problema herdado: é retrato de incompetência administrativa e ausência de liderança.",
     section: "cidade",
     authorSlug: "marcia-casali",
-    authorName: "Márcia Casali",
     date: "2026-04-10",
-    imageGradient: "from-zinc-700 via-neutral-900 to-zinc-950",
+    featured: false,
+    breaking: false,
     body: [
       "A degradação da mobilidade urbana em Belo Horizonte já não pode mais ser tratada como um problema estrutural herdado. Trata-se, hoje, de um retrato claro de incompetência administrativa e ausência de liderança.",
       "Enquanto isso, órgãos responsáveis pela infraestrutura seguem inertes diante de mais de 200 gargalos viários que estrangulam a cidade.",
@@ -167,9 +240,9 @@ export const articles: Article[] = [
     dek: "A via deixou de ser apenas rodovia problemática: tornou-se o retrato da omissão do poder público e da falência da infraestrutura metropolitana.",
     section: "estado",
     authorSlug: "leandro-heringer",
-    authorName: "Leandro Heringer",
     date: "2026-05-12",
-    imageGradient: "from-neutral-700 via-stone-900 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "O Anel Rodoviário de Belo Horizonte deixou de ser, há muito tempo, apenas uma rodovia problemática. Tornou-se o retrato acabado da omissão do poder público.",
       "O que se vê na prática é a continuidade de medidas paliativas e soluções cosméticas diante de um colapso estrutural evidente.",
@@ -182,9 +255,9 @@ export const articles: Article[] = [
     dek: "Passados 435 dias da promessa no Trevo do Belvedere, a população segue aguardando que o anúncio se transforme em obra.",
     section: "cidade",
     authorSlug: "marcia-casali",
-    authorName: "Márcia Casali",
     date: "2026-06-25",
-    imageGradient: "from-stone-700 via-zinc-900 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "No dia 13 de abril de 2025, o prefeito de Belo Horizonte, Álvaro Damião, esteve no Trevo do Belvedere para anunciar uma intervenção que ele próprio classificou como paliativa.",
       "Hoje, passados 435 dias, a população continua aguardando que aquela promessa se transforme em realidade.",
@@ -197,9 +270,9 @@ export const articles: Article[] = [
     dek: "Produção, enoturismo e identidade regional: Minas avança no mapa do vinho brasileiro.",
     section: "cultura",
     authorSlug: "adriana-garcia",
-    authorName: "Adriana Garcia",
     date: "2026-06-20",
-    imageGradient: "from-zinc-800 via-stone-950 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "O setor vitivinícola brasileiro encontra em Minas Gerais um território de consolidação — com vinícolas que apostam em terroir, enoturismo e identidade regional.",
       "Além da bebida, o movimento fortalece cadeias produtivas locais e coloca o Estado no mapa de experiências gastronômicas do País.",
@@ -211,9 +284,9 @@ export const articles: Article[] = [
     dek: "Entre o grito e o silêncio, o jornalismo que importa é o que não abre mão do fato — nem da forma.",
     section: "opiniao",
     authorSlug: "cristina-graeml",
-    authorName: "Cristina Graeml",
     date: "2026-07-18",
-    imageGradient: "from-neutral-800 via-zinc-900 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "Há uma imprensa que grita para ser ouvida — e outra que, quase sutil, fura o ruído porque carrega substância.",
       "A Ajoia Brasil aposta no segundo caminho: visceral na defesa dos fatos, sóbria na forma, intransigente na ética.",
@@ -226,9 +299,9 @@ export const articles: Article[] = [
     dek: "Há dores que a cidade normaliza. O jornalismo independente existe para recusar essa normalização.",
     section: "cidade",
     authorSlug: "marcia-casali",
-    authorName: "Márcia Casali",
     date: "2026-07-15",
-    imageGradient: "from-zinc-800 via-neutral-950 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "Tem um silêncio que dói mais que grito: é o silêncio de uma mãe cujo telefone não toca mais.",
       "Em cada história dessas há uma falha coletiva — de segurança, de justiça, de escuta. Nomeá-las é o mínimo que uma imprensa responsável pode fazer.",
@@ -241,9 +314,9 @@ export const articles: Article[] = [
     dek: "Especialistas alertam: prazo excessivo transforma obra de R$ 180 milhões em impacto social que pode chegar a R$ 2 bilhões.",
     section: "estado",
     authorSlug: "walter-navarro",
-    authorName: "Walter Navarro",
     date: "2026-04-02",
-    imageGradient: "from-slate-800 via-zinc-950 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "Embora o custo direto do projeto seja de aproximadamente R$ 180 milhões, estimativas técnicas indicam que o impacto total para a sociedade pode se aproximar de R$ 2 bilhões.",
       "O motivo é o prazo de execução considerado excessivo: 1.050 dias de transtornos. O “custo do atraso no trânsito” não aparece no contrato — mas pesa diariamente no bolso da população.",
@@ -257,9 +330,9 @@ export const articles: Article[] = [
     dek: "Cerca de 80 participantes marcaram o lançamento oficial da associação no Barroca Tênis Clube, em Belo Horizonte.",
     section: "editorial",
     authorSlug: "neimar-fernandes",
-    authorName: "Neimar Fernandes",
     date: "2026-03-31",
-    imageGradient: "from-stone-800 via-zinc-950 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "Uma noite histórica marcou o lançamento oficial da Associação de Jornalistas Independentes e Afiliados do Brasil durante evento no Antonielli Restaurante e Pizzeria, no Barroca Tênis Clube, em Belo Horizonte.",
       "Com a presença de cerca de 80 participantes, a cerimônia foi definida como marco simbólico para o fortalecimento do jornalismo independente no País.",
@@ -272,9 +345,9 @@ export const articles: Article[] = [
     dek: "Em um mundo de narrativas em disputa, a apuração independente deixa de ser luxo editorial — e vira infraestrutura democrática.",
     section: "mundo",
     authorSlug: "jorge-bessa",
-    authorName: "Jorge Bessa",
     date: "2026-07-10",
-    imageGradient: "from-slate-700 via-neutral-900 to-black",
+    featured: false,
+    breaking: false,
     body: [
       "A disputa geopolítica contemporânea não se limita a fronteiras e mercados: disputa também o sentido dos fatos.",
       "Uma imprensa livre — e responsável — é parte da arquitetura que impede que uma única narrativa se imponha como verdade oficial.",
@@ -282,76 +355,111 @@ export const articles: Article[] = [
   },
 ];
 
-export function getArticle(slug: string) {
-  return articles.find((a) => a.slug === slug);
+async function main() {
+  const adminEmail = (process.env.ADMIN_EMAIL || "admin@ajoiabrasil.com.br")
+    .trim()
+    .toLowerCase();
+  const adminPassword = process.env.ADMIN_PASSWORD || "AjoiaAdmin2026!";
+  const columnistPassword = process.env.COLUMNIST_PASSWORD || "Colunista2026!";
+
+  const adminHash = await bcrypt.hash(adminPassword, 10);
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {
+      passwordHash: adminHash,
+      name: "Administrador Ajoia",
+      role: Role.ADMIN,
+      active: true,
+    },
+    create: {
+      email: adminEmail,
+      passwordHash: adminHash,
+      name: "Administrador Ajoia",
+      slug: "admin",
+      role: Role.ADMIN,
+      roleLabel: "Administração",
+      bio: "Conta administrativa do portal Ajoia Brasil.",
+      active: true,
+    },
+  });
+
+  const colHash = await bcrypt.hash(columnistPassword, 10);
+  for (const c of columnists) {
+    await prisma.user.upsert({
+      where: { email: c.email },
+      update: {
+        name: c.name,
+        slug: c.slug,
+        bio: c.bio,
+        roleLabel: c.roleLabel,
+        featured: c.featured,
+        role: Role.COLUMNIST,
+        active: true,
+        passwordHash: colHash,
+      },
+      create: {
+        email: c.email,
+        passwordHash: colHash,
+        name: c.name,
+        slug: c.slug,
+        bio: c.bio,
+        roleLabel: c.roleLabel,
+        featured: c.featured,
+        role: Role.COLUMNIST,
+        active: true,
+      },
+    });
+  }
+
+  const users = await prisma.user.findMany({
+    where: { role: Role.COLUMNIST },
+  });
+  const bySlug = Object.fromEntries(users.map((u) => [u.slug, u]));
+
+  for (const a of articles) {
+    const author = bySlug[a.authorSlug];
+    if (!author) continue;
+    const publishedAt = new Date(`${a.date}T12:00:00.000Z`);
+    await prisma.article.upsert({
+      where: { slug: a.slug },
+      update: {
+        title: a.title,
+        dek: a.dek,
+        body: a.body.join("\n\n"),
+        section: a.section,
+        featured: a.featured,
+        breaking: a.breaking,
+        status: "PUBLISHED",
+        publishedAt,
+        authorId: author.id,
+        imageUrl: `/images/sections/${a.section}.jpg`,
+      },
+      create: {
+        slug: a.slug,
+        title: a.title,
+        dek: a.dek,
+        body: a.body.join("\n\n"),
+        section: a.section,
+        featured: a.featured,
+        breaking: a.breaking,
+        status: "PUBLISHED",
+        publishedAt,
+        authorId: author.id,
+        imageUrl: `/images/sections/${a.section}.jpg`,
+      },
+    });
+  }
+
+  console.log("Seed OK");
+  console.log(`Admin: ${adminEmail}`);
+  console.log(`Colunistas password: (COLUMNIST_PASSWORD)`);
 }
 
-export function getArticlesBySection(section: SectionSlug) {
-  return articles
-    .filter((a) => a.section === section)
-    .sort((a, b) => b.date.localeCompare(a.date));
-}
-
-export function getArticlesByAuthor(authorSlug: string) {
-  return articles
-    .filter((a) => a.authorSlug === authorSlug)
-    .sort((a, b) => b.date.localeCompare(a.date));
-}
-
-export function getFeaturedArticles() {
-  return articles
-    .filter((a) => a.featured)
-    .sort((a, b) => b.date.localeCompare(a.date));
-}
-
-export function getLatestArticles(limit = 12) {
-  return [...articles]
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, limit);
-}
-
-export const sectionMeta: Record<
-  SectionSlug,
-  { label: string; description: string }
-> = {
-  politica: {
-    label: "Política",
-    description:
-      "Poder, eleições e o debate público — com apuração independente e compromisso com os fatos.",
-  },
-  estado: {
-    label: "Estado",
-    description:
-      "Minas Gerais em perspectiva: governo, infraestrutura e decisões que afetam milhões.",
-  },
-  cidade: {
-    label: "Cidade",
-    description:
-      "Belo Horizonte e a vida urbana: mobilidade, sociedade e as histórias que a capital não pode ignorar.",
-  },
-  mundo: {
-    label: "Mundo",
-    description:
-      "O cenário internacional e seus reflexos no Brasil, sem filtro ideológico.",
-  },
-  cultura: {
-    label: "Cultura",
-    description:
-      "Ideias, artes, hábitos e o que molda o espírito do tempo.",
-  },
-  opiniao: {
-    label: "Opinião",
-    description:
-      "Análises e posicionamentos dos colunistas — de inteira responsabilidade de seus autores.",
-  },
-  editorial: {
-    label: "Editorial",
-    description:
-      "A voz institucional da Ajoia Brasil sobre imprensa, ética e liberdade de expressão.",
-  },
-  "tema-livre": {
-    label: "Tema Livre",
-    description:
-      "Painéis diários, crônicas e textos que fogem ao roteiro — sem abrir mão da informação.",
-  },
-};
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

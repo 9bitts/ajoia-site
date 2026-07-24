@@ -1,11 +1,12 @@
 import Link from "next/link";
-import type { Article, SectionSlug } from "@/data/articles";
-import { sectionMeta } from "@/data/articles";
+import type { PublicArticle } from "@/lib/articles";
+import type { SectionSlug } from "@/lib/sections";
+import { sectionMeta } from "@/lib/sections";
 import { StoryCard } from "./StoryCard";
 
 type Props = {
   section: SectionSlug;
-  articles: Article[];
+  articles: PublicArticle[];
 };
 
 export function SectionBlock({ section, articles }: Props) {

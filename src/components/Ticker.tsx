@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { getLatestArticles } from "@/data/articles";
+import { getLatestArticles } from "@/lib/articles";
 
-export function Ticker() {
-  const items = getLatestArticles(8);
+export async function Ticker() {
+  const items = await getLatestArticles(8);
+  if (items.length === 0) return null;
   const loop = [...items, ...items];
 
   return (

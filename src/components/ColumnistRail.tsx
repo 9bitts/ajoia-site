@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { columnists } from "@/data/columnists";
+import { getColumnists } from "@/lib/articles";
 
-export function ColumnistRail() {
-  const featured = columnists.filter((c) => c.featured);
+export async function ColumnistRail() {
+  const all = await getColumnists();
+  const featured = all.filter((c) => c.featured).slice(0, 4);
+  const list = featured.length > 0 ? featured : all.slice(0, 4);
+  if (list.length === 0) return null;
 
   return (
     <section className="border-y border-white/10 bg-gradient-to-b from-ink-elevated/60 to-transparent py-16">
@@ -22,7 +25,7 @@ export function ColumnistRail() {
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map((columnist) => (
+          {list.map((columnist) => (
             <Link
               key={columnist.slug}
               href={`/colunistas/${columnist.slug}`}

@@ -1,14 +1,17 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { StoryCard } from "@/components/StoryCard";
+import { getArticlesBySection } from "@/lib/articles";
 import {
-  getArticlesBySection,
+  isSectionSlug,
   sectionMeta,
   type SectionSlug,
-} from "@/data/articles";
+} from "@/lib/sections";
 import { navSections } from "@/data/site";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return navSections.map((section) => ({ slug: section.slug }));
@@ -16,18 +19,17 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const meta = sectionMeta[slug as SectionSlug];
-  if (!meta) return { title: "Seção" };
+  if (!isSectionSlug(slug)) return { title: "Seção" };
+  const meta = sectionMeta[slug];
   return { title: meta.label, description: meta.description };
 }
 
 export default async function SectionPage({ params }: Props) {
   const { slug } = await params;
+  if (!isSectionSlug(slug)) notFound();
   const section = slug as SectionSlug;
   const meta = sectionMeta[section];
-  if (!meta) notFound();
-
-  const list = getArticlesBySection(section);
+  const list = await getArticlesBySection(section);
 
   return (
     <div className="mx-auto max-w-content px-5 py-12 md:py-16">
@@ -49,7 +51,7 @@ export default async function SectionPage({ params }: Props) {
             <StoryCard key={article.slug} article={article} showDek />
           ))
         ) : (
-          <p className="text-mist-muted col-span-full">
+          <p className="col-span-full text-mist-muted">
             Em breve, novos conteúdos nesta seção.
           </p>
         )}
