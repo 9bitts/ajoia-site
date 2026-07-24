@@ -1,36 +1,39 @@
 "use client";
 
 import Image from "next/image";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const INTRO_MS = 3200;
-
-type Phase = "play" | "exit" | "done";
+type Phase = "enter" | "hold" | "exit" | "done";
 
 export function IntroSplash() {
-  const [phase, setPhase] = useState<Phase>("play");
+  const [phase, setPhase] = useState<Phase>("enter");
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    if (reduceMotion) {
-      setPhase("done");
-      return;
-    }
+    const holdDelay = 50;
+    const holdMs = reduceMotion ? 1400 : 3000;
+    const exitMs = reduceMotion ? 450 : 900;
 
     document.documentElement.classList.add("intro-lock");
 
-    const exitTimer = window.setTimeout(() => setPhase("exit"), INTRO_MS);
-    const doneTimer = window.setTimeout(() => {
+    // Next frame → hold so CSS transitions actually run
+    const tHold = window.setTimeout(() => setPhase("hold"), holdDelay);
+    const tExit = window.setTimeout(
+      () => setPhase("exit"),
+      holdDelay + holdMs,
+    );
+    const tDone = window.setTimeout(() => {
       document.documentElement.classList.remove("intro-lock");
       setPhase("done");
-    }, INTRO_MS + 900);
+    }, holdDelay + holdMs + exitMs);
 
     return () => {
-      window.clearTimeout(exitTimer);
-      window.clearTimeout(doneTimer);
+      window.clearTimeout(tHold);
+      window.clearTimeout(tExit);
+      window.clearTimeout(tDone);
       document.documentElement.classList.remove("intro-lock");
     };
   }, []);
@@ -39,7 +42,7 @@ export function IntroSplash() {
 
   return (
     <div
-      className={`intro-splash is-playing${phase === "exit" ? " is-exiting" : ""}`}
+      className={`intro-splash is-${phase}`}
       role="presentation"
       aria-hidden="true"
     >

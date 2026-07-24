@@ -271,6 +271,8 @@ html.intro-lock body {
   position: absolute;
   inset: 0;
   background: #050506;
+  opacity: 1;
+  transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .intro-splash__stage {
@@ -281,6 +283,12 @@ html.intro-lock body {
   align-items: center;
   gap: 1.75rem;
   padding: 1.5rem;
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.85s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .intro-splash__glow {
@@ -297,14 +305,21 @@ html.intro-lock body {
   filter: blur(18px);
   opacity: 0;
   transform: scale(0.85);
+  transition:
+    opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .intro-splash__mark {
   position: relative;
   overflow: hidden;
   opacity: 0;
-  filter: blur(10px);
-  transform: scale(0.94) translateY(10px);
+  filter: blur(8px);
+  transform: scale(0.94) translateY(12px);
+  transition:
+    opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+    transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+    filter 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
 }
 
 .intro-splash__logo {
@@ -325,6 +340,7 @@ html.intro-lock body {
   transform: translateX(-120%);
   mix-blend-mode: screen;
   pointer-events: none;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.9s;
 }
 
 .intro-splash__rule {
@@ -339,100 +355,42 @@ html.intro-lock body {
   opacity: 0;
   transform: scaleX(0.35);
   transform-origin: center;
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s;
 }
 
-.intro-splash.is-playing .intro-splash__glow {
-  animation: intro-glow 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+/* Hold = logo fully revealed */
+.intro-splash.is-hold .intro-splash__glow,
+.intro-splash.is-exit .intro-splash__glow {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.intro-splash.is-playing .intro-splash__mark {
-  animation: intro-mark 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+.intro-splash.is-hold .intro-splash__mark,
+.intro-splash.is-exit .intro-splash__mark {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1) translateY(0);
 }
 
-.intro-splash.is-playing .intro-splash__sheen {
-  animation: intro-sheen 1.35s cubic-bezier(0.4, 0, 0.2, 1) 1.15s both;
+.intro-splash.is-hold .intro-splash__sheen {
+  transform: translateX(120%);
 }
 
-.intro-splash.is-playing .intro-splash__rule {
-  animation: intro-rule 1s cubic-bezier(0.22, 1, 0.36, 1) 1.35s both;
+.intro-splash.is-hold .intro-splash__rule,
+.intro-splash.is-exit .intro-splash__rule {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
-.intro-splash.is-exiting .intro-splash__veil {
-  animation: intro-veil-out 0.9s cubic-bezier(0.4, 0, 0.2, 1) both;
+/* Exit = open into the site */
+.intro-splash.is-exit .intro-splash__veil {
+  opacity: 0;
 }
 
-.intro-splash.is-exiting .intro-splash__stage {
-  animation: intro-stage-out 0.85s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-@keyframes intro-glow {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes intro-mark {
-  from {
-    opacity: 0;
-    filter: blur(10px);
-    transform: scale(0.94) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes intro-sheen {
-  from {
-    transform: translateX(-120%);
-  }
-  to {
-    transform: translateX(120%);
-  }
-}
-
-@keyframes intro-rule {
-  from {
-    opacity: 0;
-    transform: scaleX(0.35);
-  }
-  to {
-    opacity: 1;
-    transform: scaleX(1);
-  }
-}
-
-@keyframes intro-veil-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes intro-stage-out {
-  from {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.04);
-    filter: blur(6px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .intro-splash {
-    display: none;
-  }
+.intro-splash.is-exit .intro-splash__stage {
+  opacity: 0;
+  transform: scale(1.04);
+  filter: blur(6px);
 }
