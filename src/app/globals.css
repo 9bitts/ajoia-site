@@ -14,6 +14,8 @@
   --accent: #c8ccd4;
   --accent-soft: #8e95a3;
   --glow: rgba(200, 204, 212, 0.12);
+  --gold: #c6a35a;
+  --gold-deep: #9a7a3a;
 }
 
 * {
@@ -212,6 +214,26 @@ body {
   transform: translateY(-1px);
   filter: brightness(1.05);
   box-shadow: 0 12px 40px rgba(200, 204, 212, 0.18);
+}
+
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  background: linear-gradient(135deg, #d4b56a 0%, #c6a35a 45%, #9a7a3a 100%);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.btn-gold:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 12px 36px rgba(198, 163, 90, 0.28);
 }
 
 .btn-ghost {

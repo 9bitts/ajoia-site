@@ -66,6 +66,9 @@ export function Header() {
           <Link href="/colunistas" className="btn-primary text-xs uppercase tracking-[0.14em]">
             Colunistas
           </Link>
+          <Link href="/assine" className="btn-gold text-[11px] tracking-[0.16em] md:hidden">
+            Assine
+          </Link>
           <button
             type="button"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -115,6 +118,12 @@ export function Header() {
           >
             Colunistas
           </Link>
+          <Link
+            href="/assine"
+            className="btn-gold ml-2 shrink-0 !py-2 !px-4 text-[11px] tracking-[0.16em]"
+          >
+            Assine
+          </Link>
         </div>
       </nav>
 
@@ -135,6 +144,12 @@ export function Header() {
               className="border-b border-white/5 pb-3 text-sm uppercase tracking-[0.16em] text-mist"
             >
               Colunistas
+            </Link>
+            <Link
+              href="/assine"
+              className="btn-gold w-fit text-[11px] tracking-[0.16em]"
+            >
+              Assine
             </Link>
             <Link
               href="/ultimas"

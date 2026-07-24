@@ -20,6 +20,10 @@ const config: Config = {
           muted: "#9a9aa3",
           dim: "#6e6e78",
         },
+        gold: {
+          DEFAULT: "#c6a35a",
+          deep: "#9a7a3a",
+        },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "sans-serif"],

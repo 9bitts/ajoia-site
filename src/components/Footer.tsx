@@ -64,6 +64,14 @@ export function Footer() {
             </li>
             <li>
               <Link
+                href="/assine"
+                className="text-sm text-gold transition-colors hover:text-white"
+              >
+                Assine
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/admin"
                 className="text-sm text-mist-muted transition-colors hover:text-white"
               >
