@@ -9,10 +9,10 @@ export async function Ticker() {
   return (
     <div className="overflow-hidden border-y border-white/10 bg-ink-elevated/80">
       <div className="mx-auto flex max-w-content items-stretch">
-        <div className="flex shrink-0 items-center bg-gradient-to-r from-mist/20 to-transparent px-4 py-3 text-[10px] uppercase tracking-[0.22em] text-mist">
+        <div className="flex shrink-0 items-center bg-gradient-to-r from-mist/20 to-transparent px-3 py-3 text-[10px] uppercase tracking-[0.18em] text-mist sm:px-4 sm:tracking-[0.22em]">
           Ao vivo
         </div>
-        <div className="relative flex-1 overflow-hidden py-3">
+        <div className="relative min-w-0 flex-1 overflow-hidden py-3">
           <div className="ticker-track gap-10 px-4">
             {loop.map((article, i) => (
               <Link

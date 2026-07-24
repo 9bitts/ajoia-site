@@ -8,7 +8,7 @@ import {
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-white/10 bg-gradient-to-b from-ink-elevated to-black">
+    <footer className="mt-24 border-t border-white/10 bg-gradient-to-b from-ink-elevated to-ink">
       <div className="mx-auto grid max-w-content gap-12 px-5 py-16 md:grid-cols-12">
         <div className="md:col-span-5">
           <BrandLogo href="/" size="lg" />

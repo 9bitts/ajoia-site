@@ -18,7 +18,7 @@ export function ContactForm() {
             id="name"
             name="name"
             required
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-mist/50"
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
           />
         </div>
         <div>
@@ -33,7 +33,7 @@ export function ContactForm() {
             name="email"
             type="email"
             required
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-mist/50"
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
           />
         </div>
         <div>
@@ -47,7 +47,7 @@ export function ContactForm() {
             id="subject"
             name="subject"
             required
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-mist/50"
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
           />
         </div>
         <div>
@@ -62,12 +62,12 @@ export function ContactForm() {
             name="message"
             rows={6}
             required
-            className="mt-2 w-full resize-y border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-mist/50"
+            className="mt-2 w-full resize-y border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
           />
         </div>
         <button
           type="submit"
-          className="btn-primary w-fit text-xs uppercase tracking-[0.14em]"
+          className="btn-primary w-full text-xs uppercase tracking-[0.14em] sm:w-fit"
         >
           Enviar mensagem
         </button>

@@ -11,9 +11,9 @@ type Props = {
 };
 
 const sizes = {
-  sm: { width: 140, height: 40, className: "h-8 w-auto md:h-9" },
-  md: { width: 220, height: 64, className: "h-10 w-auto md:h-12" },
-  lg: { width: 320, height: 92, className: "h-14 w-auto md:h-16" },
+  sm: { width: 140, height: 40, className: "h-8 w-auto max-w-full md:h-9" },
+  md: { width: 220, height: 64, className: "h-9 w-auto max-w-full sm:h-10 md:h-12" },
+  lg: { width: 320, height: 92, className: "h-12 w-auto max-w-full sm:h-14 md:h-16" },
 };
 
 export function BrandLogo({
@@ -30,14 +30,17 @@ export function BrandLogo({
       width={s.width}
       height={s.height}
       priority={priority}
-      className={`${s.className} object-contain object-left ${className}`}
+      className={`brand-logo-img ${s.className} object-contain object-left ${className}`}
     />
   );
 
   if (!href) return image;
 
   return (
-    <Link href={href} className="inline-flex shrink-0 transition-opacity hover:opacity-90">
+    <Link
+      href={href}
+      className="inline-flex min-w-0 shrink transition-opacity hover:opacity-90"
+    >
       {image}
     </Link>
   );

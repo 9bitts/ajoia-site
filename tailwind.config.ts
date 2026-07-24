@@ -10,19 +10,19 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          DEFAULT: "#070708",
-          elevated: "#101012",
-          soft: "#16161a",
+          DEFAULT: "var(--bg)",
+          elevated: "var(--bg-elevated)",
+          soft: "var(--bg-soft)",
         },
         mist: {
-          DEFAULT: "#c8ccd4",
-          soft: "#8e95a3",
-          muted: "#9a9aa3",
-          dim: "#6e6e78",
+          DEFAULT: "var(--accent)",
+          soft: "var(--accent-soft)",
+          muted: "var(--text-muted)",
+          dim: "var(--text-dim)",
         },
         gold: {
-          DEFAULT: "#c6a35a",
-          deep: "#9a7a3a",
+          DEFAULT: "var(--gold)",
+          deep: "var(--gold-deep)",
         },
       },
       fontFamily: {

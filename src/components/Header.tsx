@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   institutionalLinks,
   navSections,
@@ -34,7 +35,7 @@ export function Header() {
           : "border-b border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-5 py-2 text-[11px] uppercase tracking-[0.18em] text-mist-dim">
+      <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-mist-dim sm:px-5">
         <div className="hidden items-center gap-5 md:flex">
           {institutionalLinks.slice(0, 4).map((link) => (
             <Link
@@ -45,44 +46,55 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          <ThemeToggle className="text-mist transition-colors hover:text-[var(--text)]" />
         </div>
-        <p className="truncate text-[10px] tracking-[0.22em] text-mist-soft md:text-right">
+        <p className="min-w-0 flex-1 truncate text-[10px] tracking-[0.22em] text-mist-soft md:text-right">
           {siteConfig.city} · Jornalismo independente
         </p>
       </div>
 
       <div className="hairline" />
 
-      <div className="mx-auto flex max-w-content items-center justify-between gap-6 px-5 py-4">
-        <BrandLogo href="/" size="md" priority />
+      <div className="mx-auto flex max-w-content items-center justify-between gap-3 px-4 py-3 sm:gap-6 sm:px-5 sm:py-4">
+        <BrandLogo href="/" size="md" priority className="max-w-[42vw] sm:max-w-none" />
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <ThemeToggle
+            compact
+            className="text-[10px] tracking-[0.16em] text-mist-soft hover:text-[var(--text)] md:hidden"
+          />
           <Link
             href="/ultimas"
             className="hidden text-xs uppercase tracking-[0.16em] text-mist-soft transition-colors hover:text-white md:inline"
           >
             Últimas
           </Link>
-          <Link href="/colunistas" className="btn-primary text-xs uppercase tracking-[0.14em]">
+          <Link
+            href="/colunistas"
+            className="btn-primary hidden text-xs uppercase tracking-[0.14em] md:inline-flex"
+          >
             Colunistas
           </Link>
-          <Link href="/assine" className="btn-gold text-[11px] tracking-[0.16em] md:hidden">
+          <Link
+            href="/assine"
+            className="btn-gold !px-3 !py-2 text-[11px] tracking-[0.16em] sm:!px-5 sm:!py-2.5 md:hidden"
+          >
             Assine
           </Link>
           <button
             type="button"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
-            className="flex h-10 w-10 items-center justify-center border border-white/15 text-white lg:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/15 text-white lg:hidden"
             onClick={() => setOpen((v) => !v)}
           >
             <span className="sr-only">Menu</span>
             <div className="flex w-4 flex-col gap-1.5">
               <span
-                className={`h-px w-full bg-white transition ${open ? "translate-y-[3.5px] rotate-45" : ""}`}
+                className={`h-px w-full bg-[var(--text)] transition ${open ? "translate-y-[3.5px] rotate-45" : ""}`}
               />
-              <span className={`h-px w-full bg-white transition ${open ? "opacity-0" : ""}`} />
+              <span className={`h-px w-full bg-[var(--text)] transition ${open ? "opacity-0" : ""}`} />
               <span
-                className={`h-px w-full bg-white transition ${open ? "-translate-y-[3.5px] -rotate-45" : ""}`}
+                className={`h-px w-full bg-[var(--text)] transition ${open ? "-translate-y-[3.5px] -rotate-45" : ""}`}
               />
             </div>
           </button>
@@ -128,8 +140,14 @@ export function Header() {
       </nav>
 
       {open && (
-        <div className="border-t border-white/10 bg-ink/95 px-5 py-6 backdrop-blur-xl lg:hidden">
+        <div className="max-h-[min(80vh,640px)] overflow-y-auto border-t border-white/10 bg-ink/95 px-4 py-6 backdrop-blur-xl sm:px-5 lg:hidden">
           <div className="grid gap-4">
+            <Link
+              href="/"
+              className="border-b border-white/5 pb-3 text-sm uppercase tracking-[0.16em] text-mist"
+            >
+              Capa
+            </Link>
             {navSections.map((section) => (
               <Link
                 key={section.slug}
@@ -146,16 +164,16 @@ export function Header() {
               Colunistas
             </Link>
             <Link
-              href="/assine"
-              className="btn-gold w-fit text-[11px] tracking-[0.16em]"
-            >
-              Assine
-            </Link>
-            <Link
               href="/ultimas"
               className="border-b border-white/5 pb-3 text-sm uppercase tracking-[0.16em] text-mist"
             >
               Últimas
+            </Link>
+            <Link
+              href="/assine"
+              className="btn-gold w-full text-[11px] tracking-[0.16em] sm:w-fit"
+            >
+              Assine
             </Link>
             {institutionalLinks.map((link) => (
               <Link
@@ -166,6 +184,7 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <ThemeToggle className="justify-self-start text-xs text-mist" />
           </div>
         </div>
       )}

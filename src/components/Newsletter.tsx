@@ -3,7 +3,7 @@
 export function Newsletter() {
   return (
     <section className="mx-auto max-w-content px-5 py-16">
-      <div className="relative overflow-hidden border border-white/10 bg-gradient-to-br from-ink-soft via-ink-elevated to-black px-6 py-12 md:px-12">
+      <div className="relative overflow-hidden border border-white/10 bg-gradient-to-br from-ink-soft via-ink-elevated to-ink px-6 py-12 md:px-12">
         <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-mist/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
         <div className="relative grid gap-8 md:grid-cols-12 md:items-center">
@@ -34,11 +34,11 @@ export function Newsletter() {
                 type="email"
                 required
                 placeholder="seu@email.com"
-                className="w-full border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none placeholder:text-mist-dim focus:border-mist/50"
+                className="w-full min-w-0 border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none placeholder:text-mist-dim focus:border-mist/50 sm:text-sm"
               />
               <button
                 type="submit"
-                className="btn-primary shrink-0 text-xs uppercase tracking-[0.14em]"
+                className="btn-primary w-full shrink-0 text-xs uppercase tracking-[0.14em] sm:w-auto"
               >
                 Assinar
               </button>

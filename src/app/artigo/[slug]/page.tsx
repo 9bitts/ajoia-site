@@ -37,7 +37,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <article>
-      <header className="mx-auto max-w-content px-5 pt-10 md:pt-14">
+      <header className="mx-auto max-w-content px-4 pt-8 sm:px-5 sm:pt-10 md:pt-14">
         <div className="max-w-3xl">
           <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.18em] text-mist-dim">
             <Link
@@ -49,10 +49,10 @@ export default async function ArticlePage({ params }: Props) {
             <span>·</span>
             <time dateTime={article.date}>{formatDateLong(article.date)}</time>
           </div>
-          <h1 className="mt-4 font-display text-3xl leading-[1.1] text-white md:text-5xl">
+          <h1 className="mt-4 font-display text-[1.75rem] leading-[1.1] text-white sm:text-3xl md:text-5xl">
             {article.title}
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-mist-muted md:text-xl">
+          <p className="mt-5 text-base leading-relaxed text-mist-muted sm:text-lg md:text-xl">
             {article.dek}
           </p>
           <p className="mt-6 text-sm text-mist-dim">
@@ -67,7 +67,7 @@ export default async function ArticlePage({ params }: Props) {
         </div>
       </header>
 
-      <div className="relative mx-auto mt-10 min-h-[280px] max-w-content overflow-hidden bg-ink-soft md:min-h-[420px]">
+      <div className="relative mx-auto mt-8 min-h-[220px] w-full max-w-content overflow-hidden bg-ink-soft sm:mt-10 sm:min-h-[280px] md:min-h-[420px]">
         {image && (
           <Image
             src={image}
@@ -81,8 +81,8 @@ export default async function ArticlePage({ params }: Props) {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 
-      <div className="mx-auto grid max-w-content gap-12 px-5 py-12 lg:grid-cols-12">
-        <div className="prose-ajoia lg:col-span-8">
+      <div className="mx-auto grid max-w-content gap-12 px-4 py-10 sm:px-5 sm:py-12 lg:grid-cols-12">
+        <div className="prose-ajoia min-w-0 lg:col-span-8">
           {article.body.map((paragraph) => (
             <p key={paragraph.slice(0, 32)}>{paragraph}</p>
           ))}
@@ -94,8 +94,8 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         </div>
 
-        <aside className="lg:col-span-4">
-          <div className="sticky top-28 border border-white/10 bg-ink-elevated/50 p-6">
+        <aside className="min-w-0 lg:col-span-4">
+          <div className="sticky top-28 border border-white/10 bg-ink-elevated/50 p-5 sm:p-6">
             <p className="text-[11px] uppercase tracking-[0.2em] text-mist-dim">
               Continue lendo
             </p>
@@ -119,7 +119,7 @@ export default async function ArticlePage({ params }: Props) {
         </aside>
       </div>
 
-      <section className="mx-auto max-w-content px-5 pb-16">
+      <section className="mx-auto max-w-content px-4 pb-16 sm:px-5">
         <h2 className="mb-8 font-display text-2xl text-white">Mais da Ajoia</h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {related.slice(0, 3).map((item) => (

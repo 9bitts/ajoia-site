@@ -39,16 +39,18 @@ export function StoryCard({ article, size = "md", showDek = false }: Props) {
               className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             />
           )}
-          <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
+          <div className="on-media absolute bottom-0 left-0 right-0 z-10 p-4">
             <span className="text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">
               {section.label}
             </span>
           </div>
         </div>
         <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-mist-dim">
-          <span>{article.authorName}</span>
-          <span className="text-white/20">·</span>
-          <time dateTime={article.date}>{formatDate(article.date)}</time>
+          <span className="min-w-0 truncate">{article.authorName}</span>
+          <span className="shrink-0 text-mist-dim/50">·</span>
+          <time className="shrink-0" dateTime={article.date}>
+            {formatDate(article.date)}
+          </time>
         </div>
         <h3
           className={`mt-2 font-display leading-tight text-white transition-colors group-hover:text-mist ${
