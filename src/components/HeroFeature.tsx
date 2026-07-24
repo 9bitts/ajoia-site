@@ -12,16 +12,17 @@ export function HeroFeature({ lead, side }: Props) {
   const section = sectionMeta[lead.section];
 
   return (
-    <section className="mx-auto grid max-w-content gap-8 px-5 pt-8 lg:grid-cols-12 lg:gap-10 lg:pt-12">
+    <section className="mx-auto grid max-w-content gap-8 px-5 pt-10 lg:grid-cols-12 lg:gap-10 lg:pt-14">
       <div className="animate-fade-up lg:col-span-8">
         <Link href={`/artigo/${lead.slug}`} className="group block">
           <div
-            className={`story-media relative min-h-[340px] bg-gradient-to-br ${lead.imageGradient} md:min-h-[480px]`}
+            className={`relative flex min-h-[420px] flex-col justify-end overflow-hidden bg-gradient-to-br ${lead.imageGradient} md:min-h-[520px]`}
           >
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(220,224,232,0.16),transparent_50%)]" />
-            <div className="absolute inset-x-0 bottom-0 z-10 p-6 md:p-10">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(220,224,232,0.16),transparent_50%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent" />
+            <div className="relative z-10 p-6 pt-16 md:p-10 md:pt-24">
               {lead.breaking && (
-                <span className="mb-4 inline-block border border-mist/40 bg-black/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-mist backdrop-blur">
+                <span className="mb-4 inline-flex items-center border border-mist/40 bg-black/50 px-3 py-1.5 text-[10px] leading-none tracking-[0.22em] text-mist uppercase">
                   Em destaque
                 </span>
               )}
