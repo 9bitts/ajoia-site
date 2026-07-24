@@ -31,8 +31,7 @@ COPY --from=builder /app/next.config.ts ./
 
 USER node
 EXPOSE 3000
-ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 ENV UPLOAD_DIR=/data/uploads
 
-CMD ["sh", "-c", "npx prisma db push && npm run start"]
+CMD ["sh", "-c", "npx prisma db push && npx prisma db seed && npm run start -- -p ${PORT:-3000}"]

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
 import { ColumnistRail } from "@/components/ColumnistRail";
 import { HeroFeature } from "@/components/HeroFeature";
 import { Newsletter } from "@/components/Newsletter";
@@ -25,40 +24,36 @@ export default async function HomePage() {
   const opiniao = await getArticlesBySection("opiniao");
   const estado = await getArticlesBySection("estado");
 
-  if (!lead) {
-    return (
-      <div className="mx-auto flex max-w-content flex-col items-center px-5 py-24 text-center">
-        <BrandLogo href="/" size="lg" priority />
-        <p className="mt-6 text-mist-muted">
-          Nenhuma notícia publicada ainda. Acesse o admin para publicar.
-        </p>
-        <Link href="/admin" className="btn-primary mt-8 inline-flex text-xs uppercase tracking-[0.14em]">
-          Ir ao admin
-        </Link>
-      </div>
-    );
-  }
-
   return (
     <>
-      <Ticker />
-      <HeroFeature lead={lead} side={side} />
+      {lead ? (
+        <>
+          <Ticker />
+          <HeroFeature lead={lead} side={side} />
 
-      <section className="mx-auto max-w-content px-5 py-14">
-        <div className="mb-8 flex items-end justify-between border-b border-white/10 pb-4">
-          <h2 className="font-display text-3xl text-white">Últimas</h2>
-          <Link href="/ultimas" className="btn-ghost">
-            Arquivo →
-          </Link>
-        </div>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {latest.map((article) => (
-            <StoryCard key={article.slug} article={article} showDek />
-          ))}
-        </div>
-      </section>
+          <section className="mx-auto max-w-content px-5 py-14">
+            <div className="mb-8 flex items-end justify-between border-b border-white/10 pb-4">
+              <h2 className="font-display text-3xl text-white">Últimas</h2>
+              <Link href="/ultimas" className="btn-ghost">
+                Arquivo →
+              </Link>
+            </div>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {latest.map((article) => (
+                <StoryCard key={article.slug} article={article} showDek />
+              ))}
+            </div>
+          </section>
 
-      <SectionBlock section="politica" articles={politica} />
+          <SectionBlock section="politica" articles={politica} />
+        </>
+      ) : (
+        <section className="mx-auto max-w-content px-5 py-16">
+          <p className="text-sm text-mist-muted">
+            Em breve, novas publicações na capa.
+          </p>
+        </section>
+      )}
 
       <section className="mx-auto max-w-content px-5 py-6">
         <div className="grid gap-8 border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-8 md:grid-cols-12 md:p-12">
@@ -89,11 +84,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <SectionBlock section="cidade" articles={cidade} />
-      <ColumnistRail />
-      <SectionBlock section="opiniao" articles={opiniao} />
-      <SectionBlock section="estado" articles={estado} />
-      <Newsletter />
+      {lead && (
+        <>
+          <SectionBlock section="cidade" articles={cidade} />
+          <ColumnistRail />
+          <SectionBlock section="opiniao" articles={opiniao} />
+          <SectionBlock section="estado" articles={estado} />
+          <Newsletter />
+        </>
+      )}
     </>
   );
 }

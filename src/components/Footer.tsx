@@ -62,6 +62,14 @@ export function Footer() {
                 Colunistas
               </Link>
             </li>
+            <li>
+              <Link
+                href="/admin"
+                className="text-sm text-mist-muted transition-colors hover:text-white"
+              >
+                Admin
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
