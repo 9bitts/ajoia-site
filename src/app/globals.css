@@ -251,3 +251,188 @@ body {
   color: #fff;
   gap: 0.65rem;
 }
+
+/* —— Intro splash —— */
+html.intro-lock,
+html.intro-lock body {
+  overflow: hidden;
+}
+
+.intro-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.intro-splash__veil {
+  position: absolute;
+  inset: 0;
+  background: #050506;
+}
+
+.intro-splash__stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 1.5rem;
+}
+
+.intro-splash__glow {
+  position: absolute;
+  width: min(70vw, 520px);
+  height: min(40vw, 280px);
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(200, 204, 212, 0.16) 0%,
+    rgba(200, 204, 212, 0.04) 45%,
+    transparent 72%
+  );
+  filter: blur(18px);
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+.intro-splash__mark {
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  filter: blur(10px);
+  transform: scale(0.94) translateY(10px);
+}
+
+.intro-splash__logo {
+  display: block;
+  width: min(78vw, 420px);
+  height: auto;
+}
+
+.intro-splash__sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.18) 48%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.intro-splash__rule {
+  width: min(42vw, 180px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(230, 232, 236, 0.55),
+    transparent
+  );
+  opacity: 0;
+  transform: scaleX(0.35);
+  transform-origin: center;
+}
+
+.intro-splash.is-playing .intro-splash__glow {
+  animation: intro-glow 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+.intro-splash.is-playing .intro-splash__mark {
+  animation: intro-mark 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+}
+
+.intro-splash.is-playing .intro-splash__sheen {
+  animation: intro-sheen 1.35s cubic-bezier(0.4, 0, 0.2, 1) 1.15s both;
+}
+
+.intro-splash.is-playing .intro-splash__rule {
+  animation: intro-rule 1s cubic-bezier(0.22, 1, 0.36, 1) 1.35s both;
+}
+
+.intro-splash.is-exiting .intro-splash__veil {
+  animation: intro-veil-out 0.9s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.intro-splash.is-exiting .intro-splash__stage {
+  animation: intro-stage-out 0.85s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes intro-glow {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes intro-mark {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(0.94) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes intro-sheen {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes intro-rule {
+  from {
+    opacity: 0;
+    transform: scaleX(0.35);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes intro-veil-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-stage-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: blur(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-splash {
+    display: none;
+  }
+}

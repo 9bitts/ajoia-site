@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { IntroSplash } from "@/components/IntroSplash";
 
 export function SiteChrome({
   header,
@@ -20,6 +21,7 @@ export function SiteChrome({
 
   return (
     <>
+      <IntroSplash />
       {header}
       <main>{children}</main>
       {footer}
