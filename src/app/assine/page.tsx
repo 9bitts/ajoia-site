@@ -49,7 +49,7 @@ export default function AssinePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
         </div>
 
-        <div className="relative mx-auto grid max-w-content gap-10 px-4 py-14 sm:px-5 md:grid-cols-12 md:py-24">
+        <div className="on-dark relative mx-auto grid max-w-content gap-10 px-4 py-14 sm:px-5 md:grid-cols-12 md:py-24">
           <div className="min-w-0 md:col-span-7">
             <p className="text-[11px] uppercase tracking-[0.22em] text-gold">
               Assinatura Ajoia
@@ -83,7 +83,7 @@ export default function AssinePage() {
                 sizes="(max-width: 768px) 100vw, 40vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div className="on-dark absolute bottom-0 left-0 right-0 p-6">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-gold">
                   Belo Horizonte
                 </p>
@@ -169,7 +169,7 @@ export default function AssinePage() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="relative overflow-hidden border border-gold/35 bg-gradient-to-br from-[#1a1610] via-ink-elevated to-black p-6 sm:p-8 md:p-10">
+            <div className="on-dark relative overflow-hidden border border-gold/35 bg-gradient-to-br from-[#1a1610] via-[#14120e] to-black p-6 sm:p-8 md:p-10">
               <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/15 blur-3xl" />
               <div className="pointer-events-none absolute -bottom-20 left-10 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
 

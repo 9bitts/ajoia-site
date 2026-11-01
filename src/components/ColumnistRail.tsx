@@ -8,42 +8,38 @@ export async function ColumnistRail() {
   if (list.length === 0) return null;
 
   return (
-    <section className="border-y border-white/10 bg-gradient-to-b from-ink-elevated/60 to-transparent py-16">
-      <div className="mx-auto max-w-content px-5">
-        <div className="mb-10 flex items-end justify-between gap-4">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.22em] text-mist-dim">
-              Assinaturas
-            </p>
-            <h2 className="mt-1 font-display text-3xl text-white md:text-4xl">
-              Nossos colunistas
-            </h2>
-          </div>
-          <Link href="/colunistas" className="btn-ghost">
+    <section className="border-y border-[var(--line)] bg-[var(--bg-soft)] py-12">
+      <div className="mx-auto max-w-content px-4 sm:px-5">
+        <div className="mb-8 flex items-end justify-between gap-4">
+          <h2 className="border-b-2 border-gold pb-1 font-display text-3xl text-[var(--text)] md:text-4xl">
+            Colunistas
+          </h2>
+          <Link
+            href="/colunistas"
+            className="text-xs font-bold uppercase tracking-[0.14em] text-gold"
+          >
             Todos →
           </Link>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {list.map((columnist) => (
             <Link
               key={columnist.slug}
               href={`/colunistas/${columnist.slug}`}
-              className="group animate-fade-up border border-white/10 bg-black/30 p-6 transition-all duration-300 hover:border-mist/40 hover:bg-white/[0.03]"
+              className="group rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-5 transition-colors hover:border-gold/50"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-mist/30 to-transparent text-lg font-display text-white">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold font-display text-sm text-[var(--text)]">
                 {columnist.name
                   .split(" ")
                   .slice(0, 2)
                   .map((n) => n[0])
                   .join("")}
               </div>
-              <h3 className="font-display text-xl text-white transition-colors group-hover:text-mist">
+              <h3 className="font-sans text-lg font-bold tracking-tight text-[var(--text)] group-hover:text-gold">
                 {columnist.name}
               </h3>
-              <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-mist-dim">
-                {columnist.role}
-              </p>
+              <p className="kicker mt-1">{columnist.role}</p>
               <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-mist-muted">
                 {columnist.bio}
               </p>

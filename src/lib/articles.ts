@@ -122,7 +122,7 @@ export async function getArticlesByAuthor(authorSlug: string) {
 
 export async function getColumnists() {
   const rows = await prisma.user.findMany({
-    where: { role: "COLUMNIST", active: true },
+    where: { role: "COLUMNIST", active: true, approved: true },
     orderBy: [{ featured: "desc" }, { name: "asc" }],
   });
   return rows.map(mapColumnist);
@@ -130,7 +130,7 @@ export async function getColumnists() {
 
 export async function getColumnistBySlug(slug: string) {
   const row = await prisma.user.findFirst({
-    where: { slug, role: "COLUMNIST", active: true },
+    where: { slug, role: "COLUMNIST", active: true, approved: true },
   });
   return row ? mapColumnist(row) : null;
 }
@@ -145,7 +145,7 @@ export async function getPublishedSlugs() {
 
 export async function getColumnistSlugs() {
   const rows = await prisma.user.findMany({
-    where: { role: "COLUMNIST", active: true },
+    where: { role: "COLUMNIST", active: true, approved: true },
     select: { slug: true },
   });
   return rows.map((r) => r.slug);

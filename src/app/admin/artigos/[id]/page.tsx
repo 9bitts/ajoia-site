@@ -12,7 +12,12 @@ export default async function EditArticlePage({ params }: Props) {
   if (!session?.user) return null;
 
   const { id } = await params;
-  const article = await prisma.article.findUnique({ where: { id } });
+  const article = await prisma.article.findUnique({
+    where: { id },
+    include: {
+      author: { select: { name: true, email: true, approved: true } },
+    },
+  });
   if (!article) notFound();
 
   if (
@@ -21,6 +26,11 @@ export default async function EditArticlePage({ params }: Props) {
   ) {
     redirect("/admin");
   }
+
+  const me = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { approved: true },
+  });
 
   return (
     <div>
@@ -33,6 +43,8 @@ export default async function EditArticlePage({ params }: Props) {
           mode="edit"
           articleId={article.id}
           isAdmin={session.user.role === "ADMIN"}
+          accountApproved={session.user.role === "ADMIN" || Boolean(me?.approved)}
+          author={article.author}
           initial={{
             title: article.title,
             dek: article.dek,

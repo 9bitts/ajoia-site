@@ -34,9 +34,9 @@ export default async function ColumnistPage({ params }: Props) {
         ← Todos os colunistas
       </Link>
 
-      <header className="mt-8 grid gap-8 border-b border-white/10 pb-10 md:grid-cols-12">
+      <header className="mt-8 grid gap-8 border-b border-[var(--line)] pb-10 md:grid-cols-12">
         <div className="md:col-span-3">
-          <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-mist/30 via-white/5 to-transparent font-display text-3xl text-white">
+          <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-gold font-display text-3xl text-[var(--text)]">
             {columnist.name
               .split(" ")
               .slice(0, 2)
@@ -45,10 +45,8 @@ export default async function ColumnistPage({ params }: Props) {
           </div>
         </div>
         <div className="md:col-span-9">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-mist-dim">
-            {columnist.role}
-          </p>
-          <h1 className="mt-2 font-display text-4xl text-white md:text-5xl">
+          <p className="kicker">{columnist.role}</p>
+          <h1 className="mt-2 font-display text-4xl text-[var(--text)] md:text-5xl">
             {columnist.name}
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-mist-muted">
@@ -58,7 +56,9 @@ export default async function ColumnistPage({ params }: Props) {
       </header>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl text-white">Publicações</h2>
+        <h2 className="border-b-2 border-gold pb-1 font-display text-2xl text-[var(--text)]">
+          Publicações
+        </h2>
         {posts.length > 0 ? (
           <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((article) => (

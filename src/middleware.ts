@@ -13,7 +13,10 @@ function hasSessionCookie(req: NextRequest) {
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/admin/login")) {
+  if (
+    pathname.startsWith("/admin/login") ||
+    pathname.startsWith("/admin/cadastro")
+  ) {
     return NextResponse.next();
   }
 

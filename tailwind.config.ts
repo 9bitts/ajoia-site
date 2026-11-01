@@ -31,7 +31,7 @@ const config: Config = {
         serif: ["var(--font-serif)", "serif"],
       },
       maxWidth: {
-        content: "1180px",
+        content: "1220px",
       },
     },
   },

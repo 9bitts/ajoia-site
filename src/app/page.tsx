@@ -3,7 +3,6 @@ import { ColumnistRail } from "@/components/ColumnistRail";
 import { HeroFeature } from "@/components/HeroFeature";
 import { Newsletter } from "@/components/Newsletter";
 import { SectionBlock } from "@/components/SectionBlock";
-import { StoryCard } from "@/components/StoryCard";
 import { Ticker } from "@/components/Ticker";
 import {
   getArticlesBySection,
@@ -18,7 +17,7 @@ export default async function HomePage() {
   const featured = await getFeaturedArticles();
   const lead = featured[0];
   const side = featured.slice(1, 4);
-  const latest = await getLatestArticles(6);
+  const latest = await getLatestArticles(12);
   const politica = await getArticlesBySection("politica");
   const cidade = await getArticlesBySection("cidade");
   const opiniao = await getArticlesBySection("opiniao");
@@ -29,22 +28,7 @@ export default async function HomePage() {
       {lead ? (
         <>
           <Ticker />
-          <HeroFeature lead={lead} side={side} />
-
-          <section className="mx-auto max-w-content px-5 py-14">
-            <div className="mb-8 flex items-end justify-between border-b border-white/10 pb-4">
-              <h2 className="font-display text-3xl text-white">Últimas</h2>
-              <Link href="/ultimas" className="btn-ghost">
-                Arquivo →
-              </Link>
-            </div>
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {latest.map((article) => (
-                <StoryCard key={article.slug} article={article} showDek />
-              ))}
-            </div>
-          </section>
-
+          <HeroFeature lead={lead} side={side} latest={latest} />
           <SectionBlock section="politica" articles={politica} />
         </>
       ) : (
@@ -55,18 +39,16 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="mx-auto max-w-content px-5 py-6">
-        <div className="grid gap-8 border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-8 md:grid-cols-12 md:p-12">
+      <section className="border-y border-[var(--line)] bg-[var(--bg-soft)]">
+        <div className="mx-auto grid max-w-content gap-6 px-5 py-12 md:grid-cols-12 md:items-center">
           <div className="md:col-span-4">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-mist-soft">
-              Institucional
-            </p>
-            <h2 className="mt-2 font-display text-3xl text-white">
+            <p className="kicker">Institucional</p>
+            <h2 className="mt-2 font-display text-3xl text-[var(--text)]">
               Por que a {siteConfig.shortName} existe
             </h2>
           </div>
           <div className="md:col-span-8">
-            <p className="font-serif text-lg leading-relaxed text-zinc-300">
+            <p className="font-serif text-lg leading-relaxed text-mist-muted">
               {missao}
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
@@ -76,7 +58,10 @@ export default async function HomePage() {
               >
                 Quem somos
               </Link>
-              <Link href="/diretrizes" className="btn-ghost">
+              <Link
+                href="/diretrizes"
+                className="text-xs font-bold uppercase tracking-[0.14em] text-gold"
+              >
                 Diretrizes →
               </Link>
             </div>

@@ -4,12 +4,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SECTIONS, sectionMeta } from "@/lib/sections";
 
+type ArticleStatusValue = "DRAFT" | "PENDING" | "PUBLISHED";
+
 type ArticleFormValues = {
   title: string;
   dek: string;
   body: string;
   section: string;
-  status: "DRAFT" | "PUBLISHED";
+  status: ArticleStatusValue;
   featured: boolean;
   breaking: boolean;
   imageUrl: string | null;
@@ -20,9 +22,18 @@ type Props = {
   articleId?: string;
   initial: ArticleFormValues;
   isAdmin?: boolean;
+  accountApproved?: boolean;
+  author?: { name: string; email: string; approved: boolean } | null;
 };
 
-export function ArticleForm({ mode, articleId, initial, isAdmin }: Props) {
+export function ArticleForm({
+  mode,
+  articleId,
+  initial,
+  isAdmin,
+  accountApproved = true,
+  author,
+}: Props) {
   const router = useRouter();
   const [form, setForm] = useState(initial);
   const [saving, setSaving] = useState(false);
@@ -47,7 +58,7 @@ export function ArticleForm({ mode, articleId, initial, isAdmin }: Props) {
     }
   }
 
-  async function onSubmit(status: "DRAFT" | "PUBLISHED") {
+  async function onSubmit(status: ArticleStatusValue) {
     setSaving(true);
     setError("");
     setMessage("");
@@ -62,7 +73,14 @@ export function ArticleForm({ mode, articleId, initial, isAdmin }: Props) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Falha ao salvar");
-      setMessage(status === "PUBLISHED" ? "Publicado." : "Rascunho salvo.");
+      setForm((f) => ({ ...f, status }));
+      setMessage(
+        status === "PUBLISHED"
+          ? "Publicado no site."
+          : status === "PENDING"
+            ? "Enviado para avaliação. A matéria só entra no ar quando a administração publicar."
+            : "Rascunho salvo."
+      );
       if (mode === "create") {
         router.push(`/admin/artigos/${json.article.id}`);
         router.refresh();
@@ -85,8 +103,55 @@ export function ArticleForm({ mode, articleId, initial, isAdmin }: Props) {
     }
   }
 
+  const statusLabel =
+    form.status === "PUBLISHED"
+      ? "Publicado"
+      : form.status === "PENDING"
+        ? "Aguardando avaliação"
+        : "Rascunho";
+
   return (
     <div className="space-y-6">
+      <p className="text-sm text-mist-muted">
+        Situação:{" "}
+        <span
+          className={
+            form.status === "PUBLISHED"
+              ? "text-emerald-300"
+              : form.status === "PENDING"
+                ? "text-amber-200"
+                : "text-mist"
+          }
+        >
+          {statusLabel}
+        </span>
+        {isAdmin && author && (
+          <>
+            {" "}
+            · Autor: {author.name} ({author.email})
+            {author.approved ? "" : " — conta ainda não liberada"}
+          </>
+        )}
+      </p>
+      {!isAdmin && !accountApproved && (
+        <p className="border border-amber-200/30 bg-amber-200/10 px-4 py-3 text-sm text-amber-100">
+          Sua conta ainda não foi liberada. Você pode escrever e salvar
+          rascunhos. O envio para publicação fica disponível depois que a
+          administração autorizar seu acesso.
+        </p>
+      )}
+      {!isAdmin && accountApproved && (
+        <p className="text-sm text-mist-muted">
+          Enviar para avaliação coloca o texto na fila do administrador. Ele
+          lê e só então clica em publicar.
+        </p>
+      )}
+      {!isAdmin && form.status === "PUBLISHED" && (
+        <p className="text-sm text-amber-100">
+          Esta matéria está no ar. Salvar rascunho ou reenviar para avaliação
+          tira o texto do site até a administração publicar de novo.
+        </p>
+      )}
       <div className="grid gap-5">
         <label className="block">
           <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
@@ -224,15 +289,26 @@ export function ArticleForm({ mode, articleId, initial, isAdmin }: Props) {
         >
           Salvar rascunho
         </button>
-        <button
-          type="button"
-          disabled={saving}
-          onClick={() => void onSubmit("PUBLISHED")}
-          className="btn-primary text-xs uppercase tracking-[0.14em] disabled:opacity-50"
-        >
-          Publicar
-        </button>
-        {mode === "edit" && (
+        {isAdmin ? (
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => void onSubmit("PUBLISHED")}
+            className="btn-primary text-xs uppercase tracking-[0.14em] disabled:opacity-50"
+          >
+            Publicar
+          </button>
+        ) : (
+          <button
+            type="button"
+            disabled={saving || !accountApproved}
+            onClick={() => void onSubmit("PENDING")}
+            className="btn-primary text-xs uppercase tracking-[0.14em] disabled:opacity-50"
+          >
+            Enviar para avaliação
+          </button>
+        )}
+        {mode === "edit" && (isAdmin || form.status !== "PUBLISHED") && (
           <button
             type="button"
             onClick={() => void onDelete()}

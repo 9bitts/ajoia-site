@@ -370,6 +370,7 @@ async function main() {
       name: "Administrador Ajoia",
       role: Role.ADMIN,
       active: true,
+      approved: true,
     },
     create: {
       email: adminEmail,
@@ -380,6 +381,7 @@ async function main() {
       roleLabel: "Administração",
       bio: "Conta administrativa do portal Ajoia Brasil.",
       active: true,
+      approved: true,
     },
   });
 
@@ -395,6 +397,7 @@ async function main() {
         featured: c.featured,
         role: Role.COLUMNIST,
         active: true,
+        approved: true,
         passwordHash: colHash,
       },
       create: {
@@ -407,6 +410,7 @@ async function main() {
         featured: c.featured,
         role: Role.COLUMNIST,
         active: true,
+        approved: true,
       },
     });
   }

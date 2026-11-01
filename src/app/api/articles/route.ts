@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { isSectionSlug } from "@/lib/sections";
 import { uniqueSlug } from "@/lib/slug";
+import { resolveArticleStatus } from "@/lib/editorial";
 import { z } from "zod";
 
 const articleSchema = z.object({
@@ -10,7 +11,7 @@ const articleSchema = z.object({
   dek: z.string().default(""),
   body: z.string().min(10),
   section: z.string(),
-  status: z.enum(["DRAFT", "PUBLISHED"]),
+  status: z.enum(["DRAFT", "PENDING", "PUBLISHED"]),
   featured: z.boolean().optional(),
   breaking: z.boolean().optional(),
   imageUrl: z.string().nullable().optional(),
@@ -30,7 +31,9 @@ export async function GET() {
 
   const articles = await prisma.article.findMany({
     where,
-    include: { author: { select: { name: true, slug: true } } },
+    include: {
+      author: { select: { name: true, email: true, slug: true, approved: true } },
+    },
     orderBy: { updatedAt: "desc" },
   });
 
@@ -57,6 +60,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Seção inválida" }, { status: 400 });
   }
 
+  const resolved = await resolveArticleStatus({
+    role: session.user.role,
+    userId: session.user.id,
+    requested: data.status,
+  });
+  if ("error" in resolved) {
+    return NextResponse.json(
+      { error: resolved.error },
+      { status: resolved.statusCode }
+    );
+  }
+
   const slug = await uniqueSlug(data.slug || data.title, async (s) => {
     const existing = await prisma.article.findUnique({ where: { slug: s } });
     return Boolean(existing);
@@ -68,13 +83,13 @@ export async function POST(req: Request) {
       dek: data.dek,
       body: data.body,
       section: data.section,
-      status: data.status,
+      status: resolved.status,
       featured: session.user.role === "ADMIN" ? Boolean(data.featured) : false,
       breaking: session.user.role === "ADMIN" ? Boolean(data.breaking) : false,
       imageUrl: data.imageUrl || null,
       slug,
       authorId: session.user.id,
-      publishedAt: data.status === "PUBLISHED" ? new Date() : null,
+      publishedAt: resolved.status === "PUBLISHED" ? new Date() : null,
     },
   });
 

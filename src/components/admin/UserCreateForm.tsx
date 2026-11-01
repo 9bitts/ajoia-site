@@ -41,7 +41,11 @@ export function UserCreateForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4 border border-white/10 p-6">
-      <h2 className="font-display text-2xl text-white">Novo colunista</h2>
+      <h2 className="font-display text-2xl text-white">Novo jornalista</h2>
+      <p className="text-sm text-mist-muted">
+        Conta criada por aqui já nasce liberada. Quem se cadastra sozinho
+        precisa da sua autorização.
+      </p>
       <input
         name="name"
         required

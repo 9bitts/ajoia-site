@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { articleStatusLabel } from "@/lib/editorial";
 import { formatDate } from "@/lib/format";
 import { sectionMeta, isSectionSlug } from "@/lib/sections";
 
@@ -15,9 +16,24 @@ export default async function AdminDashboardPage() {
 
   const articles = await prisma.article.findMany({
     where,
-    include: { author: { select: { name: true } } },
+    include: { author: { select: { name: true, email: true, approved: true } } },
     orderBy: { updatedAt: "desc" },
   });
+
+  const rank = { PENDING: 0, DRAFT: 1, PUBLISHED: 2 } as const;
+  articles.sort((a, b) => {
+    const byStatus = rank[a.status] - rank[b.status];
+    if (byStatus !== 0) return byStatus;
+    return b.updatedAt.getTime() - a.updatedAt.getTime();
+  });
+
+  const pendingArticles = articles.filter((article) => article.status === "PENDING");
+  const pendingAccounts =
+    session.user.role === "ADMIN"
+      ? await prisma.user.count({
+          where: { role: "COLUMNIST", approved: false },
+        })
+      : 0;
 
   return (
     <div>
@@ -30,8 +46,8 @@ export default async function AdminDashboardPage() {
           <p className="mt-2 text-sm text-mist-muted">
             Olá, {session.user.name}.{" "}
             {session.user.role === "ADMIN"
-              ? "Você vê todos os textos."
-              : "Você gerencia os seus textos."}
+              ? "Avalie as matérias enviadas e publique quando estiverem prontas."
+              : "Você escreve os seus textos. A publicação fica com a administração."}
           </p>
         </div>
         <Link
@@ -41,6 +57,37 @@ export default async function AdminDashboardPage() {
           Novo artigo
         </Link>
       </div>
+
+      {session.user.role === "ADMIN" &&
+        (pendingArticles.length > 0 || pendingAccounts > 0) && (
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <div className="border border-amber-200/30 bg-amber-200/10 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-amber-100">
+                Matérias para avaliar
+              </p>
+              <p className="mt-2 font-display text-3xl text-white">
+                {pendingArticles.length}
+              </p>
+              <p className="mt-1 text-sm text-mist-muted">
+                Aparecem no topo da lista. Abra, leia e clique em publicar.
+              </p>
+            </div>
+            <Link
+              href="/admin/usuarios"
+              className="border border-white/10 px-4 py-4 hover:border-mist/40"
+            >
+              <p className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
+                Contas para liberar
+              </p>
+              <p className="mt-2 font-display text-3xl text-white">
+                {pendingAccounts}
+              </p>
+              <p className="mt-1 text-sm text-mist-muted">
+                Jornalistas que criaram conta e ainda não podem enviar.
+              </p>
+            </Link>
+          </div>
+        )}
 
       <div className="mt-10 overflow-x-auto border border-white/10">
         <table className="min-w-full text-left text-sm">
@@ -59,7 +106,7 @@ export default async function AdminDashboardPage() {
             {articles.length === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={session.user.role === "ADMIN" ? 5 : 4}
                   className="px-4 py-8 text-center text-mist-muted"
                 >
                   Nenhum artigo ainda. Crie o primeiro.
@@ -89,17 +136,21 @@ export default async function AdminDashboardPage() {
                       className={
                         article.status === "PUBLISHED"
                           ? "text-emerald-300"
-                          : "text-amber-200/80"
+                          : article.status === "PENDING"
+                            ? "text-amber-200"
+                            : "text-mist-muted"
                       }
                     >
-                      {article.status === "PUBLISHED"
-                        ? "Publicado"
-                        : "Rascunho"}
+                      {articleStatusLabel(article.status)}
                     </span>
                   </td>
                   {session.user.role === "ADMIN" && (
                     <td className="px-4 py-3 text-mist-muted">
-                      {article.author.name}
+                      <span className="block text-white">{article.author.name}</span>
+                      <span className="block text-xs text-mist-dim">
+                        {article.author.email}
+                        {article.author.approved ? "" : " · conta não liberada"}
+                      </span>
                     </td>
                   )}
                   <td className="px-4 py-3 text-mist-dim">

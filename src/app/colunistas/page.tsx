@@ -16,10 +16,8 @@ export default async function ColumnistsPage() {
   return (
     <div className="mx-auto max-w-content px-5 py-12 md:py-16">
       <header className="max-w-2xl">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-mist-dim">
-          Redação
-        </p>
-        <h1 className="mt-2 font-display text-4xl text-white md:text-5xl">
+        <p className="kicker">Redação</p>
+        <h1 className="mt-2 font-display text-4xl text-[var(--text)] md:text-5xl">
           Colunistas
         </h1>
         <p className="mt-4 text-base leading-relaxed text-mist-muted">
@@ -33,16 +31,16 @@ export default async function ColumnistsPage() {
           <Link
             key={columnist.slug}
             href={`/colunistas/${columnist.slug}`}
-            className="group border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-7 transition-all hover:border-mist/35"
+            className="group rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-7 transition-colors hover:border-gold/50"
           >
-            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-mist/25 to-transparent font-display text-lg text-white">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold font-display text-lg text-[var(--text)]">
               {columnist.name
                 .split(" ")
                 .slice(0, 2)
                 .map((n) => n[0])
                 .join("")}
             </div>
-            <h2 className="font-display text-2xl text-white transition-colors group-hover:text-mist">
+            <h2 className="font-sans text-2xl font-bold tracking-tight text-[var(--text)] transition-colors group-hover:text-gold">
               {columnist.name}
             </h2>
             <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-mist-dim">

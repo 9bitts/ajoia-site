@@ -13,27 +13,37 @@ export const dynamic = "force-dynamic";
 export default async function UltimasPage() {
   const list = await getLatestArticles(24);
 
+  const [lead, ...rest] = list;
+
   return (
-    <div className="mx-auto max-w-content px-5 py-12 md:py-16">
-      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-6">
+    <div className="mx-auto max-w-content px-4 py-10 sm:px-5 md:py-14">
+      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--line)] pb-6">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.22em] text-mist-dim">
-            Arquivo
-          </p>
-          <h1 className="mt-2 font-display text-4xl text-white md:text-5xl">
+          <p className="kicker">Arquivo</p>
+          <h1 className="mt-2 font-display text-4xl text-[var(--text)] md:text-5xl">
             Últimas
           </h1>
         </div>
-        <Link href="/" className="btn-ghost">
+        <Link
+          href="/"
+          className="text-xs font-bold uppercase tracking-[0.14em] text-gold"
+        >
           Voltar à capa →
         </Link>
       </header>
 
-      <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((article) => (
-          <StoryCard key={article.slug} article={article} showDek />
-        ))}
-      </div>
+      {lead && (
+        <div className="mt-8 grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <StoryCard article={lead} size="lg" showDek />
+          </div>
+          <div className="divide-y divide-[var(--line)] lg:col-span-7">
+            {rest.map((article) => (
+              <StoryCard key={article.slug} article={article} variant="row" />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

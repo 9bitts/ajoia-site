@@ -1,9 +1,15 @@
 import { auth } from "@/auth";
 import { ArticleForm } from "@/components/admin/ArticleForm";
+import { prisma } from "@/lib/db";
 
 export default async function NewArticlePage() {
   const session = await auth();
   if (!session?.user) return null;
+
+  const me = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { approved: true },
+  });
 
   return (
     <div>
@@ -15,6 +21,7 @@ export default async function NewArticlePage() {
         <ArticleForm
           mode="create"
           isAdmin={session.user.role === "ADMIN"}
+          accountApproved={session.user.role === "ADMIN" || Boolean(me?.approved)}
           initial={{
             title: "",
             dek: "",

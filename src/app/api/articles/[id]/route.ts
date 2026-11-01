@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { isSectionSlug } from "@/lib/sections";
 import { slugify } from "@/lib/slug";
+import { resolveArticleStatus } from "@/lib/editorial";
 import { z } from "zod";
 
 type Params = { params: Promise<{ id: string }> };
@@ -12,7 +13,7 @@ const articleSchema = z.object({
   dek: z.string().default(""),
   body: z.string().min(10),
   section: z.string(),
-  status: z.enum(["DRAFT", "PUBLISHED"]),
+  status: z.enum(["DRAFT", "PENDING", "PUBLISHED"]),
   featured: z.boolean().optional(),
   breaking: z.boolean().optional(),
   imageUrl: z.string().nullable().optional(),
@@ -72,6 +73,18 @@ export async function PUT(req: Request, { params }: Params) {
     return NextResponse.json({ error: "Seção inválida" }, { status: 400 });
   }
 
+  const resolved = await resolveArticleStatus({
+    role: session.user.role,
+    userId: session.user.id,
+    requested: data.status,
+  });
+  if ("error" in resolved) {
+    return NextResponse.json(
+      { error: resolved.error },
+      { status: resolved.statusCode }
+    );
+  }
+
   let slug = existing.slug;
   if (data.slug && data.slug !== existing.slug) {
     const candidate = slugify(data.slug);
@@ -85,7 +98,7 @@ export async function PUT(req: Request, { params }: Params) {
   }
 
   const becomingPublished =
-    data.status === "PUBLISHED" && existing.status !== "PUBLISHED";
+    resolved.status === "PUBLISHED" && existing.status !== "PUBLISHED";
 
   const article = await prisma.article.update({
     where: { id },
@@ -94,7 +107,7 @@ export async function PUT(req: Request, { params }: Params) {
       dek: data.dek,
       body: data.body,
       section: data.section,
-      status: data.status,
+      status: resolved.status,
       slug,
       imageUrl: data.imageUrl ?? null,
       featured:
@@ -107,9 +120,9 @@ export async function PUT(req: Request, { params }: Params) {
           : existing.breaking,
       publishedAt: becomingPublished
         ? new Date()
-        : data.status === "DRAFT"
-          ? null
-          : existing.publishedAt,
+        : resolved.status === "PUBLISHED"
+          ? existing.publishedAt
+          : null,
     },
   });
 
@@ -129,6 +142,15 @@ export async function DELETE(_req: Request, { params }: Params) {
   }
   if (!(await canEdit(existing.authorId, session.user.id, session.user.role))) {
     return NextResponse.json({ error: "Sem permissão" }, { status: 403 });
+  }
+  if (
+    session.user.role !== "ADMIN" &&
+    existing.status === "PUBLISHED"
+  ) {
+    return NextResponse.json(
+      { error: "Matéria publicada só pode ser retirada pela administração." },
+      { status: 403 }
+    );
   }
 
   await prisma.article.delete({ where: { id } });

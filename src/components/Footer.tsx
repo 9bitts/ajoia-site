@@ -1,28 +1,24 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
-import {
-  institutionalLinks,
-  navSections,
-  siteConfig,
-} from "@/data/site";
+import { institutionalLinks, navSections, siteConfig } from "@/data/site";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-white/10 bg-gradient-to-b from-ink-elevated to-ink">
+    <footer className="on-dark border-t border-[#e8c56b]/30 bg-[#111113] text-white">
       <div className="mx-auto grid max-w-content gap-12 px-5 py-16 md:grid-cols-12">
         <div className="md:col-span-5">
           <BrandLogo href="/" size="lg" />
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-mist-muted">
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-white/70">
             Compromisso com os fatos, ética profissional e liberdade de
             expressão.
           </p>
-          <p className="mt-6 text-xs uppercase tracking-[0.18em] text-mist-dim">
+          <p className="mt-6 text-xs uppercase tracking-[0.18em] text-[#e8c56b]">
             Sede · {siteConfig.city}
           </p>
         </div>
 
         <div className="md:col-span-3">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-mist-dim">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/45">
             Seções
           </p>
           <ul className="mt-4 space-y-2">
@@ -30,7 +26,7 @@ export function Footer() {
               <li key={section.slug}>
                 <Link
                   href={`/secao/${section.slug}`}
-                  className="text-sm text-mist-muted transition-colors hover:text-white"
+                  className="text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
                 >
                   {section.label}
                 </Link>
@@ -40,7 +36,7 @@ export function Footer() {
         </div>
 
         <div className="md:col-span-4">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-mist-dim">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/45">
             Institucional
           </p>
           <ul className="mt-4 space-y-2">
@@ -48,7 +44,7 @@ export function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-mist-muted transition-colors hover:text-white"
+                  className="text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
                 >
                   {link.label}
                 </Link>
@@ -57,7 +53,7 @@ export function Footer() {
             <li>
               <Link
                 href="/colunistas"
-                className="text-sm text-mist-muted transition-colors hover:text-white"
+                className="text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
               >
                 Colunistas
               </Link>
@@ -65,25 +61,17 @@ export function Footer() {
             <li>
               <Link
                 href="/assine"
-                className="text-sm text-gold transition-colors hover:text-white"
+                className="text-sm font-semibold text-[#e8c56b]"
               >
                 Assine
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/admin"
-                className="text-sm text-mist-muted transition-colors hover:text-white"
-              >
-                Admin
               </Link>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-white/5">
-        <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-6 text-xs text-mist-dim md:flex-row md:items-center md:justify-between">
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-6 text-xs text-white/45 md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. Todos os direitos
             reservados.

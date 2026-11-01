@@ -8,22 +8,67 @@ type Props = {
   article: PublicArticle;
   size?: "sm" | "md" | "lg";
   showDek?: boolean;
+  variant?: "media" | "row" | "line";
 };
 
-export function StoryCard({ article, size = "md", showDek = false }: Props) {
+export function StoryCard({
+  article,
+  size = "md",
+  showDek = false,
+  variant = "media",
+}: Props) {
   const section = sectionMeta[article.section];
   const image = article.image;
+
+  if (variant === "line") {
+    return (
+      <Link
+        href={`/artigo/${article.slug}`}
+        className="group block py-3.5"
+      >
+        <p className="kicker">{section.label}</p>
+        <h3 className="mt-1 font-sans text-[15px] font-semibold leading-snug tracking-tight text-[var(--text)] transition-colors group-hover:text-gold">
+          {article.title}
+        </h3>
+      </Link>
+    );
+  }
+
+  if (variant === "row") {
+    return (
+      <article>
+        <Link href={`/artigo/${article.slug}`} className="group flex gap-4 py-4">
+          <div className="relative h-[78px] w-[112px] shrink-0 overflow-hidden rounded-md bg-[var(--bg-soft)]">
+            {image && (
+              <Image
+                src={image}
+                alt=""
+                fill
+                sizes="112px"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="kicker">{section.label}</p>
+            <h3 className="mt-1 font-sans text-base font-semibold leading-snug tracking-tight text-[var(--text)] transition-colors group-hover:text-gold">
+              {article.title}
+            </h3>
+            <p className="mt-1 text-xs text-mist-dim">
+              {article.authorName} · {formatDate(article.date)}
+            </p>
+          </div>
+        </Link>
+      </article>
+    );
+  }
 
   return (
     <article className="group">
       <Link href={`/artigo/${article.slug}`} className="block">
         <div
-          className={`story-media relative mb-4 overflow-hidden bg-ink-soft ${
-            size === "lg"
-              ? "aspect-[16/10]"
-              : size === "sm"
-                ? "aspect-[16/11]"
-                : "aspect-[16/10]"
+          className={`relative overflow-hidden rounded-xl bg-[var(--bg-soft)] ${
+            size === "lg" ? "aspect-[16/10]" : "aspect-[16/10]"
           }`}
         >
           {image && (
@@ -33,38 +78,30 @@ export function StoryCard({ article, size = "md", showDek = false }: Props) {
               fill
               sizes={
                 size === "lg"
-                  ? "(max-width: 1024px) 100vw, 60vw"
+                  ? "(max-width: 1024px) 100vw, 50vw"
                   : "(max-width: 768px) 100vw, 33vw"
               }
               className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             />
           )}
-          <div className="on-media absolute bottom-0 left-0 right-0 z-10 p-4">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">
-              {section.label}
-            </span>
-          </div>
         </div>
-        <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-mist-dim">
-          <span className="min-w-0 truncate">{article.authorName}</span>
-          <span className="shrink-0 text-mist-dim/50">·</span>
-          <time className="shrink-0" dateTime={article.date}>
-            {formatDate(article.date)}
-          </time>
-        </div>
+        <p className="kicker mt-3">{section.label}</p>
         <h3
-          className={`mt-2 font-display leading-tight text-white transition-colors group-hover:text-mist ${
+          className={`mt-1 font-sans font-bold leading-snug tracking-tight text-[var(--text)] transition-colors group-hover:text-gold ${
             size === "lg"
-              ? "text-2xl md:text-3xl"
+              ? "text-2xl md:text-[1.7rem]"
               : size === "sm"
                 ? "text-lg"
-                : "text-xl md:text-[1.35rem]"
+                : "text-xl"
           }`}
         >
           {article.title}
         </h3>
+        <p className="mt-2 text-xs text-mist-dim">
+          {article.authorName} · {formatDate(article.date)}
+        </p>
         {showDek && (
-          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-mist-muted">
+          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-mist-muted">
             {article.dek}
           </p>
         )}

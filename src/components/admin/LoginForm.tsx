@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -65,6 +66,12 @@ export function LoginForm() {
       >
         {loading ? "Entrando…" : "Entrar"}
       </button>
+      <p className="text-center text-sm text-mist-muted">
+        Jornalista novo?{" "}
+        <Link href="/admin/cadastro" className="text-mist hover:text-white">
+          Criar conta
+        </Link>
+      </p>
     </form>
   );
 }

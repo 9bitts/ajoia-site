@@ -14,6 +14,7 @@ enum Role {
 
 enum ArticleStatus {
   DRAFT
+  PENDING
   PUBLISHED
 }
 
@@ -28,6 +29,7 @@ model User {
   roleLabel    String    @default("Colunista")
   featured     Boolean   @default(false)
   active       Boolean   @default(true)
+  approved     Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   articles     Article[]

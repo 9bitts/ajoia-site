@@ -17,7 +17,7 @@ export function ThemeToggle({ className = "", compact = false }: Props) {
     setMounted(true);
   }, []);
 
-  const isDark = !mounted || theme === "dark";
+  const isDark = mounted && theme === "dark";
   const label = isDark ? "Tema claro" : "Tema escuro";
 
   return (

@@ -37,37 +37,31 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <article>
-      <header className="mx-auto max-w-content px-4 pt-8 sm:px-5 sm:pt-10 md:pt-14">
-        <div className="max-w-3xl">
-          <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.18em] text-mist-dim">
-            <Link
-              href={`/secao/${article.section}`}
-              className="text-mist-soft transition-colors hover:text-white"
-            >
-              {section.label}
-            </Link>
-            <span>·</span>
-            <time dateTime={article.date}>{formatDateLong(article.date)}</time>
-          </div>
-          <h1 className="mt-4 font-display text-[1.75rem] leading-[1.1] text-white sm:text-3xl md:text-5xl">
-            {article.title}
-          </h1>
-          <p className="mt-5 text-base leading-relaxed text-mist-muted sm:text-lg md:text-xl">
-            {article.dek}
-          </p>
-          <p className="mt-6 text-sm text-mist-dim">
-            Por{" "}
-            <Link
-              href={`/colunistas/${article.authorSlug}`}
-              className="text-mist transition-colors hover:text-white"
-            >
-              {article.authorName}
-            </Link>
-          </p>
+      <header className="mx-auto max-w-3xl px-4 pt-8 sm:px-5 sm:pt-12">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-mist-dim">
+          <Link href={`/secao/${article.section}`} className="kicker">
+            {section.label}
+          </Link>
+          <time dateTime={article.date}>{formatDateLong(article.date)}</time>
         </div>
+        <h1 className="mt-3 font-display text-[1.85rem] leading-[1.08] text-[var(--text)] sm:text-4xl md:text-5xl">
+          {article.title}
+        </h1>
+        <p className="mt-5 font-serif text-lg leading-relaxed text-mist-muted md:text-xl">
+          {article.dek}
+        </p>
+        <p className="mt-6 border-t border-[var(--line)] pt-4 text-sm text-mist-dim">
+          Por{" "}
+          <Link
+            href={`/colunistas/${article.authorSlug}`}
+            className="font-semibold text-[var(--text)] hover:text-gold"
+          >
+            {article.authorName}
+          </Link>
+        </p>
       </header>
 
-      <div className="relative mx-auto mt-8 min-h-[220px] w-full max-w-content overflow-hidden bg-ink-soft sm:mt-10 sm:min-h-[280px] md:min-h-[420px]">
+      <div className="relative mx-auto mt-8 aspect-[16/8] w-full max-w-content overflow-hidden rounded-2xl bg-[var(--bg-soft)] sm:mt-10">
         {image && (
           <Image
             src={image}
@@ -78,7 +72,6 @@ export default async function ArticlePage({ params }: Props) {
             className="object-cover"
           />
         )}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 
       <div className="mx-auto grid max-w-content gap-12 px-4 py-10 sm:px-5 sm:py-12 lg:grid-cols-12">
@@ -86,7 +79,7 @@ export default async function ArticlePage({ params }: Props) {
           {article.body.map((paragraph) => (
             <p key={paragraph.slice(0, 32)}>{paragraph}</p>
           ))}
-          <div className="mt-10 border-t border-white/10 pt-6 text-sm text-mist-dim">
+          <div className="mt-10 border-t border-[var(--line)] pt-6 text-sm text-mist-dim">
             <p>
               Aviso: artigos e opiniões publicados são de inteira
               responsabilidade e autoria dos colunistas.
@@ -95,21 +88,19 @@ export default async function ArticlePage({ params }: Props) {
         </div>
 
         <aside className="min-w-0 lg:col-span-4">
-          <div className="sticky top-28 border border-white/10 bg-ink-elevated/50 p-5 sm:p-6">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-mist-dim">
+          <div className="sticky top-28 rounded-2xl bg-[var(--bg-soft)] p-5 sm:p-6">
+            <p className="font-sans text-lg font-bold tracking-tight text-[var(--text)]">
               Continue lendo
             </p>
-            <div className="mt-5 space-y-6">
-              {related.slice(0, 3).map((item) => (
+            <div className="mt-2 divide-y divide-[var(--line)]">
+              {related.slice(0, 4).map((item) => (
                 <Link
                   key={item.slug}
                   href={`/artigo/${item.slug}`}
-                  className="group block border-b border-white/5 pb-5 last:border-0"
+                  className="group block py-3.5"
                 >
-                  <p className="text-[10px] uppercase tracking-[0.16em] text-mist-dim">
-                    {sectionMeta[item.section].label}
-                  </p>
-                  <h3 className="mt-2 font-display text-lg leading-snug text-white transition-colors group-hover:text-mist">
+                  <p className="kicker">{sectionMeta[item.section].label}</p>
+                  <h3 className="mt-1 font-sans text-[15px] font-semibold leading-snug text-[var(--text)] group-hover:text-gold">
                     {item.title}
                   </h3>
                 </Link>
@@ -120,7 +111,9 @@ export default async function ArticlePage({ params }: Props) {
       </div>
 
       <section className="mx-auto max-w-content px-4 pb-16 sm:px-5">
-        <h2 className="mb-8 font-display text-2xl text-white">Mais da Ajoia</h2>
+        <h2 className="mb-8 border-b-2 border-gold pb-1 font-display text-2xl text-[var(--text)]">
+          Mais da Ajoia
+        </h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {related.slice(0, 3).map((item) => (
             <StoryCard key={item.slug} article={item} />

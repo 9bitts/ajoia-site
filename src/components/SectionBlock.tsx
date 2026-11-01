@@ -15,28 +15,26 @@ export function SectionBlock({ section, articles }: Props) {
   const [lead, ...rest] = articles;
 
   return (
-    <section className="mx-auto max-w-content px-5 py-14">
-      <div className="mb-8 flex items-end justify-between gap-4 border-b border-white/10 pb-4">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.22em] text-mist-dim">
-            Seção
-          </p>
-          <h2 className="mt-1 font-display text-3xl text-white md:text-4xl">
-            {meta.label}
-          </h2>
-        </div>
-        <Link href={`/secao/${section}`} className="btn-ghost shrink-0">
+    <section className="mx-auto max-w-content px-4 py-10 sm:px-5">
+      <div className="mb-6 flex items-end justify-between gap-4 border-b border-[var(--line)] pb-3">
+        <h2 className="border-b-2 border-gold pb-1 font-display text-3xl text-[var(--text)] md:text-4xl">
+          {meta.label}
+        </h2>
+        <Link
+          href={`/secao/${section}`}
+          className="shrink-0 text-xs font-bold uppercase tracking-[0.14em] text-gold"
+        >
           Ver seção →
         </Link>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-12">
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-5">
           <StoryCard article={lead} size="lg" showDek />
         </div>
-        <div className="grid gap-8 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
-          {rest.slice(0, 3).map((article) => (
-            <StoryCard key={article.slug} article={article} size="sm" />
+        <div className="divide-y divide-[var(--line)] lg:col-span-7">
+          {rest.slice(0, 4).map((article) => (
+            <StoryCard key={article.slug} article={article} variant="row" />
           ))}
         </div>
       </div>
