@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Mídia Kit",
   description: "Publicidade e parcerias no portal Ajoia Brasil.",
-};
+  path: "/midia-kit",
+});
 
 export default function MidiaKitPage() {
   return (

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contrato de Parceria — Info8 × Ajoia Brasil</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+    }
+
+    :root {
+      --teal: #216a86;
+      --teal-dark: #176a88;
+      --teal-deep: #1a6e8c;
+      --teal-light: #3eb8d4;
+      --orange: #e05930;
+      --orange-soft: #f07a4a;
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #dbe7ee;
+      --bg-soft: #f4fafc;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 10.2pt;
+      line-height: 1.55;
+      background: var(--white);
+    }
+
+    .cover {
+      page-break-after: always;
+      min-height: 250mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8mm 4mm;
+      position: relative;
+    }
+
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .logo {
+      height: 48px;
+      width: auto;
+    }
+
+    .badge {
+      background: linear-gradient(135deg, var(--teal-deep), var(--teal-light));
+      color: white;
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border-radius: 999px;
+    }
+
+    .cover-hero {
+      margin-top: 28mm;
+      text-align: left;
+    }
+
+    .eyebrow {
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 10pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .cover h1 {
+      font-size: 26pt;
+      line-height: 1.15;
+      margin: 0 0 14px;
+      color: var(--teal-deep);
+      max-width: 150mm;
+    }
+
+    .cover-sub {
+      font-size: 12pt;
+      color: var(--muted);
+      max-width: 145mm;
+      margin: 0 0 22px;
+    }
+
+    .parties-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .party {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: var(--bg-soft);
+    }
+
+    .party strong {
+      display: block;
+      color: var(--teal-deep);
+      font-size: 9pt;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .party span {
+      display: block;
+      font-size: 10pt;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .party small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 8.5pt;
+    }
+
+    .accent-bar {
+      height: 5px;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--teal-deep), var(--teal-light) 45%, var(--orange));
+      margin: 22px 0 10px;
+    }
+
+    .cover-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 9pt;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(33,106,134,0.08), rgba(224,89,48,0.08));
+      border-left: 4px solid var(--orange);
+      border-radius: 0 12px 12px 0;
+      padding: 12px 14px;
+      margin: 14px 0 18px;
+    }
+
+    .highlight-box strong {
+      color: var(--teal-deep);
+    }
+
+    h2.clause {
+      color: var(--teal-deep);
+      font-size: 11.5pt;
+      margin: 18px 0 8px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid var(--line);
+      page-break-after: avoid;
+    }
+
+    p { margin: 0 0 8px; text-align: justify; }
+
+    ol.alpha {
+      margin: 6px 0 10px 18px;
+      padding: 0;
+    }
+
+    ol.alpha li { margin-bottom: 4px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      font-size: 9.5pt;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--teal-deep);
+      color: white;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) td { background: var(--bg-soft); }
+
+    .formula {
+      background: var(--bg-soft);
+      border: 1px dashed var(--teal-light);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin: 8px 0 12px;
+      font-weight: 700;
+      color: var(--teal-deep);
+      text-align: center;
+    }
+
+    .sign-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 28px;
+      page-break-inside: avoid;
+    }
+
+    .sign-box {
+      border-top: 1.5px solid var(--ink);
+      padding-top: 10px;
+      min-height: 42mm;
+    }
+
+    .sign-box .entity {
+      font-weight: 700;
+      color: var(--teal-deep);
+      font-size: 9.5pt;
+      margin-bottom: 4px;
+    }
+
+    .sign-box .meta {
+      color: var(--muted);
+      font-size: 8.5pt;
+      line-height: 1.4;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 8.5pt;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .annex {
+      page-break-before: always;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 0;
+    }
+
+    .checklist li {
+      padding: 6px 0 6px 28px;
+      position: relative;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .checklist li::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid var(--teal);
+      border-radius: 3px;
+      position: absolute;
+      left: 0;
+      top: 9px;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-bar img { height: 32px; }
+
+    .header-bar .doc-label {
+      font-size: 8pt;
+      color: var(--muted);
+      text-align: right;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .small { font-size: 9pt; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <section class="cover">
+    <div class="cover-top">
+      <img class="logo" src="info8-logo.png" alt="Info8" />
+      <div class="badge">Documento contratual</div>
+    </div>
+
+    <div class="cover-hero">
+      <div class="eyebrow">Info8 × Ajoia Brasil</div>
+      <h1>Contrato de Parceria Comercial e Prestação de Serviços Digitais</h1>
+      <p class="cover-sub">Portal Ajoia Brasil — evolução tecnológica, distribuição em redes/YouTube, curadoria RSS e monetização digital, sem taxa de construção, com participação na receita.</p>
+
+      <div class="highlight-box">
+        <strong>Modelo comercial:</strong> 50% / 50% sobre a Receita Comercial Digital Líquida Rateável
+        (após comissão do captador do patrocínio, quando houver).
+      </div>
+
+      <div class="parties-card">
+        <div class="party">
+          <strong>Parceira técnica</strong>
+          <span>Info8 Desenvolvimento de Sistemas Ltda.</span>
+          <small>CNPJ 20.251.527/0001-04 · Belo Horizonte/MG</small>
+        </div>
+        <div class="party">
+          <strong>Parceira contratante</strong>
+          <span>Ajoia Brasil — Associação Brasileira de Jornalistas Independentes e Afiliados</span>
+          <small>CNPJ 64.777.514/0001-30 · Belo Horizonte/MG</small>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="accent-bar"></div>
+      <div class="cover-meta">
+        <div>
+          <div><strong>Portal:</strong> ajoiabrasil.com.br</div>
+          <div><strong>Vigência:</strong> 24 meses (renovação automática)</div>
+        </div>
+        <div style="text-align:right">
+          <div><strong>Contato Info8:</strong> concierge@doctor8.com.br</div>
+          <div><strong>Foro:</strong> Belo Horizonte/MG</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORPO -->
+  <div class="header-bar">
+    <img src="info8-logo.png" alt="Info8" />
+    <div class="doc-label">Contrato de parceria · Info8 × Ajoia</div>
+  </div>
+
+  <p>Pelo presente instrumento particular, de um lado:</p>
+
+  <p><strong>INFO8 DESENVOLVIMENTO DE SISTEMAS LTDA.</strong>, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob o nº <strong>20.251.527/0001-04</strong>, com sede na Rua Jornalista Djalma Andrade, nº 1.505, sala 01, bairro Belvedere, Belo Horizonte/MG, CEP 30320-595, neste ato representada por seu administrador <strong>DIEGO ALBS PASSOS</strong>, brasileiro, empresário, portador da Carteira de Identidade MG-15.063.647 (SSP/MG), inscrito no CPF/MF sob o nº 085.282.136-09, doravante denominada simplesmente <strong>INFO8</strong> ou <strong>PARCEIRA TÉCNICA</strong>;</p>
+
+  <p>e, de outro lado:</p>
+
+  <p><strong>AJOIA BRASIL — ASSOCIAÇÃO BRASILEIRA DE JORNALISTAS INDEPENDENTES E AFILIADOS</strong>, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob o nº <strong>64.777.514/0001-30</strong>, com sede na Rua São Paulo, nº 684, sala/apto 209, Bloco B, Centro, Belo Horizonte/MG, neste ato representada por seu Presidente <strong>JOSÉ APARECIDO RIBEIRO</strong>, doravante denominada simplesmente <strong>AJOIA</strong> ou <strong>PARCEIRA CONTRATANTE</strong>;</p>
+
+  <p>sendo as partes, em conjunto, denominadas <strong>PARTES</strong> e, individualmente, <strong>PARTE</strong>; resolvem celebrar o presente <strong>Contrato de Parceria Comercial e Prestação de Serviços Digitais</strong> (“Contrato”), que se regerá pelas cláusulas e condições seguintes.</p>
+
+  <h2 class="clause">CLÁUSULA 1ª — DO OBJETO</h2>
+  <p>1.1. O objeto deste Contrato é a parceria para <strong>evolução, operação técnica, integração, redesign e estruturação comercial digital</strong> do portal <strong>https://ajoiabrasil.com.br</strong>, mantido em WordPress na hospedagem atualmente utilizada pela AJOIA, sem cobrança de preço fixo de construção, mediante <strong>participação da INFO8 na receita comercial digital</strong> do portal, nos termos deste instrumento.</p>
+  <p>1.2. Incluem-se no objeto, sem prejuízo de ajustes mutuamente acordados por escrito:</p>
+  <ol class="alpha" type="a">
+    <li>organização do painel administrativo multi-usuário para jornalistas/colunistas;</li>
+    <li>padronização editorial digital (papéis, categorias, tags, perfis e páginas de colunistas);</li>
+    <li>integração do portal com redes sociais oficiais e YouTube;</li>
+    <li>implantação de fluxo de curadoria via RSS de fontes definidas pela AJOIA;</li>
+    <li>evolução de design e experiência de uso (home, artigo, colunista, institucional e mobile);</li>
+    <li>estruturação de inventário de mídia, mídia kit e apoio à oferta comercial digital;</li>
+    <li>suporte técnico razoável à operação digital durante a vigência.</li>
+  </ol>
+  <p>1.3. <strong>Não</strong> integram o objeto deste Contrato, salvo aditivo escrito:</p>
+  <ol class="alpha" type="a">
+    <li>produção jornalística, textual, fotográfica ou audiovisual;</li>
+    <li>gestão diária de community (comentários, DMs e moderação de redes);</li>
+    <li>mídia paga (boost/ads), cujo custo será do anunciante ou da AJOIA;</li>
+    <li>troca obrigatória de hospedagem;</li>
+    <li>desenvolvimento de aplicativo mobile nativo;</li>
+    <li>reconstrução integral do portal em outra tecnologia, desnecessária nesta fase.</li>
+  </ol>
+
+  <h2 class="clause">CLÁUSULA 2ª — DA NATUREZA DA PARCERIA</h2>
+  <p>2.1. As PARTES reconhecem que esta é uma <strong>parceria comercial de risco compartilhado</strong>: a INFO8 não cobra honorários fixos pela evolução descrita na Cláusula 1ª, e sua remuneração decorre da participação na receita comercial digital efetivamente recebida.</p>
+  <p>2.2. Nada neste Contrato cria vínculo empregatício, societário, de joint venture societária, representação comercial exclusiva ou relação de consumo entre as PARTES ou entre a INFO8 e associados/colunistas da AJOIA.</p>
+  <p>2.3. A AJOIA permanece titular da marca, do domínio, do conteúdo editorial, das contas oficiais e da linha editorial do portal.</p>
+
+  <h2 class="clause">CLÁUSULA 3ª — DAS OBRIGAÇÕES DA INFO8</h2>
+  <p>3.1. São obrigações da INFO8:</p>
+  <ol class="alpha" type="a">
+    <li>executar o escopo da Cláusula 1ª com diligência técnica compatível com a natureza do serviço;</li>
+    <li>iniciar os trabalhos após o recebimento dos acessos essenciais (WordPress, hospedagem quando necessário, redes oficiais e YouTube);</li>
+    <li>manter backup inicial antes de alterações relevantes;</li>
+    <li>preservar, na medida do possível, conteúdo, URLs e SEO existentes;</li>
+    <li>orientar a redação quanto ao uso do painel e dos fluxos implantados;</li>
+    <li>apresentar, mensalmente, apoio à conferência da receita comercial digital rateada, quando solicitado;</li>
+    <li>guardar sigilo sobre acessos, credenciais e informações confidenciais da AJOIA;</li>
+    <li>devolver ou revogar acessos ao término do Contrato, mantendo apenas o estritamente necessário à transição, se houver.</li>
+  </ol>
+  <p>3.2. Prazos indicativos (contados do kickoff com acessos liberados):</p>
+  <table>
+    <thead>
+      <tr><th>Fase</th><th>Entrega</th><th>Prazo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>Kickoff, backup e mapeamento</td><td>3 a 7 dias</td></tr>
+      <tr><td>1</td><td>Redação / painel / taxonomia</td><td>até 15 dias</td></tr>
+      <tr><td>2</td><td>Integrações (redes, YouTube, RSS)</td><td>até 21 dias</td></tr>
+      <tr><td>3</td><td>Design + inventário/mídia kit</td><td>até 30 dias</td></tr>
+      <tr><td>4</td><td>Operação e ajustes</td><td>contínua na vigência</td></tr>
+    </tbody>
+  </table>
+  <p>3.3. Os prazos da cláusula 3.2 são <strong>estimativas operacionais</strong> e poderão ser prorrogados diante de atraso na liberação de acessos, validações ou decisões da AJOIA, falhas de terceiros (hospedagem, Meta, Google, Make.com etc.) ou caso fortuito/força maior.</p>
+
+  <h2 class="clause">CLÁUSULA 4ª — DAS OBRIGAÇÕES DA AJOIA</h2>
+  <p>4.1. São obrigações da AJOIA:</p>
+  <ol class="alpha" type="a">
+    <li>fornecer tempestivamente acessos administrativos ao WordPress, hospedagem (quando necessário), contas oficiais de redes e YouTube, lista de colunistas e fontes RSS;</li>
+    <li>produzir e publicar conteúdo editorial de forma contínua, sob sua exclusiva responsabilidade;</li>
+    <li>captar, negociar e contratar patrocínios/publicidade, sem prejuízo do apoio técnico-comercial da INFO8;</li>
+    <li>informar à INFO8, por escrito, toda receita comercial digital recebida no mês, com identificação do anunciante/patrocinador, valor bruto, comissão de captação (se houver) e valor líquido rateável;</li>
+    <li>efetuar o repasse da participação da INFO8 nos prazos deste Contrato;</li>
+    <li>arcar com custos de infraestrutura e ferramentas essenciais de operação (hospedagem, domínio, planos de automação/plugins necessários), mediante aprovação prévia dos valores;</li>
+    <li>manter a independência editorial e a correta identificação de conteúdos patrocinados perante o público;</li>
+    <li>obter as autorizações internas (diretoria/assembleia) necessárias à celebração e execução deste Contrato.</li>
+  </ol>
+  <p>4.2. A AJOIA declara ser a legítima responsável pelo portal e pelas contas oficiais utilizadas na integração, respondendo perante terceiros por conteúdo publicado sob sua marca.</p>
+
+  <h2 class="clause">CLÁUSULA 5ª — DA REMUNERAÇÃO E DO RATEIO</h2>
+  <p>5.1. Em contraprestação ao objeto deste Contrato, a INFO8 fará jus a <strong>50% (cinquenta por cento)</strong> da <strong>Receita Comercial Digital Líquida Rateável</strong> do portal e dos pacotes de mídia a ele vinculados.</p>
+  <p>5.2. Considera-se <strong>Receita Comercial Digital Bruta</strong> todo valor efetivamente contratado e/ou recebido pela AJOIA (ou por quem ela indicar para cobrança) decorrente de:</p>
+  <ol class="alpha" type="a">
+    <li>patrocínio e publicidade no site (banners, home, seções, sidebar e formatos equivalentes);</li>
+    <li>conteúdo patrocinado, publieditorial ou informe publicitário publicado no portal;</li>
+    <li>pacotes comerciais que incluam site e/ou redes oficiais da AJOIA;</li>
+    <li>demais formatos de mídia digital criados a partir do inventário do portal.</li>
+  </ol>
+  <p>5.3. <strong>Comissão de captação.</strong> Do valor bruto de cada negócio, deduz-se, quando houver, a <strong>comissão devida à pessoa física ou jurídica responsável pela captação do patrocínio/apoio</strong>, em percentual e condições definidos pela AJOIA e comunicados por escrito à INFO8 (por e-mail ou anexo), antes ou no ato do fechamento do respectivo negócio.</p>
+  <p>5.4. Considera-se <strong>Receita Comercial Digital Líquida Rateável</strong> o valor resultante da seguinte fórmula:</p>
+  <div class="formula">Receita Líquida Rateável = Receita Comercial Digital Bruta − Comissão de Captação</div>
+  <p>Sobre a Receita Líquida Rateável aplica-se o rateio:</p>
+  <div class="formula">50% AJOIA / 50% INFO8</div>
+  <p>5.5. <strong>Não integram</strong> a base de rateio, salvo acordo escrito em contrário: mensalidades de associados; doações sem contrapartida de mídia digital; receitas de eventos presenciais sem componente de mídia digital; valores de mídia paga (ads); reembolsos de despesas de terceiros sem natureza de patrocínio.</p>
+  <p>5.6. Impostos eventualmente destacados em nota fiscal da AJOIA ao anunciante, quando meramente repassados na forma da legislação, serão tratados conforme a documentação fiscal do negócio, sem distorcer o equilíbrio econômico do rateio 50/50 sobre a Receita Líquida Rateável.</p>
+  <p>5.7. A AJOIA emitirá à INFO8, até o <strong>5º (quinto) dia útil</strong> de cada mês, relatório do mês anterior contendo: negócios fechados, valores brutos, comissões de captação, receita líquida rateável, valores devidos a cada PARTE e status de recebimento.</p>
+  <p>5.8. O repasse à INFO8 ocorrerá em até <strong>10 (dez) dias úteis</strong> após o efetivo recebimento do valor pela AJOIA (ou por quem ela designar), mediante PIX ou transferência para conta de titularidade da INFO8, contra apresentação de nota fiscal/recibo compatível com o regime tributário da INFO8.</p>
+  <p>5.9. A INFO8 poderá solicitar, mediante aviso prévio de 5 (cinco) dias úteis, a conferência dos documentos comprobatórios dos negócios rateados. A AJOIA não poderá opor-se a tal conferência de forma injustificada.</p>
+  <p>5.10. Inadimplemento do repasse superior a 15 (quinze) dias correntes autoriza a INFO8 a notificar a AJOIA e, persistindo o atraso por mais 10 (dez) dias correntes após a notificação, a suspender parcialmente entregas não essenciais e/ou a considerar o Contrato rescindido por justa causa, sem prejuízo da cobrança do crédito e encargos legais.</p>
+
+  <h2 class="clause">CLÁUSULA 6ª — DOS CUSTOS OPERACIONAIS</h2>
+  <p>6.1. Correm por conta da <strong>AJOIA</strong> os custos de hospedagem, domínio e ferramentas essenciais de operação (ex.: planos de automação e plugins premium necessários), sempre com <strong>aprovação prévia</strong> da AJOIA.</p>
+  <p>6.2. Referência de mercado para o início da operação (valores aproximados): cenário usual de <strong>R$ 0,00 a R$ 80,00/mês</strong>; teto operacional razoável de até cerca de <strong>R$ 250,00/mês</strong>, se houver necessidade de pacote completo pago.</p>
+  <p>6.3. Tais valores <strong>não</strong> constituem remuneração da INFO8; a remuneração da INFO8 é exclusivamente a participação da Cláusula 5ª.</p>
+  <p>6.4. Custos extraordinários não previstos serão objeto de aprovação escrita prévia da AJOIA.</p>
+
+  <h2 class="clause">CLÁUSULA 7ª — DA PROPRIEDADE INTELECTUAL E DOS ATIVOS</h2>
+  <p>7.1. Pertencem à <strong>AJOIA</strong>: marca, domínio, conteúdos editoriais, banco de imagens próprios, contas oficiais, lista de associados/colunistas e dados de audiência do portal.</p>
+  <p>7.2. Durante a vigência, a AJOIA concede à INFO8 licença de uso limitada, não exclusiva e revogável, dos ativos necessários à execução do objeto.</p>
+  <p>7.3. Softwares, temas, plugins e códigos de terceiros permanecem sob suas respectivas licenças.</p>
+  <p>7.4. Customizações, configurações, automações, layouts e materiais operacionais desenvolvidos especificamente para o portal da AJOIA: (a) poderão ser utilizados pela AJOIA durante e após a vigência; (b) a INFO8 mantém o direito de reutilizar <em>know-how</em>, metodologias e componentes genéricos não confidenciais em outros projetos.</p>
+  <p>7.5. Ao término do Contrato, a INFO8 entregará à AJOIA documentação operacional razoável, sem retenção abusiva de ativos da AJOIA.</p>
+
+  <h2 class="clause">CLÁUSULA 8ª — DA CONFIDENCIALIDADE E DA PROTEÇÃO DE DADOS</h2>
+  <p>8.1. As PARTES obrigam-se a manter confidencialidade sobre credenciais, dados financeiros da parceria, estratégias comerciais e informações não públicas obtidas em razão deste Contrato, pelo prazo da vigência e por <strong>2 (dois) anos</strong> após o término.</p>
+  <p>8.2. No tratamento de dados pessoais eventualmente envolvidos, as PARTES observarão a Lei nº 13.709/2018 (LGPD), limitando o uso à finalidade da parceria.</p>
+
+  <h2 class="clause">CLÁUSULA 9ª — DA RESPONSABILIDADE EDITORIAL E LIMITAÇÃO</h2>
+  <p>9.1. A AJOIA é a exclusiva responsável pelo conteúdo publicado no portal e nas redes oficiais.</p>
+  <p>9.2. A INFO8 não responde por decisões editoriais, por atos de colunistas/associados, nem por indisponibilidades de plataformas de terceiros, salvo dolo ou culpa grave comprovada da INFO8.</p>
+  <p>9.3. A responsabilidade civil da INFO8 fica limitada ao montante efetivamente recebido pela INFO8 a título de participação nos <strong>12 (doze) meses</strong> anteriores ao evento danoso, exceto em casos de dolo.</p>
+
+  <h2 class="clause">CLÁUSULA 10ª — DA VIGÊNCIA E DA RESCISÃO</h2>
+  <p>10.1. Este Contrato vigorará pelo prazo de <strong>24 (vinte e quatro) meses</strong>, contados da data de assinatura, renovando-se automaticamente por iguais períodos, salvo denúncia de qualquer PARTE com antecedência mínima de <strong>60 (sessenta) dias</strong>.</p>
+  <p>10.2. O Contrato poderá ser rescindido: (a) por comum acordo; (b) por inadimplemento grave, após notificação e prazo de cura de 15 dias correntes, quando sanável; (c) por falência, recuperação judicial ou dissolução de qualquer PARTE; (d) por denúncia imotivada, observada a antecedência da cláusula 10.1.</p>
+  <p>10.3. A rescisão não afasta o dever de pagar à INFO8 as participações já devidas por receitas recebidas ou contratadas até a data do término, inclusive aquelas cujo recebimento ocorra após o término, desde que o negócio tenha sido fechado na vigência.</p>
+  <p>10.4. Em caso de rescisão imotivada pela AJOIA antes de completados 6 meses de vigência, e desde que a INFO8 tenha iniciado efetivamente as entregas das Fases 1 a 3, as PARTES poderão negociar, de boa-fé, uma transição técnica de até 30 dias.</p>
+
+  <h2 class="clause">CLÁUSULA 11ª — DAS DECLARAÇÕES</h2>
+  <p>11.1. A INFO8 declara possuir capacidade técnica para o objeto e poderes de seu administrador signatário para obrigar a sociedade.</p>
+  <p>11.2. A AJOIA declara possuir poderes estatutários para celebrar este Contrato e que a parceria foi ou será submetida às instâncias internas competentes, quando exigido.</p>
+
+  <h2 class="clause">CLÁUSULA 12ª — DAS DISPOSIÇÕES GERAIS</h2>
+  <p>12.1. Este Contrato constitui o acordo integral entre as PARTES sobre o objeto, prevalecendo sobre propostas, e-mails e tratativas anteriores.</p>
+  <p>12.2. Qualquer alteração somente será válida por <strong>aditivo escrito</strong> assinado pelas PARTES.</p>
+  <p>12.3. A tolerância quanto ao descumprimento de qualquer cláusula não implicará novação ou renúncia de direitos.</p>
+  <p>12.4. A eventual nulidade de qualquer disposição não prejudicará as demais.</p>
+  <p>12.5. Comunicações válidas poderão ser feitas por e-mail:</p>
+  <ol class="alpha" type="a">
+    <li>INFO8: <strong>concierge@doctor8.com.br</strong></li>
+    <li>AJOIA: <strong>contato@ajoiabrasil.com.br</strong> / ______________________________</li>
+  </ol>
+  <p>12.6. Este Contrato poderá ser assinado física ou eletronicamente, em tantas vias quantas necessárias, todas de igual teor.</p>
+
+  <h2 class="clause">CLÁUSULA 13ª — DO FORO</h2>
+  <p>13.1. Fica eleito o foro da Comarca de <strong>Belo Horizonte/MG</strong>, com renúncia a qualquer outro, por mais privilegiado que seja, para dirimir dúvidas oriundas deste Contrato.</p>
+
+  <p style="margin-top:18px">E, por estarem justas e contratadas, as PARTES firmam o presente instrumento.</p>
+  <p>Belo Horizonte/MG, _____ de _________________ de 2026.</p>
+
+  <div class="sign-grid">
+    <div class="sign-box">
+      <div class="entity">INFO8 DESENVOLVIMENTO DE SISTEMAS LTDA.</div>
+      <div class="meta">
+        CNPJ 20.251.527/0001-04<br />
+        Representada por: Diego Albs Passos<br />
+        CPF 085.282.136-09 · Administrador
+      </div>
+    </div>
+    <div class="sign-box">
+      <div class="entity">AJOIA BRASIL</div>
+      <div class="meta">
+        CNPJ 64.777.514/0001-30<br />
+        Representada por: José Aparecido Ribeiro<br />
+        Presidente
+      </div>
+    </div>
+  </div>
+
+  <p class="small" style="margin-top:18px"><strong>Testemunhas (opcional)</strong><br />
+  1. Nome: ___________________________ CPF: _________________ Assinatura: _______________<br />
+  2. Nome: ___________________________ CPF: _________________ Assinatura: _______________</p>
+
+  <!-- ANEXO I -->
+  <section class="annex">
+    <div class="header-bar">
+      <img src="info8-logo.png" alt="Info8" />
+      <div class="doc-label">Anexo I · Memória de cálculo</div>
+    </div>
+    <h2 class="clause">ANEXO I — MEMÓRIA DE CÁLCULO DO RATEIO (MODELO)</h2>
+    <table>
+      <thead>
+        <tr><th>Campo</th><th>Exemplo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Anunciante/Patrocinador</td><td>Empresa X</td></tr>
+        <tr><td>Produto de mídia</td><td>Banner home + pacote redes</td></tr>
+        <tr><td>Período</td><td>set/2026</td></tr>
+        <tr><td>Valor bruto (A)</td><td>R$ 10.000,00</td></tr>
+        <tr><td>Comissão do captador (B) — % e nome</td><td>20% — Fulano = R$ 2.000,00</td></tr>
+        <tr><td>Receita líquida rateável (A − B)</td><td>R$ 8.000,00</td></tr>
+        <tr><td>AJOIA 50%</td><td>R$ 4.000,00</td></tr>
+        <tr><td>INFO8 50%</td><td>R$ 4.000,00</td></tr>
+        <tr><td>Data do recebimento</td><td>__/__/____</td></tr>
+        <tr><td>Data do repasse à INFO8</td><td>__/__/____</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="clause">ANEXO II — ESCOPO RESUMIDO (CHECKLIST DE ENTREGA)</h2>
+    <ul class="checklist">
+      <li>Backup inicial do WordPress</li>
+      <li>Papéis: admin / editor / colunista</li>
+      <li>Perfis e páginas de colunistas</li>
+      <li>Taxonomia (categorias × tags × autores)</li>
+      <li>Auto-distribuição site → redes oficiais</li>
+      <li>YouTube (embed + destaque; opcional: vídeo → rascunho)</li>
+      <li>RSS com curadoria (rascunho)</li>
+      <li>Redesign (home, artigo, colunista, mobile)</li>
+      <li>Slots de anúncio padronizados</li>
+      <li>Mídia kit / inventário comercial atualizado</li>
+      <li>Orientação rápida à redação</li>
+    </ul>
+
+    <div class="accent-bar"></div>
+    <p class="footer-note">Minuta elaborada com base na proposta comercial e nas tratativas entre as PARTES. Identidade visual Info8 (#216a86 · #e05930). Recomenda-se revisão por assessoria jurídica de cada PARTE antes da assinatura.</p>
+  </section>
+
+</body>
+</html>

@@ -45,14 +45,42 @@ model Article {
   status      ArticleStatus @default(DRAFT)
   featured    Boolean       @default(false)
   breaking    Boolean       @default(false)
-  imageUrl    String?
-  authorId    String
-  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  publishedAt DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  imageUrl       String?
+  imageAlt       String        @default("")
+  seoTitle       String        @default("")
+  seoDescription String        @default("")
+  noindex        Boolean       @default(false)
+  isOpinion      Boolean?
+  authorId       String
+  author         User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  publishedAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@index([status, publishedAt])
+  @@index([status, noindex, publishedAt])
   @@index([section])
   @@index([authorId])
+}
+
+model Redirect {
+  id        String   @id @default(cuid())
+  fromPath  String   @unique
+  toPath    String
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }

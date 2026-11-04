@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { ArticleForm } from "@/components/admin/ArticleForm";
 import { prisma } from "@/lib/db";
+import { sectionDefaultsToOpinion } from "@/lib/sections";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -54,6 +55,13 @@ export default async function EditArticlePage({ params }: Props) {
             featured: article.featured,
             breaking: article.breaking,
             imageUrl: article.imageUrl,
+            imageAlt: article.imageAlt,
+            seoTitle: article.seoTitle,
+            seoDescription: article.seoDescription,
+            noindex: article.noindex,
+            isOpinion:
+              article.isOpinion ?? sectionDefaultsToOpinion(article.section),
+            slug: article.slug,
           }}
         />
       </div>

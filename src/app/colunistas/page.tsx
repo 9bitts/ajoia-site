@@ -1,12 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { getColumnists } from "@/lib/articles";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Colunistas",
   description:
     "Conheça os jornalistas e colunistas da Ajoia Brasil — associação de jornalistas independentes e afiliados.",
-};
+  path: "/colunistas",
+});
 
 export const dynamic = "force-dynamic";
 

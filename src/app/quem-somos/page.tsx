@@ -1,11 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { missao, siteConfig, valores, visao } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Quem Somos",
   description: siteConfig.description,
-};
+  path: "/quem-somos",
+});
 
 export default function QuemSomosPage() {
   return (

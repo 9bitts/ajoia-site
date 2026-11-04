@@ -1,13 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { ArticleAnalytics } from "@/components/ArticleAnalytics";
+import { JsonLd } from "@/components/JsonLd";
 import { StoryCard } from "@/components/StoryCard";
 import {
   getArticleBySlug,
   getLatestArticles,
 } from "@/lib/articles";
-import { formatDateLong } from "@/lib/format";
+import { formatDateLong, saoPauloDay } from "@/lib/format";
+import { findRedirectTarget } from "@/lib/redirects";
+import { articleJsonLd, articleMetadata } from "@/lib/seo";
 import { sectionMeta } from "@/lib/sections";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -18,31 +22,48 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
   if (!article) return { title: "Artigo" };
-  return {
-    title: article.title,
-    description: article.dek,
-  };
+  return articleMetadata(article);
 }
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
-  if (!article) notFound();
+  if (!article) {
+    const target = await findRedirectTarget(`/artigo/${slug}`);
+    if (target) redirect(target);
+    notFound();
+  }
 
   const related = (await getLatestArticles(4)).filter(
     (a) => a.slug !== article.slug
   );
   const section = sectionMeta[article.section];
   const image = article.image;
+  const publishedDay = saoPauloDay(article.publishedAt);
+  const updatedDay = saoPauloDay(article.updatedAt);
 
   return (
     <article>
+      <JsonLd data={articleJsonLd(article)} />
+      <ArticleAnalytics
+        section={section.label}
+        author={article.authorName}
+        title={article.title}
+      />
       <header className="mx-auto max-w-3xl px-4 pt-8 sm:px-5 sm:pt-12">
         <div className="flex flex-wrap items-center gap-3 text-xs text-mist-dim">
           <Link href={`/secao/${article.section}`} className="kicker">
             {section.label}
           </Link>
-          <time dateTime={article.date}>{formatDateLong(article.date)}</time>
+          {article.isOpinion && article.section !== "opiniao" && (
+            <span className="kicker">Opinião</span>
+          )}
+          <time dateTime={article.publishedAt}>{formatDateLong(article.date)}</time>
+          {updatedDay !== publishedDay && (
+            <time dateTime={article.updatedAt}>
+              Atualizado em {formatDateLong(updatedDay)}
+            </time>
+          )}
         </div>
         <h1 className="mt-3 font-display text-[1.85rem] leading-[1.08] text-[var(--text)] sm:text-4xl md:text-5xl">
           {article.title}
@@ -65,7 +86,7 @@ export default async function ArticlePage({ params }: Props) {
         {image && (
           <Image
             src={image}
-            alt=""
+            alt={article.imageAlt || article.title}
             fill
             priority
             sizes="100vw"

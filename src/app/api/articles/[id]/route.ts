@@ -1,24 +1,15 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { articleInputSchema, articleSeoData } from "@/lib/article-input";
+import { syncArticleSurfaces } from "@/lib/article-publish";
 import { prisma } from "@/lib/db";
+import { resolveArticleStatus } from "@/lib/editorial";
+import { rememberSlug } from "@/lib/redirects";
+import { publishSeoError } from "@/lib/seo-rules";
 import { isSectionSlug } from "@/lib/sections";
 import { slugify } from "@/lib/slug";
-import { resolveArticleStatus } from "@/lib/editorial";
-import { z } from "zod";
 
 type Params = { params: Promise<{ id: string }> };
-
-const articleSchema = z.object({
-  title: z.string().min(3),
-  dek: z.string().default(""),
-  body: z.string().min(10),
-  section: z.string(),
-  status: z.enum(["DRAFT", "PENDING", "PUBLISHED"]),
-  featured: z.boolean().optional(),
-  breaking: z.boolean().optional(),
-  imageUrl: z.string().nullable().optional(),
-  slug: z.string().optional(),
-});
 
 async function canEdit(articleAuthorId: string, userId: string, role: string) {
   return role === "ADMIN" || articleAuthorId === userId;
@@ -54,7 +45,10 @@ export async function PUT(req: Request, { params }: Params) {
   }
 
   const { id } = await params;
-  const existing = await prisma.article.findUnique({ where: { id } });
+  const existing = await prisma.article.findUnique({
+    where: { id },
+    include: { author: { select: { slug: true } } },
+  });
   if (!existing) {
     return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
   }
@@ -63,7 +57,7 @@ export async function PUT(req: Request, { params }: Params) {
   }
 
   const json = await req.json();
-  const parsed = articleSchema.safeParse(json);
+  const parsed = articleInputSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
   }
@@ -85,6 +79,15 @@ export async function PUT(req: Request, { params }: Params) {
     );
   }
 
+  const seoError = publishSeoError({
+    status: resolved.status,
+    dek: data.dek,
+    imageAlt: data.imageAlt,
+  });
+  if (seoError) {
+    return NextResponse.json({ error: seoError }, { status: 400 });
+  }
+
   let slug = existing.slug;
   if (data.slug && data.slug !== existing.slug) {
     const candidate = slugify(data.slug);
@@ -100,30 +103,45 @@ export async function PUT(req: Request, { params }: Params) {
   const becomingPublished =
     resolved.status === "PUBLISHED" && existing.status !== "PUBLISHED";
 
-  const article = await prisma.article.update({
-    where: { id },
-    data: {
-      title: data.title,
-      dek: data.dek,
-      body: data.body,
-      section: data.section,
-      status: resolved.status,
-      slug,
-      imageUrl: data.imageUrl ?? null,
-      featured:
-        session.user.role === "ADMIN"
-          ? Boolean(data.featured)
-          : existing.featured,
-      breaking:
-        session.user.role === "ADMIN"
-          ? Boolean(data.breaking)
-          : existing.breaking,
-      publishedAt: becomingPublished
-        ? new Date()
-        : resolved.status === "PUBLISHED"
-          ? existing.publishedAt
-          : null,
-    },
+  const article = await prisma.$transaction(async (tx) => {
+    if (slug !== existing.slug && existing.status === "PUBLISHED") {
+      await rememberSlug(tx, existing.slug, slug);
+    }
+    return tx.article.update({
+      where: { id },
+      data: {
+        title: data.title,
+        dek: data.dek,
+        body: data.body,
+        section: data.section,
+        status: resolved.status,
+        slug,
+        imageUrl: data.imageUrl ?? null,
+        featured:
+          session.user.role === "ADMIN"
+            ? Boolean(data.featured)
+            : existing.featured,
+        breaking:
+          session.user.role === "ADMIN"
+            ? Boolean(data.breaking)
+            : existing.breaking,
+        publishedAt: becomingPublished
+          ? new Date()
+          : resolved.status === "PUBLISHED"
+            ? existing.publishedAt
+            : null,
+        ...articleSeoData(data, session.user.role, existing.noindex),
+      },
+    });
+  });
+
+  syncArticleSurfaces({
+    slug: article.slug,
+    previousSlug: existing.slug,
+    section: article.section,
+    previousSection: existing.section,
+    authorSlug: existing.author.slug,
+    status: article.status,
   });
 
   return NextResponse.json({ article });
@@ -136,7 +154,10 @@ export async function DELETE(_req: Request, { params }: Params) {
   }
 
   const { id } = await params;
-  const existing = await prisma.article.findUnique({ where: { id } });
+  const existing = await prisma.article.findUnique({
+    where: { id },
+    include: { author: { select: { slug: true } } },
+  });
   if (!existing) {
     return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
   }
@@ -154,5 +175,11 @@ export async function DELETE(_req: Request, { params }: Params) {
   }
 
   await prisma.article.delete({ where: { id } });
+  syncArticleSurfaces({
+    slug: existing.slug,
+    section: existing.section,
+    authorSlug: existing.author.slug,
+    status: "DRAFT",
+  });
   return NextResponse.json({ ok: true });
 }

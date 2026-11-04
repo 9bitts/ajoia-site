@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mídia Kit — Ajoia Brasil</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      color: #1a1814;
+      background: #fff;
+      font-size: 10.5pt;
+      line-height: 1.45;
+    }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    .gap {
+      color: #9f1230;
+      background: #fde8ea;
+      font-weight: 700;
+      padding: 0 5px 1px;
+      border-radius: 2px;
+    }
+
+    /* COVER */
+    .cover {
+      background: #0c0c0c;
+      color: #f4efe6;
+      padding: 16mm 16mm 14mm;
+      display: flex;
+      flex-direction: column;
+    }
+    .cover-rule {
+      height: 2px;
+      width: 42mm;
+      background: #b8956a;
+      margin-bottom: 14mm;
+    }
+    .logo-plate {
+      background: #fff;
+      display: inline-block;
+      padding: 7mm 8mm 6mm;
+      width: 118mm;
+    }
+    .logo-plate img { width: 102mm; height: auto; display: block; }
+    .kicker {
+      margin-top: 16mm;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: #b8956a;
+      font-size: 9pt;
+      font-weight: 700;
+    }
+    .cover h1 {
+      font-family: Palatino, "Palatino Linotype", Georgia, serif;
+      font-weight: 400;
+      font-size: 42pt;
+      line-height: .95;
+      margin: 4mm 0 6mm;
+      letter-spacing: -0.02em;
+    }
+    .cover-lead {
+      max-width: 150mm;
+      font-size: 12pt;
+      line-height: 1.45;
+      color: #d9d1c4;
+      margin: 0 0 12mm;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4mm;
+      margin-top: auto;
+    }
+    .stat {
+      border-top: 1px solid #3a342c;
+      padding-top: 4mm;
+    }
+    .stat b {
+      display: block;
+      font-family: Palatino, "Palatino Linotype", Georgia, serif;
+      font-size: 20pt;
+      font-weight: 400;
+      color: #f4efe6;
+    }
+    .stat span {
+      display: block;
+      margin-top: 1mm;
+      color: #b8956a;
+      font-size: 8pt;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .cover-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 10mm;
+      padding-top: 5mm;
+      border-top: 1px solid #2a2622;
+      font-size: 9pt;
+      color: #cfc6b8;
+    }
+    .cover-foot strong { color: #f4efe6; font-weight: 600; }
+
+    /* INNER */
+    .inner {
+      background: #f7f4ef;
+      padding: 14mm 14mm 16mm;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #1a1814;
+      padding-bottom: 3mm;
+      margin-bottom: 7mm;
+    }
+    .topbar .brand {
+      font-family: Palatino, "Palatino Linotype", Georgia, serif;
+      letter-spacing: .18em;
+      font-size: 11pt;
+    }
+    .topbar .sec {
+      font-size: 8pt;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #8a7350;
+    }
+    h2 {
+      font-family: Palatino, "Palatino Linotype", Georgia, serif;
+      font-weight: 400;
+      font-size: 22pt;
+      margin: 0 0 3mm;
+      line-height: 1.1;
+    }
+    .deck {
+      margin: 0 0 6mm;
+      color: #4a453d;
+      max-width: 170mm;
+    }
+    h3 {
+      font-size: 8.5pt;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #8a7350;
+      margin: 0 0 2.5mm;
+      font-weight: 700;
+    }
+    .cols {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 7mm;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+    }
+    th {
+      text-align: left;
+      font-size: 7.5pt;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #8a7350;
+      font-weight: 700;
+      border-bottom: 1px solid #1a1814;
+      padding: 0 0 2mm;
+    }
+    td {
+      padding: 2.1mm 2mm 2.1mm 0;
+      border-bottom: 1px solid #e3dcd2;
+      vertical-align: top;
+    }
+    td.num, th.num { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
+    .note {
+      margin-top: 5mm;
+      font-size: 8.5pt;
+      color: #5c564c;
+      border-left: 2px solid #b8956a;
+      padding-left: 3.5mm;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3mm;
+      margin: 0 0 6mm;
+    }
+    .metric {
+      background: #0c0c0c;
+      color: #f4efe6;
+      padding: 4mm 3.5mm 3.5mm;
+    }
+    .metric b {
+      display: block;
+      font-family: Palatino, "Palatino Linotype", Georgia, serif;
+      font-size: 18pt;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .metric span {
+      display: block;
+      margin-top: 1.5mm;
+      font-size: 7.5pt;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #b8956a;
+    }
+    .split3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 5mm;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid #e3dcd2;
+      padding: 3.5mm 4mm;
+    }
+    .panel li { margin: 0 0 1.2mm; }
+    ul.clean { margin: 0; padding: 0; list-style: none; }
+    ul.clean li { display: flex; justify-content: space-between; gap: 3mm; border-bottom: 1px solid #eee8df; padding: 1.3mm 0; font-size: 9pt; }
+    ul.clean li span:last-child { font-variant-numeric: tabular-nums; color: #3d3832; }
+    .foot {
+      position: absolute;
+      left: 14mm;
+      right: 14mm;
+      bottom: 8mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 7.5pt;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #8a8176;
+      border-top: 1px solid #e3dcd2;
+      padding-top: 2.5mm;
+    }
+    .cover .foot { display: none; }
+    .legend {
+      margin-top: 4mm;
+      font-size: 8pt;
+      color: #5c564c;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="page cover">
+    <div class="cover-rule"></div>
+    <div class="logo-plate">
+      <img src="ajoia-logo.jpg" alt="Ajoia Brasil" />
+    </div>
+    <div class="kicker">Mídia kit · Portal</div>
+    <h1>Anuncie<br>na Ajoia.</h1>
+    <p class="cover-lead">O jornal da Associação Brasileira de Jornalistas Independentes e Afiliados. Opinião, cidade, política e colunas assinadas, com leitor no Brasil e leitura forte no celular.</p>
+    <div class="stat-row">
+      <div class="stat"><b>3,5 mil</b><span>Visitantes em 90 dias</span></div>
+      <div class="stat"><b>82%</b><span>Audiência no Brasil</span></div>
+      <div class="stat"><b>60%</b><span>Acesso pelo celular</span></div>
+    </div>
+    <div class="cover-foot">
+      <div>ajoiabrasil.com.br<br>Período: 10 jul – 6 out 2026</div>
+      <div style="text-align:right">Comercial<br><strong>Alexandre Siqueira</strong><br>+55 31 9823-5151<br><span class="gap">E-mail a definir</span></div>
+    </div>
+  </section>
+
+  <section class="page inner">
+    <div class="topbar"><div class="brand">AJOIA</div><div class="sec">O veículo</div></div>
+    <h2>Quem lê, lê um nome.</h2>
+    <p class="deck">Portal de jornalistas independentes, com redação própria, seções fixas e dezenas de colunistas. O anúncio entra num ambiente de texto assinado, não num agregador sem autoria.</p>
+    <div class="cols">
+      <div>
+        <h3>Seções no ar</h3>
+        <table>
+          <thead><tr><th>Seção</th><th class="num">Matérias</th></tr></thead>
+          <tbody>
+            <tr><td>Últimas</td><td class="num">359</td></tr>
+            <tr><td>Colunistas</td><td class="num">280</td></tr>
+            <tr><td>Tema livre</td><td class="num">146</td></tr>
+            <tr><td>Opinião</td><td class="num">77</td></tr>
+            <tr><td>Política</td><td class="num">66</td></tr>
+            <tr><td>Cultura</td><td class="num">23</td></tr>
+            <tr><td>Cidade</td><td class="num">23</td></tr>
+            <tr><td>Editorial</td><td class="num">16</td></tr>
+            <tr><td>Estado</td><td class="num">11</td></tr>
+            <tr><td>Mundo</td><td class="num">6</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Quem mais publica</h3>
+        <ul class="clean">
+          <li><span>Edy Fernandes</span><span>96</span></li>
+          <li><span>José Aparecido Ribeiro</span><span>69</span></li>
+          <li><span>Alexandre Siqueira</span><span>54</span></li>
+          <li><span>Arilda Costa McClive</span><span>21</span></li>
+          <li><span>Walter Felix</span><span>14</span></li>
+          <li><span>Joabson João</span><span>10</span></li>
+        </ul>
+        <p class="note">46 contas de redação: 3 administradores, 1 editor e 42 colunistas. Vários nomes estão no ar com pouca ou nenhuma matéria recente.</p>
+        <h3 style="margin-top:6mm">No site hoje</h3>
+        <p class="deck" style="margin:0">Página institucional de publicidade publicada e ainda sem tabela. Parceiros citados na coluna: Associação Palmeiros, Minas Conexão, Tudo Viagem e No Ponto do Fato.</p>
+      </div>
+    </div>
+    <div class="foot"><span>Ajoia Brasil · Mídia kit</span><span>02</span></div>
+  </section>
+
+  <section class="page inner">
+    <div class="topbar"><div class="brand">AJOIA</div><div class="sec">Audiência · 90 dias</div></div>
+    <h2>O leitor chegou pela busca.</h2>
+    <p class="deck">Números do Google Analytics e do Search Console, de 10 de julho a 6 de outubro de 2026. A curva sobe no fim de setembro: poucas matérias puxam boa parte da visita recente.</p>
+    <div class="metrics">
+      <div class="metric"><b>3,5 mil</b><span>Visitantes</span></div>
+      <div class="metric"><b>74 mil</b><span>Impressões na busca</span></div>
+      <div class="metric"><b>1,8 mil</b><span>Cliques na busca</span></div>
+      <div class="metric"><b>1,5 mil</b><span>Visitantes via busca</span></div>
+    </div>
+    <div class="split3">
+      <div class="panel">
+        <h3>Origem</h3>
+        <ul class="clean">
+          <li><span>Busca orgânica</span><span>41%</span></li>
+          <li><span>Acesso direto</span><span>36%</span></li>
+          <li><span>Referência</span><span>10%</span></li>
+          <li><span>Assistente de IA</span><span>7%</span></li>
+          <li><span>Outros</span><span>6%</span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>País</h3>
+        <ul class="clean">
+          <li><span>Brasil</span><span>82%</span></li>
+          <li><span>Estados Unidos</span><span>7%</span></li>
+          <li><span>Portugal</span><span>1%</span></li>
+          <li><span>Índia</span><span>1%</span></li>
+          <li><span>Outros</span><span>9%</span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Como leem</h3>
+        <ul class="clean">
+          <li><span>Celular</span><span>60%</span></li>
+          <li><span>Computador</span><span>40%</span></li>
+          <li><span>Tablet</span><span>&lt;1%</span></li>
+          <li><span>Novos visitantes</span><span>3,5 mil</span></li>
+          <li><span>Quem volta</span><span>423</span></li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="margin-top:6mm">Páginas mais lidas no período</h3>
+    <table>
+      <thead><tr><th>Matéria</th><th class="num">Páginas vistas</th></tr></thead>
+      <tbody>
+        <tr><td>Renan Santos e a rede que o aproxima da direita radical nos EUA</td><td class="num">2.559</td></tr>
+        <tr><td>Início do portal</td><td class="num">893</td></tr>
+        <tr><td>A bandeira de Alagoas: história, significados e simbolismo</td><td class="num">276</td></tr>
+        <tr><td>1ª Conferência Ajoia Brasil · São Paulo 2026</td><td class="num">170</td></tr>
+        <tr><td>Entrevista: “Só vai ter descida”, alfineta presidente da Abrasel</td><td class="num">159</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Cidades, sobre o tráfego todo: São Paulo 12,4%, Belo Horizonte 6,9%, Rio de Janeiro 4,1%. Na busca, “ajoia brasil” teve 43 cliques e “ajoia”, 27. O termo “emanuel telles chaves” teve 525. O anúncio compra o veículo inteiro, não só o pico de uma matéria.</p>
+    <div class="foot"><span>Fonte: Site Kit · Analytics e Search Console</span><span>03</span></div>
+  </section>
+
+  <section class="page inner">
+    <div class="topbar"><div class="brand">AJOIA</div><div class="sec">Inventário</div></div>
+    <h2>Onde a marca entra.</h2>
+    <p class="deck">Hoje só o banner do topo está no ar, com a peça da própria Ajoia (“Anuncie aqui”). Os outros espaços existem no tema e podem ser ligados. Valores em vermelho ainda não foram fechados.</p>
+    <table>
+      <thead>
+        <tr><th>Formato</th><th>Onde</th><th>Peça</th><th class="num">30 dias</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Banner do topo</td>
+          <td>Home, ao lado da marca</td>
+          <td>670 × 126 px</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+        <tr>
+          <td>Abaixo do cabeçalho</td>
+          <td>Páginas do site</td>
+          <td>Faixa horizontal</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+        <tr>
+          <td>Acima da matéria</td>
+          <td>Artigo</td>
+          <td>Faixa horizontal</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+        <tr>
+          <td>Abaixo da matéria</td>
+          <td>Artigo</td>
+          <td>Faixa horizontal</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+        <tr>
+          <td>Coluna direita</td>
+          <td>Todas as páginas</td>
+          <td>300×250, 300×600 ou 160×600</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+        <tr>
+          <td>Publieditorial</td>
+          <td>Seção combinada</td>
+          <td>1 matéria com selo</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+        <tr>
+          <td>Topo + matéria</td>
+          <td>Pacote no site</td>
+          <td>Banner e publieditorial</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+        <tr>
+          <td>Site + redes</td>
+          <td>Portal e contas oficiais</td>
+          <td>Depende dos links abaixo</td>
+          <td class="num"><span class="gap">A definir</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="cols" style="margin-top:6mm">
+      <div>
+        <h3>Redes oficiais</h3>
+        <ul class="clean">
+          <li><span>Instagram</span><span>instagram.com/ajoiabr</span></li>
+          <li><span>Facebook</span><span class="gap">Sem link</span></li>
+          <li><span>YouTube</span><span class="gap">Sem link</span></li>
+          <li><span>X</span><span class="gap">Sem link</span></li>
+          <li><span>LinkedIn</span><span class="gap">Sem link</span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>O que o leitor já vê na coluna</h3>
+        <p class="deck" style="margin:0">Busca, ícones de redes, QR dos associados, arquivo por mês, selo de navegação segura e sites parceiros. Não há banner de anunciante nessa coluna. O rodapé do site está sem widgets.</p>
+      </div>
+    </div>
+    <p class="legend">Em vermelho: dado que ainda precisa ser definido antes de enviar este kit ao anunciante.</p>
+    <div class="foot"><span>Formatos do tema Sahifa · banner do topo já medido</span><span>04</span></div>
+  </section>
+
+  <section class="page inner">
+    <div class="topbar"><div class="brand">AJOIA</div><div class="sec">Como anunciar</div></div>
+    <h2>Fale com quem fecha.</h2>
+    <p class="deck">O pedido comercial vai para o Alexandre. Conteúdo patrocinado sai identificado para o leitor. A redação da Ajoia responde pelo texto editorial; o anúncio responde pela peça.</p>
+    <div class="cols">
+      <div class="panel" style="background:#0c0c0c; color:#f4efe6; border:0; padding:7mm">
+        <h3 style="color:#b8956a">Comercial</h3>
+        <p style="font-family:Palatino, 'Palatino Linotype', Georgia, serif; font-size:18pt; margin:0 0 3mm; line-height:1.15">Alexandre Siqueira</p>
+        <p style="margin:0; font-size:11pt; line-height:1.6">
+          WhatsApp +55 31 9823-5151<br>
+          <span class="gap">E-mail a definir</span><br>
+          ajoiabrasil.com.br
+        </p>
+      </div>
+      <div>
+        <h3>Condições deste kit</h3>
+        <ul class="clean">
+          <li><span>Veiculação</span><span>30 dias</span></li>
+          <li><span>Material</span><span>Anunciante envia</span></li>
+          <li><span>Selo</span><span>Conteúdo patrocinado</span></li>
+          <li><span>Troca de peça</span><span class="gap">A definir</span></li>
+          <li><span>Desconto de pacote</span><span class="gap">A definir</span></li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="margin-top:8mm">Para fechar antes de circular</h3>
+    <table>
+      <thead><tr><th>Item</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Tabela de preços dos oito formatos</td><td><span class="gap">A definir com o Alexandre</span></td></tr>
+        <tr><td>E-mail comercial</td><td><span class="gap">A definir</span></td></tr>
+        <tr><td>Links de Facebook, YouTube, X e LinkedIn</td><td><span class="gap">Ícone no ar, endereço vazio</span></td></tr>
+        <tr><td>Regra de troca de criativo e desconto</td><td><span class="gap">A definir</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note">Associação Brasileira de Jornalistas Independentes e Afiliados. CNPJ 64.777.514/0001-30. Belo Horizonte. Documento montado em 6 de outubro de 2026 com o portal no ar. Audiência: últimos 90 dias, Google Analytics e Search Console.</p>
+    <div class="foot"><span>Uso comercial · não circular com os campos em vermelho</span><span>05</span></div>
+  </section>
+
+</body>
+</html>

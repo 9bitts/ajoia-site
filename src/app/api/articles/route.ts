@@ -1,22 +1,12 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { articleInputSchema, articleSeoData } from "@/lib/article-input";
+import { syncArticleSurfaces } from "@/lib/article-publish";
 import { prisma } from "@/lib/db";
+import { resolveArticleStatus } from "@/lib/editorial";
+import { publishSeoError } from "@/lib/seo-rules";
 import { isSectionSlug } from "@/lib/sections";
 import { uniqueSlug } from "@/lib/slug";
-import { resolveArticleStatus } from "@/lib/editorial";
-import { z } from "zod";
-
-const articleSchema = z.object({
-  title: z.string().min(3),
-  dek: z.string().default(""),
-  body: z.string().min(10),
-  section: z.string(),
-  status: z.enum(["DRAFT", "PENDING", "PUBLISHED"]),
-  featured: z.boolean().optional(),
-  breaking: z.boolean().optional(),
-  imageUrl: z.string().nullable().optional(),
-  slug: z.string().optional(),
-});
 
 export async function GET() {
   const session = await auth();
@@ -47,7 +37,7 @@ export async function POST(req: Request) {
   }
 
   const json = await req.json();
-  const parsed = articleSchema.safeParse(json);
+  const parsed = articleInputSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Dados inválidos", details: parsed.error.flatten() },
@@ -72,6 +62,15 @@ export async function POST(req: Request) {
     );
   }
 
+  const seoError = publishSeoError({
+    status: resolved.status,
+    dek: data.dek,
+    imageAlt: data.imageAlt,
+  });
+  if (seoError) {
+    return NextResponse.json({ error: seoError }, { status: 400 });
+  }
+
   const slug = await uniqueSlug(data.slug || data.title, async (s) => {
     const existing = await prisma.article.findUnique({ where: { slug: s } });
     return Boolean(existing);
@@ -90,7 +89,16 @@ export async function POST(req: Request) {
       slug,
       authorId: session.user.id,
       publishedAt: resolved.status === "PUBLISHED" ? new Date() : null,
+      ...articleSeoData(data, session.user.role),
     },
+    include: { author: { select: { slug: true } } },
+  });
+
+  syncArticleSurfaces({
+    slug: article.slug,
+    section: article.section,
+    authorSlug: article.author.slug,
+    status: article.status,
   });
 
   return NextResponse.json({ article }, { status: 201 });

@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+import Link from "next/link";
 import { siteConfig } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Expediente",
   description: "Expediente editorial e institucional da Ajoia Brasil.",
-};
+  path: "/expediente",
+});
 
 export default function ExpedientePage() {
   return (
@@ -37,7 +39,12 @@ export default function ExpedientePage() {
       <p className="mt-10 text-sm leading-relaxed text-mist-muted">
         Os artigos e opiniões publicados são de inteira responsabilidade e
         autoria dos colunistas. O portal não se responsabiliza pelo conteúdo,
-        ideias ou posicionamentos expressos nos textos.
+        ideias ou posicionamentos expressos nos textos. Correções de fato
+        seguem a{" "}
+        <Link href="/correcoes" className="text-gold">
+          política de correções
+        </Link>
+        .
       </p>
     </div>
   );

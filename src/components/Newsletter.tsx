@@ -1,6 +1,35 @@
 "use client";
 
+import { useState } from "react";
+
 export function Newsletter() {
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "already" | "error">("idle");
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("sending");
+    setError("");
+
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form));
+    const res = await fetch("/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const json = (await res.json().catch(() => null)) as { error?: string; already?: boolean } | null;
+
+    if (!res.ok) {
+      setStatus("error");
+      setError(json?.error || "Não foi possível assinar agora.");
+      return;
+    }
+
+    form.reset();
+    setStatus(json?.already ? "already" : "sent");
+  }
+
   return (
     <section className="on-dark bg-[#111113] text-white">
       <div className="mx-auto grid max-w-content items-center gap-8 px-5 py-14 md:grid-cols-12">
@@ -16,18 +45,14 @@ export function Newsletter() {
             Notícias do Dia — sem ruído, com rigor.
           </p>
         </div>
-        <form
-          className="md:col-span-5"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <label htmlFor="email" className="sr-only">
+        <form className="md:col-span-5" onSubmit={onSubmit}>
+          <label htmlFor="newsletter-email" className="sr-only">
             E-mail
           </label>
           <div className="flex flex-col gap-3 sm:flex-row">
             <input
-              id="email"
+              id="newsletter-email"
+              name="email"
               type="email"
               required
               placeholder="seu@email.com"
@@ -35,14 +60,23 @@ export function Newsletter() {
             />
             <button
               type="submit"
-              className="w-full shrink-0 rounded-md bg-[#e8c56b] px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-[#111113] sm:w-auto"
+              disabled={status === "sending"}
+              className="w-full shrink-0 rounded-md bg-[#e8c56b] px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-[#111113] disabled:opacity-60 sm:w-auto"
             >
-              Assinar
+              {status === "sending" ? "Enviando…" : "Assinar"}
             </button>
           </div>
+          <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
           <p className="mt-3 text-[11px] text-white/50">
             Ao assinar, você concorda em receber comunicações da Ajoia Brasil.
           </p>
+          {status === "sent" && (
+            <p className="mt-2 text-sm text-[#e8c56b]">Inscrição confirmada.</p>
+          )}
+          {status === "already" && (
+            <p className="mt-2 text-sm text-white/80">Este e-mail já está na lista.</p>
+          )}
+          {status === "error" && <p className="mt-2 text-sm text-red-300">{error}</p>}
         </form>
       </div>
     </section>

@@ -24,9 +24,14 @@ export async function AdminNav() {
               Novo
             </Link>
             {session.user.role === "ADMIN" && (
-              <Link href="/admin/usuarios" className="hover:text-white">
-                Usuários
-              </Link>
+              <>
+                <Link href="/admin/usuarios" className="hover:text-white">
+                  Usuários
+                </Link>
+                <Link href="/admin/mensagens" className="hover:text-white">
+                  Caixa
+                </Link>
+              </>
             )}
             <Link href="/" className="hover:text-white" target="_blank">
               Ver site

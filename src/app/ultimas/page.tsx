@@ -1,12 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { StoryCard } from "@/components/StoryCard";
 import { getLatestArticles } from "@/lib/articles";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Últimas",
   description: "Todas as publicações recentes da Ajoia Brasil.",
-};
+  path: "/ultimas",
+});
 
 export const dynamic = "force-dynamic";
 

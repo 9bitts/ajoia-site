@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
 import { StoryCard } from "@/components/StoryCard";
 import {
   getArticlesByAuthor,
   getColumnistBySlug,
 } from "@/lib/articles";
+import { siteConfig } from "@/data/site";
+import { columnistJsonLd } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -18,6 +21,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: columnist.name,
     description: columnist.bio,
+    alternates: { canonical: `/colunistas/${columnist.slug}` },
+    openGraph: {
+      title: columnist.name,
+      description: columnist.bio,
+      url: `/colunistas/${columnist.slug}`,
+      locale: "pt_BR",
+      type: "website",
+      siteName: siteConfig.name,
+    },
   };
 }
 
@@ -30,6 +42,7 @@ export default async function ColumnistPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-content px-5 py-12 md:py-16">
+      <JsonLd data={columnistJsonLd(columnist)} />
       <Link href="/colunistas" className="btn-ghost">
         ← Todos os colunistas
       </Link>

@@ -1,14 +1,15 @@
 import Image from "next/image";
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { siteConfig } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Assine",
   description:
     "Assine a Ajoia Brasil por R$ 25/mês e apoie o jornalismo independente com compromisso com os fatos.",
-};
+  path: "/assine",
+});
 
 const benefits = [
   {

@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 import { siteConfig } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Contato",
   description: `Fale com a ${siteConfig.name}.`,
-};
+  path: "/contato",
+});
 
 export default function ContatoPage() {
   return (

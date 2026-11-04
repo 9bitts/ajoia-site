@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ColumnistRail } from "@/components/ColumnistRail";
 import { HeroFeature } from "@/components/HeroFeature";
+import { JsonLd } from "@/components/JsonLd";
 import { Newsletter } from "@/components/Newsletter";
 import { SectionBlock } from "@/components/SectionBlock";
 import { Ticker } from "@/components/Ticker";
@@ -10,8 +12,18 @@ import {
   getLatestArticles,
 } from "@/lib/articles";
 import { missao, siteConfig } from "@/data/site";
+import { homeJsonLd } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: siteConfig.name }],
+    },
+  },
+};
 
 export default async function HomePage() {
   const featured = await getFeaturedArticles();
@@ -25,6 +37,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={homeJsonLd()} />
       {lead ? (
         <>
           <Ticker />

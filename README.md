@@ -56,6 +56,8 @@ Altere via `ADMIN_PASSWORD` / `COLUMNIST_PASSWORD` antes do seed.
    - `ADMIN_EMAIL` / `ADMIN_PASSWORD`
    - `COLUMNIST_PASSWORD` (opcional, para re-seed)
    - `UPLOAD_DIR=/data/uploads`
+   - `GMAIL_USER=portal.ajoiabrasil@gmail.com`
+   - `GMAIL_APP_PASSWORD` (senha de app do Google, não a senha da conta)
 3. Monte um **Volume** em `/data` (persistir uploads).
 4. Deploy. No primeiro boot: `npx prisma db push` (já no start) e rode **uma vez**:
 

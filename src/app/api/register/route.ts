@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { sendPortalMail } from "@/lib/mail";
 import { slugify, uniqueSlug } from "@/lib/slug";
 
 const registerSchema = z.object({
@@ -45,6 +46,16 @@ export async function POST(req: Request) {
       approved: false,
       featured: false,
     },
+  });
+
+  await sendPortalMail({
+    replyTo: email,
+    subject: "[Redação] novo cadastro de jornalista",
+    text: [
+      `Nome: ${data.name.trim()}`,
+      `E-mail: ${email}`,
+      `Função: ${data.roleLabel.trim() || "Jornalista"}`,
+    ].join("\n"),
   });
 
   return NextResponse.json(

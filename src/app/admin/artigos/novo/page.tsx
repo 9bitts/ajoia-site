@@ -31,6 +31,12 @@ export default async function NewArticlePage() {
             featured: false,
             breaking: false,
             imageUrl: null,
+            imageAlt: "",
+            seoTitle: "",
+            seoDescription: "",
+            noindex: false,
+            isOpinion: false,
+            slug: "",
           }}
         />
       </div>

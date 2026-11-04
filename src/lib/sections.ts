@@ -67,3 +67,13 @@ export const sectionMeta: Record<
 export function isSectionSlug(value: string): value is SectionSlug {
   return SECTIONS.includes(value as SectionSlug);
 }
+
+const opinionSections = new Set<SectionSlug>([
+  "opiniao",
+  "editorial",
+  "tema-livre",
+]);
+
+export function sectionDefaultsToOpinion(section: string) {
+  return opinionSections.has(section as SectionSlug);
+}

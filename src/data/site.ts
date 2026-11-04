@@ -8,7 +8,7 @@ export const siteConfig = {
   city: "Belo Horizonte",
   founded: "2025",
   president: "José Aparecido Ribeiro",
-  email: "contato@ajoiabrasil.com.br",
+  email: "portal.ajoiabrasil@gmail.com",
   social: {
     facebook: "https://facebook.com",
     twitter: "https://x.com",
@@ -35,6 +35,7 @@ export const institutionalLinks = [
   { href: "/expediente", label: "Expediente" },
   { href: "/midia-kit", label: "Mídia Kit" },
   { href: "/contato", label: "Contato" },
+  { href: "/correcoes", label: "Correções" },
 ] as const;
 
 export const missao =

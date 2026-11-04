@@ -1,13 +1,15 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
 import { StoryCard } from "@/components/StoryCard";
+import { navSections, siteConfig } from "@/data/site";
 import { getArticlesBySection } from "@/lib/articles";
+import { sectionJsonLd } from "@/lib/seo";
 import {
   isSectionSlug,
   sectionMeta,
   type SectionSlug,
 } from "@/lib/sections";
-import { navSections } from "@/data/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -21,7 +23,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   if (!isSectionSlug(slug)) return { title: "Seção" };
   const meta = sectionMeta[slug];
-  return { title: meta.label, description: meta.description };
+  return {
+    title: meta.label,
+    description: meta.description,
+    alternates: {
+      canonical: `/secao/${slug}`,
+      types: {
+        "application/rss+xml": [
+          { url: `/secao/${slug}/feed.xml`, title: meta.label },
+        ],
+      },
+    },
+    openGraph: {
+      title: meta.label,
+      description: meta.description,
+      url: `/secao/${slug}`,
+      locale: "pt_BR",
+      type: "website",
+      siteName: siteConfig.name,
+    },
+  };
 }
 
 export default async function SectionPage({ params }: Props) {
@@ -35,6 +56,7 @@ export default async function SectionPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-content px-4 py-10 sm:px-5 md:py-14">
+      <JsonLd data={sectionJsonLd(section)} />
       <header className="max-w-2xl border-b border-[var(--line)] pb-6">
         <p className="kicker">Seção</p>
         <h1 className="mt-2 font-display text-4xl text-[var(--text)] md:text-5xl">

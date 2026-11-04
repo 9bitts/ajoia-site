@@ -1,8 +1,11 @@
 import type { Article, User } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getSectionImage } from "@/lib/images";
-import type { SectionSlug } from "@/lib/sections";
-import { isSectionSlug } from "@/lib/sections";
+import {
+  isSectionSlug,
+  sectionDefaultsToOpinion,
+  type SectionSlug,
+} from "@/lib/sections";
 
 export type PublicArticle = {
   id: string;
@@ -17,7 +20,14 @@ export type PublicArticle = {
   featured: boolean;
   breaking: boolean;
   image?: string;
+  imageAlt: string;
   imageGradient: string;
+  seoTitle: string;
+  seoDescription: string;
+  noindex: boolean;
+  isOpinion: boolean;
+  publishedAt: string;
+  updatedAt: string;
 };
 
 export type PublicColumnist = {
@@ -56,7 +66,14 @@ export function mapArticle(article: ArticleWithAuthor): PublicArticle {
     featured: article.featured,
     breaking: article.breaking,
     image: article.imageUrl || getSectionImage(section),
+    imageAlt: article.imageAlt,
     imageGradient: "from-zinc-800 via-neutral-900 to-black",
+    seoTitle: article.seoTitle,
+    seoDescription: article.seoDescription,
+    noindex: article.noindex,
+    isOpinion: article.isOpinion ?? sectionDefaultsToOpinion(section),
+    publishedAt: (article.publishedAt ?? article.createdAt).toISOString(),
+    updatedAt: article.updatedAt.toISOString(),
   };
 }
 
@@ -70,9 +87,11 @@ export function mapColumnist(user: User): PublicColumnist {
   };
 }
 
+const publicWhere = { status: "PUBLISHED" as const, noindex: false };
+
 export async function getLatestArticles(limit = 12) {
   const rows = await prisma.article.findMany({
-    where: { status: "PUBLISHED" },
+    where: publicWhere,
     include: { author: true },
     orderBy: { publishedAt: "desc" },
     take: limit,
@@ -82,7 +101,7 @@ export async function getLatestArticles(limit = 12) {
 
 export async function getFeaturedArticles(limit = 8) {
   const rows = await prisma.article.findMany({
-    where: { status: "PUBLISHED", featured: true },
+    where: { status: "PUBLISHED", noindex: false, featured: true },
     include: { author: true },
     orderBy: { publishedAt: "desc" },
     take: limit,
@@ -101,7 +120,7 @@ export async function getArticleBySlug(slug: string) {
 
 export async function getArticlesBySection(section: SectionSlug) {
   const rows = await prisma.article.findMany({
-    where: { status: "PUBLISHED", section },
+    where: { status: "PUBLISHED", noindex: false, section },
     include: { author: true },
     orderBy: { publishedAt: "desc" },
   });
@@ -112,6 +131,7 @@ export async function getArticlesByAuthor(authorSlug: string) {
   const rows = await prisma.article.findMany({
     where: {
       status: "PUBLISHED",
+      noindex: false,
       author: { slug: authorSlug, active: true },
     },
     include: { author: true },
@@ -135,12 +155,35 @@ export async function getColumnistBySlug(slug: string) {
   return row ? mapColumnist(row) : null;
 }
 
-export async function getPublishedSlugs() {
-  const rows = await prisma.article.findMany({
-    where: { status: "PUBLISHED" },
-    select: { slug: true },
+export async function getSitemapArticles() {
+  return prisma.article.findMany({
+    where: publicWhere,
+    select: { slug: true, updatedAt: true },
+    orderBy: { publishedAt: "desc" },
   });
-  return rows.map((r) => r.slug);
+}
+
+export async function getNewsSitemapArticles() {
+  const since = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  return prisma.article.findMany({
+    where: {
+      ...publicWhere,
+      publishedAt: { gte: since },
+    },
+    select: { slug: true, title: true, publishedAt: true },
+    orderBy: { publishedAt: "desc" },
+    take: 1000,
+  });
+}
+
+export async function getFeedArticles(section?: SectionSlug) {
+  const rows = await prisma.article.findMany({
+    where: section ? { ...publicWhere, section } : publicWhere,
+    include: { author: true },
+    orderBy: { publishedAt: "desc" },
+    take: 30,
+  });
+  return rows.map(mapArticle);
 }
 
 export async function getColumnistSlugs() {

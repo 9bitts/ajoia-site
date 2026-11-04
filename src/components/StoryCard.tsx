@@ -42,7 +42,7 @@ export function StoryCard({
             {image && (
               <Image
                 src={image}
-                alt=""
+                alt={article.imageAlt}
                 fill
                 sizes="112px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -74,7 +74,7 @@ export function StoryCard({
           {image && (
             <Image
               src={image}
-              alt=""
+              alt={article.imageAlt}
               fill
               sizes={
                 size === "lg"

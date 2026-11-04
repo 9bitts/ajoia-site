@@ -25,7 +25,7 @@ export function HeroFeature({ lead, side, latest }: Props) {
             {lead.image && (
               <Image
                 src={lead.image}
-                alt=""
+                alt={lead.imageAlt}
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 66vw"

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 140" fill="none">
+  <!-- Info8 wordmark: Info in brand teal, 8 in brand orange -->
+  <text
+    x="16"
+    y="96"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="92"
+    font-weight="800"
+    font-style="italic"
+    letter-spacing="-2"
+  >
+    <tspan fill="#216a86">Info</tspan><tspan fill="#e05930">8</tspan>
+  </text>
+</svg>

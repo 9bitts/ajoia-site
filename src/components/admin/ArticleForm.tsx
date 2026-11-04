@@ -2,7 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SECTIONS, sectionMeta } from "@/lib/sections";
+import {
+  SEO_DESCRIPTION_MAX,
+  SEO_DESCRIPTION_MIN,
+  SEO_TITLE_MAX,
+  SEO_TITLE_MIN,
+  publishSeoError,
+} from "@/lib/seo-rules";
+import { SECTIONS, sectionDefaultsToOpinion, sectionMeta } from "@/lib/sections";
+import { slugify } from "@/lib/slug";
 
 type ArticleStatusValue = "DRAFT" | "PENDING" | "PUBLISHED";
 
@@ -15,6 +23,12 @@ type ArticleFormValues = {
   featured: boolean;
   breaking: boolean;
   imageUrl: string | null;
+  imageAlt: string;
+  seoTitle: string;
+  seoDescription: string;
+  noindex: boolean;
+  isOpinion: boolean;
+  slug: string;
 };
 
 type Props = {
@@ -59,6 +73,16 @@ export function ArticleForm({
   }
 
   async function onSubmit(status: ArticleStatusValue) {
+    const seoError = publishSeoError({
+      status,
+      dek: form.dek,
+      imageAlt: form.imageAlt,
+    });
+    if (seoError) {
+      setError(seoError);
+      setMessage("");
+      return;
+    }
     setSaving(true);
     setError("");
     setMessage("");
@@ -162,6 +186,11 @@ export function ArticleForm({
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
           />
+          <FieldLength
+            value={form.seoTitle.trim() || form.title.trim()}
+            min={SEO_TITLE_MIN}
+            max={SEO_TITLE_MAX}
+          />
         </label>
 
         <label className="block">
@@ -174,6 +203,11 @@ export function ArticleForm({
             rows={2}
             className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
           />
+          <FieldLength
+            value={form.seoDescription.trim() || form.dek.trim()}
+            min={SEO_DESCRIPTION_MIN}
+            max={SEO_DESCRIPTION_MAX}
+          />
         </label>
 
         <label className="block">
@@ -182,7 +216,14 @@ export function ArticleForm({
           </span>
           <select
             value={form.section}
-            onChange={(e) => setForm({ ...form, section: e.target.value })}
+            onChange={(e) => {
+              const section = e.target.value;
+              setForm({
+                ...form,
+                section,
+                isOpinion: sectionDefaultsToOpinion(section),
+              });
+            }}
             className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
           >
             {SECTIONS.map((s) => (
@@ -215,7 +256,7 @@ export function ArticleForm({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={form.imageUrl}
-                  alt=""
+                  alt={form.imageAlt || "Prévia da capa"}
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -249,6 +290,116 @@ export function ArticleForm({
               )}
             </div>
           </div>
+        </div>
+
+        <label className="block">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
+            Descrição da imagem (alt)
+          </span>
+          <input
+            value={form.imageAlt}
+            onChange={(e) => setForm({ ...form, imageAlt: e.target.value })}
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
+          />
+          <p className="mt-2 text-xs text-mist-dim">
+            Obrigatória para publicar. Se não houver foto própria, a seção usa
+            uma imagem padrão — descreva o que o leitor vê.
+          </p>
+        </label>
+
+        {mode === "edit" && (
+          <label className="block">
+            <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
+              Endereço
+            </span>
+            <input
+              value={form.slug}
+              onChange={(e) => setForm({ ...form, slug: e.target.value })}
+              className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
+            />
+            <p className="mt-2 text-xs text-mist-dim">
+              ajoiabrasil.com.br/artigo/{slugify(form.slug) || "slug"}
+            </p>
+            {form.status === "PUBLISHED" &&
+              slugify(form.slug) !== slugify(initial.slug) && (
+                <p className="mt-1 text-xs text-amber-200">
+                  A URL antiga passa a redirecionar para esta. Evite mudar
+                  depois de publicada.
+                </p>
+              )}
+          </label>
+        )}
+
+        <div className="space-y-4 border border-white/10 p-4">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
+            Busca e redes
+          </p>
+          <label className="block">
+            <span className="text-xs text-mist-muted">
+              Título no Google (opcional)
+            </span>
+            <input
+              value={form.seoTitle}
+              onChange={(e) => setForm({ ...form, seoTitle: e.target.value })}
+              className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs text-mist-muted">
+              Descrição no Google (opcional)
+            </span>
+            <textarea
+              value={form.seoDescription}
+              onChange={(e) =>
+                setForm({ ...form, seoDescription: e.target.value })
+              }
+              rows={2}
+              className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
+            />
+          </label>
+          <label className="flex items-start gap-2 text-sm text-mist-muted">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={form.isOpinion}
+              onChange={(e) =>
+                setForm({ ...form, isOpinion: e.target.checked })
+              }
+            />
+            <span>
+              Esta matéria é opinião. Opinião, Editorial e Tema Livre já nascem
+              marcadas. O rótulo aparece na página.
+            </span>
+          </label>
+          {isAdmin && (
+            <label className="flex items-start gap-2 text-sm text-mist-muted">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={form.noindex}
+                onChange={(e) =>
+                  setForm({ ...form, noindex: e.target.checked })
+                }
+              />
+              <span>
+                Não indexar. A página continua no ar, fora do Google, do sitemap
+                e do RSS.
+              </span>
+            </label>
+          )}
+          <SerpPreview
+            title={form.seoTitle.trim() || form.title.trim() || "Título da matéria"}
+            description={
+              form.seoDescription.trim() ||
+              form.dek.trim() ||
+              "A linha-fina aparece aqui como descrição."
+            }
+            slug={
+              mode === "edit"
+                ? slugify(form.slug) || "slug"
+                : slugify(form.title) || "endereco-gerado-do-titulo"
+            }
+          />
         </div>
 
         {isAdmin && (
@@ -318,6 +469,44 @@ export function ArticleForm({
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+function FieldLength({
+  value,
+  min,
+  max,
+}: {
+  value: string;
+  min: number;
+  max: number;
+}) {
+  const length = value.length;
+  const outside = length > 0 && (length < min || length > max);
+  return (
+    <p className={`mt-2 text-xs ${outside ? "text-amber-200" : "text-mist-dim"}`}>
+      {length} caracteres · ideal {min}–{max}
+    </p>
+  );
+}
+
+function SerpPreview({
+  title,
+  description,
+  slug,
+}: {
+  title: string;
+  description: string;
+  slug: string;
+}) {
+  return (
+    <div className="bg-white px-4 py-3 text-black">
+      <p className="text-xs text-[#4d5156]">
+        ajoiabrasil.com.br/artigo/{slug}
+      </p>
+      <p className="mt-1 text-lg leading-snug text-[#1a0dab]">{title}</p>
+      <p className="mt-1 text-sm leading-snug text-[#4d5156]">{description}</p>
     </div>
   );
 }

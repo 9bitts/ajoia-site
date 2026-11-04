@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { Analytics } from "@/components/Analytics";
 import { IntroSplash } from "@/components/IntroSplash";
 
 export function SiteChrome({
@@ -25,6 +26,7 @@ export function SiteChrome({
       {header}
       <main>{children}</main>
       {footer}
+      <Analytics />
     </>
   );
 }

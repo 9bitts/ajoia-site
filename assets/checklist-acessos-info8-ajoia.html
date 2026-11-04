@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checklist de Acessos e Credenciais — Info8 × Ajoia Brasil</title>
+  <style>
+    @page { size: A4; margin: 14mm 12mm 14mm 12mm; }
+    :root {
+      --teal: #216a86;
+      --teal-deep: #1a6e8c;
+      --teal-light: #3eb8d4;
+      --orange: #e05930;
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #dbe7ee;
+      --bg-soft: #f4fafc;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 9.4pt;
+      line-height: 1.45;
+      background: var(--white);
+    }
+    .cover {
+      page-break-after: always;
+      min-height: 255mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6mm 2mm;
+    }
+    .cover-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .logo { height: 46px; width: auto; }
+    .badge {
+      background: linear-gradient(135deg, var(--teal-deep), var(--teal-light));
+      color: #fff; font-size: 8pt; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; padding: 8px 14px; border-radius: 999px;
+    }
+    .eyebrow {
+      color: var(--orange); font-weight: 700; font-size: 9.5pt;
+      letter-spacing: .12em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .cover h1 {
+      font-size: 24pt; line-height: 1.15; margin: 0 0 12px;
+      color: var(--teal-deep); max-width: 155mm;
+    }
+    .cover-sub { font-size: 11pt; color: var(--muted); max-width: 150mm; margin: 0 0 18px; }
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(33,106,134,.08), rgba(224,89,48,.08));
+      border-left: 4px solid var(--orange);
+      border-radius: 0 12px 12px 0;
+      padding: 11px 13px; margin: 10px 0 16px;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card {
+      border: 1px solid var(--line); border-radius: 12px;
+      padding: 12px 14px; background: var(--bg-soft);
+    }
+    .card strong {
+      display: block; color: var(--teal-deep); font-size: 8.5pt;
+      letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px;
+    }
+    .card span { display: block; font-weight: 600; font-size: 9.5pt; }
+    .card small { display: block; margin-top: 3px; color: var(--muted); font-size: 8pt; }
+    .accent-bar {
+      height: 5px; width: 100%; border-radius: 999px; margin: 18px 0 10px;
+      background: linear-gradient(90deg, var(--teal-deep), var(--teal-light) 45%, var(--orange));
+    }
+    .cover-meta {
+      display: flex; justify-content: space-between; gap: 12px;
+      color: var(--muted); font-size: 8.5pt;
+      border-top: 1px solid var(--line); padding-top: 12px;
+    }
+    .min-list { margin: 8px 0 0; padding-left: 18px; }
+    .min-list li { margin-bottom: 4px; }
+    .header-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px; padding-bottom: 7px; border-bottom: 1px solid var(--line);
+    }
+    .header-bar img { height: 30px; }
+    .header-bar .doc-label {
+      font-size: 7.5pt; color: var(--muted); text-align: right;
+      text-transform: uppercase; letter-spacing: .08em; font-weight: 700;
+    }
+    h2 {
+      color: var(--teal-deep); font-size: 11pt; margin: 14px 0 7px;
+      padding-bottom: 4px; border-bottom: 2px solid var(--line);
+      page-break-after: avoid;
+    }
+    h3 {
+      color: var(--orange); font-size: 9.5pt; margin: 12px 0 6px;
+      text-transform: uppercase; letter-spacing: .04em;
+      page-break-after: avoid;
+    }
+    p { margin: 0 0 7px; }
+    .note {
+      background: var(--bg-soft); border-radius: 8px;
+      padding: 8px 10px; margin: 6px 0 10px; font-size: 8.5pt; color: var(--muted);
+    }
+    table {
+      width: 100%; border-collapse: collapse; margin: 6px 0 12px;
+      font-size: 8.6pt; page-break-inside: auto;
+    }
+    th, td {
+      border: 1px solid var(--line); padding: 6px 8px;
+      text-align: left; vertical-align: top;
+    }
+    th {
+      background: var(--teal-deep); color: #fff; font-weight: 700; width: 38%;
+    }
+    td.fill { min-height: 18px; background: #fcfeff; }
+    tr { page-break-inside: avoid; }
+    .checks { white-space: nowrap; }
+    .box {
+      display: inline-block; width: 11px; height: 11px;
+      border: 1.4px solid var(--teal); border-radius: 2px;
+      margin: 0 3px 0 0; vertical-align: -1px;
+    }
+    .section { page-break-inside: avoid; }
+    .blank-row td { height: 22px; }
+    .sign-line {
+      margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line);
+      font-size: 9pt;
+    }
+    .footer-note {
+      margin-top: 12px; font-size: 8pt; color: var(--muted); font-style: italic;
+    }
+    ol.steps { margin: 6px 0 10px 18px; padding: 0; }
+    ol.steps li { margin-bottom: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <section class="cover">
+    <div class="cover-top">
+      <img class="logo" src="info8-logo.png" alt="Info8" />
+      <div class="badge">Anexo operacional</div>
+    </div>
+
+    <div>
+      <div class="eyebrow">Info8 × Ajoia Brasil</div>
+      <h1>Checklist de acessos e credenciais</h1>
+      <p class="cover-sub">Documento para a Ajoia preencher e devolver à Info8. Libera tudo o que é necessário para evoluir o portal, integrar redes/YouTube/RSS e operar a parceria.</p>
+
+      <div class="highlight-box">
+        <strong>E-mail para convites de administrador:</strong> concierge@doctor8.com.br<br />
+        Prefira <strong>convidar</strong> este e-mail como admin em vez de enviar senha, sempre que possível.
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <strong>De</strong>
+          <span>Info8 Desenvolvimento de Sistemas Ltda.</span>
+          <small>Diego Albs Passos · CNPJ 20.251.527/0001-04</small>
+        </div>
+        <div class="card">
+          <strong>Para</strong>
+          <span>Ajoia Brasil</span>
+          <small>Portal ajoiabrasil.com.br · contato@ajoiabrasil.com.br</small>
+        </div>
+      </div>
+
+      <h2 style="margin-top:18px;border:none;padding:0;">Mínimo para começar</h2>
+      <ol class="min-list">
+        <li><strong>WordPress admin</strong> (usuário ou convite)</li>
+        <li><strong>Hospedagem</strong> (painel ou FTP + contato do hospedeiro)</li>
+        <li><strong>Instagram + Facebook</strong> (admin / Meta)</li>
+        <li><strong>YouTube</strong> (gerente do canal)</li>
+        <li><strong>Lista de colunistas</strong> (nome + e-mail)</li>
+        <li><strong>Google Analytics</strong> (convite editor) — fortemente recomendado</li>
+      </ol>
+    </div>
+
+    <div>
+      <div class="accent-bar"></div>
+      <div class="cover-meta">
+        <div>
+          <div><strong>Como devolver:</strong> e-mail ou WhatsApp (pode ser em partes)</div>
+          <div><strong>Após configurar:</strong> trocar senhas compartilhadas</div>
+        </div>
+        <div style="text-align:right">
+          <div><strong>Contato Info8:</strong> concierge@doctor8.com.br</div>
+          <div><strong>Confidencial</strong> — uso exclusivo da parceria</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORPO -->
+  <div class="header-bar">
+    <img src="info8-logo.png" alt="Info8" />
+    <div class="doc-label">Checklist de acessos · Info8 × Ajoia</div>
+  </div>
+
+  <div class="section">
+    <h2>0. Responsável na Ajoia por este formulário</h2>
+    <table>
+      <tr><th>Nome</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>WhatsApp</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>E-mail</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Data</th><td class="fill">____ / ____ / ________</td></tr>
+    </table>
+    <p><strong>Como preencher:</strong></p>
+    <ol class="steps">
+      <li>Preencha o que já tiver.</li>
+      <li>Se não souber a senha, prefira <strong>convidar</strong> concierge@doctor8.com.br como administrador.</li>
+      <li>Envie de volta por e-mail ou WhatsApp (pode ser em partes).</li>
+      <li>Depois da configuração, troquem as senhas compartilhadas.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>1. Site WordPress <span style="color:var(--orange)">(obrigatório)</span></h2>
+    <table>
+      <tr><th>URL do site</th><td>https://ajoiabrasil.com.br</td></tr>
+      <tr><th>URL do painel admin</th><td>https://ajoiabrasil.com.br/wp-admin &nbsp; (ou outra: ________)</td></tr>
+      <tr><th>Usuário admin</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Senha admin</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>OU convite de administrador enviado?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não &nbsp; → para concierge@doctor8.com.br</td></tr>
+      <tr><th>E-mail do admin atual do site</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Quem administra hoje (nome)</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Plugins premium / licenças</th><td>1. Sahifa / tema: _______________<br>2. WPConsent (ou outro): _______________<br>Chaves/licenças: _______________</td></tr>
+      <tr><th>Acesso a tema filho / customizações?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não &nbsp; <span class="box"></span> Não sei</td></tr>
+    </table>
+    <div class="note">Ideal: criar um usuário <strong>Administrador</strong> exclusivo para a Info8 (não usar conta pessoal de alguém).</div>
+  </div>
+
+  <div class="section">
+    <h2>2. Hospedagem / servidor <span style="color:var(--orange)">(obrigatório ou fortemente recomendado)</span></h2>
+    <p>Quem hospeda hoje: _________________________________ (amigo / empresa)</p>
+    <table>
+      <tr><th>Empresa de hospedagem</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Painel</th><td>cPanel / hPanel / Plesk / DirectAdmin / outro: ________</td></tr>
+      <tr><th>URL do painel</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Usuário</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Senha</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>OU convite/subconta para Info8?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>FTP / SFTP — host</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>FTP — usuário</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>FTP — senha</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>FTP — porta</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>MySQL — host / nome / usuário / senha</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Backups existentes?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não &nbsp; · Onde: ________</td></tr>
+      <tr><th>Registrador do domínio</th><td>Registro.br / GoDaddy / outro: ________</td></tr>
+      <tr><th>Login do registrador</th><td>usuário: ________ &nbsp; senha: ________</td></tr>
+      <tr><th>DNS / Cloudflare</th><td class="checks"><span class="box"></span> Não usa &nbsp; <span class="box"></span> Usa — login: ________</td></tr>
+    </table>
+    <div class="note"><strong>Mínimo aceitável</strong> se não liberarem o painel completo: FTP + wp-admin + WhatsApp do hospedeiro: ________</div>
+  </div>
+
+  <div class="section">
+    <h2>3. Contas oficiais de redes sociais <span style="color:var(--orange)">(obrigatório)</span></h2>
+    <p>Marque o que existe e libere <strong>admin</strong> (não só “editor”/“anunciante”, quando possível).</p>
+
+    <h3>3.1 Instagram</h3>
+    <table>
+      <tr><th>Existe conta oficial?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>@usuário</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Conta Profissional (Business/Creator)?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não &nbsp; <span class="box"></span> Não sei</td></tr>
+      <tr><th>Ligada a Página do Facebook?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não &nbsp; <span class="box"></span> Não sei</td></tr>
+      <tr><th>Login (e-mail/telefone)</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Senha</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>OU admin via Meta Business Suite?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Quem tem o celular do 2FA</th><td class="fill">&nbsp;</td></tr>
+    </table>
+
+    <h3>3.2 Facebook (Página)</h3>
+    <table>
+      <tr><th>Existe Página oficial?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Nome da Página + URL</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Meta Business Manager / Suite</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Login / Senha</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>OU convite de admin Página / BM?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Permissões para Info8</th><td class="checks"><span class="box"></span> Admin da Página &nbsp; <span class="box"></span> Admin do BM</td></tr>
+    </table>
+
+    <h3>3.3 YouTube</h3>
+    <table>
+      <tr><th>Existe canal oficial?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Nome do canal + URL</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Conta Google dona (e-mail)</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Senha</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>OU adicionou concierge@doctor8.com.br como gerente/admin?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Brand Account?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não &nbsp; <span class="box"></span> Não sei</td></tr>
+    </table>
+
+    <h3>3.4 X (Twitter)</h3>
+    <table>
+      <tr><th>Existe conta oficial?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>@usuário</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Login / Senha</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>2FA — quem tem</th><td class="fill">&nbsp;</td></tr>
+    </table>
+
+    <h3>3.5 LinkedIn</h3>
+    <table>
+      <tr><th>Existe Página oficial?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>URL da Página</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Login / Senha da conta admin</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>OU convite Super Admin / Admin?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+    </table>
+
+    <h3>3.6 Outras redes (se houver)</h3>
+    <table>
+      <tr><th>Rede</th><th style="width:20%;background:var(--teal-deep);color:#fff">@ / URL</th><th style="width:20%;background:var(--teal-deep);color:#fff">Login</th><th style="width:22%;background:var(--teal-deep);color:#fff">Senha / convite</th></tr>
+      <tr><td>TikTok</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Threads</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>WhatsApp Business / Canal</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Outra: ________</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>4. Google Analytics / Search Console <span style="color:var(--muted)">(recomendado)</span></h2>
+    <table>
+      <tr><th>Google Analytics — propriedade</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Conta Google dona</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>Convite Editor/Admin para concierge@doctor8.com.br?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Search Console do domínio</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não &nbsp; <span class="box"></span> Não sei</td></tr>
+      <tr><th>Convite Search Console enviado?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Tag Manager</th><td class="checks"><span class="box"></span> Não usa &nbsp; <span class="box"></span> Usa — convite: <span class="box"></span> Sim <span class="box"></span> Não</td></tr>
+      <tr><th>AdSense / Ad Manager</th><td class="checks"><span class="box"></span> Não usa &nbsp; <span class="box"></span> Usa — acesso: ________</td></tr>
+    </table>
+    <div class="note">Com acesso ao Analytics dá para limpar a leitura de audiência (leitores reais, fontes, cidades, páginas).</div>
+  </div>
+
+  <div class="section">
+    <h2>5. E-mail institucional <span style="color:var(--muted)">(recomendado)</span></h2>
+    <table>
+      <tr><th>Domínio @ajoiabrasil.com.br?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Onde hospeda o e-mail</th><td>Google Workspace / cPanel / outro: ________</td></tr>
+      <tr><th>Existe contato@ajoiabrasil.com.br?</th><td class="checks"><span class="box"></span> Sim &nbsp; <span class="box"></span> Não</td></tr>
+      <tr><th>Caixa técnica</th><td class="checks"><span class="box"></span> Criar: ________ &nbsp; <span class="box"></span> Usar concierge@doctor8.com.br</td></tr>
+      <tr><th>SMTP (formulários do site)</th><td>host / usuário / senha: ________</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>6. Colunistas e redação <span style="color:var(--orange)">(obrigatório)</span></h2>
+    <p>Podem anexar Excel/Google Sheets. Abaixo, linhas para os primeiros nomes:</p>
+    <table>
+      <tr>
+        <th style="width:22%">Nome completo</th>
+        <th style="width:18%;background:var(--teal-deep);color:#fff">E-mail login</th>
+        <th style="width:14%;background:var(--teal-deep);color:#fff">WhatsApp</th>
+        <th style="width:12%;background:var(--teal-deep);color:#fff">Cargo/UF</th>
+        <th style="width:14%;background:var(--teal-deep);color:#fff">Bio / foto</th>
+        <th style="width:12%;background:var(--teal-deep);color:#fff">Já tem WP?</th>
+      </tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+    <p><strong>Admin editorial da Ajoia</strong> (quem aprova padrão de publicação): Nome ________ · WhatsApp ________ · E-mail ________</p>
+  </div>
+
+  <div class="section">
+    <h2>7. RSS / fontes externas</h2>
+    <table>
+      <tr>
+        <th style="width:28%">Fonte</th>
+        <th style="width:28%;background:var(--teal-deep);color:#fff">URL do site</th>
+        <th style="width:28%;background:var(--teal-deep);color:#fff">URL do feed RSS</th>
+        <th style="width:16%;background:var(--teal-deep);color:#fff">Rascunho?</th>
+      </tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td class="checks"><span class="box"></span> Sim</td></tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td class="checks"><span class="box"></span> Sim</td></tr>
+      <tr class="blank-row"><td>&nbsp;</td><td></td><td></td><td class="checks"><span class="box"></span> Sim</td></tr>
+    </table>
+    <p class="checks"><span class="box"></span> Ainda sem lista — definir depois com a Info8</p>
+  </div>
+
+  <div class="section">
+    <h2>8. Ferramentas de automação / plugins</h2>
+    <table>
+      <tr>
+        <th>Ferramenta</th>
+        <th style="width:22%;background:var(--teal-deep);color:#fff">Tem conta?</th>
+        <th style="width:22%;background:var(--teal-deep);color:#fff">Login</th>
+        <th style="width:22%;background:var(--teal-deep);color:#fff">Senha / API</th>
+      </tr>
+      <tr><td>Make.com</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Zapier</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Buffer / Hootsuite / outro</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td><td class="fill">&nbsp;</td></tr>
+    </table>
+    <p><strong>Licenças de plugins WordPress</strong> (chave, e-mail de compra, painel):</p>
+    <p>1. _______________________________________________________________<br>
+       2. _______________________________________________________________<br>
+       3. _______________________________________________________________</p>
+  </div>
+
+  <div class="section">
+    <h2>9. Identidade visual e materiais</h2>
+    <table>
+      <tr><th>Item</th><th style="width:18%;background:var(--teal-deep);color:#fff">Tem?</th><th style="width:44%;background:var(--teal-deep);color:#fff">Onde enviar / link</th></tr>
+      <tr><td>Logo em alta (PNG/SVG)</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Manual da marca / cores / fontes</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Fotos institucionais</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Mídia kit atual (PDF)</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Tabela de preços de patrocínio</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td></tr>
+      <tr><td>Lista de patrocinadores atuais</td><td class="checks"><span class="box"></span> Sim <span class="box"></span> Não</td><td class="fill">&nbsp;</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>10. Comercial / financeiro (rateio 50/50)</h2>
+    <table>
+      <tr><th>Contato comercial da Ajoia</th><td>Nome / WhatsApp / e-mail: ________</td></tr>
+      <tr><th>Quem define a % do captador</th><td class="fill">&nbsp;</td></tr>
+      <tr><th>% padrão de comissão de captação</th><td>________ %</td></tr>
+      <tr><th>Dados para NF da Info8</th><td>razão social Ajoia / e-mail financeiro: ________</td></tr>
+      <tr><th>PIX/conta Ajoia (opcional)</th><td class="fill">&nbsp;</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>11. Prioridade de integração</h2>
+    <p>Marque a ordem desejada (sugerida abaixo):</p>
+    <p class="checks">
+      1. <span class="box"></span> Instagram &nbsp;
+      2. <span class="box"></span> Facebook &nbsp;
+      3. <span class="box"></span> YouTube &nbsp;
+      4. <span class="box"></span> X &nbsp;
+      5. <span class="box"></span> LinkedIn &nbsp;
+      6. <span class="box"></span> RSS &nbsp;
+      7. <span class="box"></span> Outro: ________
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>12. Segurança e autorização</h2>
+    <p class="checks"><span class="box"></span> Entendo que senhas compartilhadas devem ser <strong>trocadas</strong> após a configuração.</p>
+    <p class="checks"><span class="box"></span> Prefiro, sempre que possível, <strong>convite de administrador</strong> em vez de enviar senha.</p>
+    <p class="checks"><span class="box"></span> A Ajoia autoriza a Info8 a criar backups e usuários técnicos no WordPress/hospedagem.</p>
+    <p class="checks"><span class="box"></span> A Ajoia autoriza a Info8 a conectar o site às redes oficiais para publicação automática/assistida.</p>
+    <p class="checks"><span class="box"></span> Credenciais serão tratadas com confidencialidade, nos termos do contrato de parceria.</p>
+
+    <div class="sign-line">
+      Responsável Ajoia: _______________________________ &nbsp;
+      Assinatura/ok: _______________ &nbsp;
+      Data: ____/____/________
+    </div>
+  </div>
+
+  <div class="accent-bar"></div>
+  <div class="grid-2">
+    <div class="card">
+      <strong>Contato Info8</strong>
+      <span>Info8 Desenvolvimento de Sistemas Ltda.</span>
+      <small>CNPJ 20.251.527/0001-04<br>concierge@doctor8.com.br<br>Diego Albs Passos</small>
+    </div>
+    <div class="card">
+      <strong>Envio</strong>
+      <span>Devolver preenchido junto com o contrato</span>
+      <small>Pode enviar parcial — o mínimo da capa já destrava o kickoff.</small>
+    </div>
+  </div>
+  <p class="footer-note">Documento confidencial para uso exclusivo da parceria Info8 × Ajoia Brasil. Identidade visual Info8 (#216a86 · #e05930).</p>
+
+</body>
+</html>

@@ -20,7 +20,7 @@ export async function Ticker() {
           <div className="relative hidden h-14 w-24 shrink-0 overflow-hidden rounded-md sm:block">
             <Image
               src={article.image}
-              alt=""
+              alt={article.imageAlt}
               fill
               sizes="96px"
               className="object-cover"
