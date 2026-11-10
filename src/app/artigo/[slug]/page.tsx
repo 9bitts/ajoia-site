@@ -2,9 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { AdSlot, AdStack } from "@/components/AdSlot";
 import { ArticleAnalytics } from "@/components/ArticleAnalytics";
 import { JsonLd } from "@/components/JsonLd";
 import { StoryCard } from "@/components/StoryCard";
+import { sidebarAds } from "@/data/ads";
 import {
   getArticleBySlug,
   getLatestArticles,
@@ -50,66 +52,79 @@ export default async function ArticlePage({ params }: Props) {
         author={article.authorName}
         title={article.title}
       />
-      <header className="mx-auto max-w-3xl px-4 pt-8 sm:px-5 sm:pt-12">
-        <div className="flex flex-wrap items-center gap-3 text-xs text-mist-dim">
-          <Link href={`/secao/${article.section}`} className="kicker">
-            {section.label}
-          </Link>
-          {article.isOpinion && article.section !== "opiniao" && (
-            <span className="kicker">Opinião</span>
-          )}
-          <time dateTime={article.publishedAt}>{formatDateLong(article.date)}</time>
-          {updatedDay !== publishedDay && (
-            <time dateTime={article.updatedAt}>
-              Atualizado em {formatDateLong(updatedDay)}
-            </time>
-          )}
-        </div>
-        <h1 className="mt-3 font-display text-[1.85rem] leading-[1.08] text-[var(--text)] sm:text-4xl md:text-5xl">
-          {article.title}
-        </h1>
-        <p className="mt-5 font-serif text-lg leading-relaxed text-mist-muted md:text-xl">
-          {article.dek}
-        </p>
-        <p className="mt-6 border-t border-[var(--line)] pt-4 text-sm text-mist-dim">
-          Por{" "}
-          <Link
-            href={`/colunistas/${article.authorSlug}`}
-            className="font-semibold text-[var(--text)] hover:text-gold"
-          >
-            {article.authorName}
-          </Link>
-        </p>
-      </header>
-
-      <div className="relative mx-auto mt-8 aspect-[16/8] w-full max-w-content overflow-hidden rounded-2xl bg-[var(--bg-soft)] sm:mt-10">
-        {image && (
-          <Image
-            src={image}
-            alt={article.imageAlt || article.title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        )}
-      </div>
-
-      <div className="mx-auto grid max-w-content gap-12 px-4 py-10 sm:px-5 sm:py-12 lg:grid-cols-12">
-        <div className="prose-ajoia min-w-0 lg:col-span-8">
-          {article.body.map((paragraph) => (
-            <p key={paragraph.slice(0, 32)}>{paragraph}</p>
-          ))}
-          <div className="mt-10 border-t border-[var(--line)] pt-6 text-sm text-mist-dim">
-            <p>
-              Aviso: artigos e opiniões publicados são de inteira
-              responsabilidade e autoria dos colunistas.
+      <div className="mx-auto grid max-w-content items-start gap-10 px-4 py-8 sm:px-5 sm:py-10 lg:grid-cols-12 lg:gap-12">
+        <div className="min-w-0 lg:col-span-8">
+          <header>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-mist-dim">
+              <Link href={`/secao/${article.section}`} className="kicker">
+                {section.label}
+              </Link>
+              {article.isOpinion && article.section !== "opiniao" && (
+                <span className="kicker">Opinião</span>
+              )}
+              <time dateTime={article.publishedAt}>
+                {formatDateLong(article.date)}
+              </time>
+              {updatedDay !== publishedDay && (
+                <time dateTime={article.updatedAt}>
+                  Atualizado em {formatDateLong(updatedDay)}
+                </time>
+              )}
+            </div>
+            <h1 className="mt-3 font-display text-[1.85rem] leading-[1.08] text-[var(--text)] sm:text-4xl md:text-5xl">
+              {article.title}
+            </h1>
+            <p className="mt-5 font-serif text-lg leading-relaxed text-mist-muted md:text-xl">
+              {article.dek}
             </p>
+            <p className="mt-6 border-t border-[var(--line)] pt-4 text-sm text-mist-dim">
+              Por{" "}
+              <Link
+                href={`/colunistas/${article.authorSlug}`}
+                className="font-semibold text-[var(--text)] hover:text-gold"
+              >
+                {article.authorName}
+              </Link>
+            </p>
+          </header>
+
+          <div className="relative mt-8 aspect-[16/8] overflow-hidden rounded-2xl bg-[var(--bg-soft)]">
+            {image && (
+              <Image
+                src={image}
+                alt={article.imageAlt || article.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-cover"
+              />
+            )}
+          </div>
+
+          {sidebarAds[0] && (
+            <div className="mt-8 lg:hidden">
+              <AdSlot ad={sidebarAds[0]} showLabel />
+            </div>
+          )}
+
+          <div className="prose-ajoia mt-8">
+            {article.body.map((paragraph) => (
+              <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+            ))}
+            <div className="mt-10 border-t border-[var(--line)] pt-6 text-sm text-mist-dim">
+              <p>
+                Aviso: artigos e opiniões publicados são de inteira
+                responsabilidade e autoria dos colunistas.
+              </p>
+            </div>
           </div>
         </div>
 
         <aside className="min-w-0 lg:col-span-4">
-          <div className="sticky top-28 rounded-2xl bg-[var(--bg-soft)] p-5 sm:p-6">
+          <div className="hidden lg:block">
+            <AdStack ads={sidebarAds} />
+          </div>
+          <div className="rounded-2xl bg-[var(--bg-soft)] p-5 sm:p-6 lg:mt-8">
             <p className="font-sans text-lg font-bold tracking-tight text-[var(--text)]">
               Continue lendo
             </p>
@@ -128,6 +143,11 @@ export default async function ArticlePage({ params }: Props) {
               ))}
             </div>
           </div>
+          {sidebarAds.length > 1 && (
+            <div className="mt-8 lg:hidden">
+              <AdStack ads={sidebarAds.slice(1)} />
+            </div>
+          )}
         </aside>
       </div>
 

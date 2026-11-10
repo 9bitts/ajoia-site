@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { AdSlot } from "@/components/AdSlot";
 import { BrandLogo } from "@/components/BrandLogo";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { headerAds } from "@/data/ads";
 import { institutionalLinks, navSections, siteConfig } from "@/data/site";
 
 export function Header() {
@@ -29,11 +31,17 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50">
       <div className="border-b border-[var(--line)] bg-[var(--bg)]">
-        <div className="mx-auto flex max-w-content items-center justify-between gap-3 px-4 py-3 sm:px-5">
-          <BrandLogo href="/" size="md" priority className="max-w-[46vw] sm:max-w-none" />
+        <div className="mx-auto flex max-w-content items-center gap-3 px-4 py-3 sm:gap-4 sm:px-5">
+          <BrandLogo href="/" size="md" priority className="max-w-[46vw] shrink-0 sm:max-w-none" />
 
-          <div className="flex shrink-0 items-center gap-3 sm:gap-4">
-            <p className="hidden text-[11px] uppercase tracking-[0.14em] text-mist-dim lg:block">
+          {headerAds[0] && (
+            <div className="hidden min-w-0 flex-1 lg:block">
+              <AdSlot ad={headerAds[0]} variant="leaderboard" />
+            </div>
+          )}
+
+          <div className="ml-auto flex shrink-0 items-center gap-3 sm:gap-4">
+            <p className="hidden text-[11px] uppercase tracking-[0.14em] text-mist-dim xl:block">
               {siteConfig.city}
               {today ? ` · ${today}` : ""}
             </p>
@@ -68,6 +76,11 @@ export function Header() {
             </button>
           </div>
         </div>
+        {headerAds[0] && (
+          <div className="mx-auto max-w-content px-4 pb-3 lg:hidden">
+            <AdSlot ad={headerAds[0]} variant="leaderboard" />
+          </div>
+        )}
       </div>
 
       <nav className="mast-nav on-dark hidden bg-[#111113] lg:block">

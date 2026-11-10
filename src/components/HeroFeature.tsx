@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AdSlot } from "@/components/AdSlot";
+import { sidebarAds } from "@/data/ads";
 import type { PublicArticle } from "@/lib/articles";
 import { formatDate } from "@/lib/format";
 import { sectionMeta } from "@/lib/sections";
@@ -74,6 +76,11 @@ export function HeroFeature({ lead, side, latest }: Props) {
             Ver todas →
           </Link>
         </div>
+        {sidebarAds[0] && (
+          <div className="mt-6">
+            <AdSlot ad={sidebarAds[0]} showLabel />
+          </div>
+        )}
       </aside>
     </section>
   );
