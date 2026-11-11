@@ -11,8 +11,8 @@
 4. Depois da configuração, **troquem as senhas** compartilhadas.
 
 **E-mail para convites de admin:**  
-`concierge@doctor8.com.br`  
-*(se preferirem outro e-mail técnico exclusivo, avisem)*
+`portal.ajoiabrasil@gmail.com`  
+*(conta operacional da associação. É nela que ficam Analytics, Search Console, YouTube e os convites de rede. Contato da Info8 continua concierge@doctor8.com.br)*
 
 **Responsável na Ajoia por este formulário:**  
 Nome: _______________________  
@@ -30,7 +30,7 @@ Data: ____/____/______
 | URL do painel admin | https://ajoiabrasil.com.br/wp-admin (ou outra: ________) |
 | Usuário admin | |
 | Senha admin | |
-| **OU** convite de administrador enviado para concierge@doctor8.com.br? | [ ] Sim [ ] Não |
+| **OU** convite de administrador enviado para portal.ajoiabrasil@gmail.com? | [ ] Sim [ ] Não |
 | E-mail do admin atual do site | |
 | Quem administra hoje (nome) | |
 | Plugins premium já comprados (nome + onde está a licença/chave) | 1. Sahifa / tema: ________<br>2. WPConsent (ou outro): ________<br>Chaves/licenças: ________ |
@@ -83,7 +83,7 @@ Marque o que existe e libere **admin** (não só “editor”/“anunciante”, 
 | Está ligada a uma Página do Facebook? | [ ] Sim [ ] Não [ ] Não sei |
 | Login (e-mail/telefone) | |
 | Senha | |
-| **OU** adicionou Info8 como administrador via Meta Business Suite? | [ ] Sim [ ] Não |
+| **OU** adicionou portal.ajoiabrasil@gmail.com como administrador via Meta Business Suite? | [ ] Sim [ ] Não |
 | Quem tem o celular da autenticação em 2 fatores | |
 
 ### 3.2 Facebook (Página)
@@ -104,7 +104,7 @@ Marque o que existe e libere **admin** (não só “editor”/“anunciante”, 
 | Nome do canal + URL | |
 | Conta Google dona do canal (e-mail) | |
 | Senha | |
-| **OU** adicionou concierge@doctor8.com.br como **gerente/administrador** do canal? | [ ] Sim [ ] Não |
+| **OU** adicionou portal.ajoiabrasil@gmail.com como **gerente/administrador** do canal? | [ ] Sim [ ] Não |
 | Brand Account? | [ ] Sim [ ] Não [ ] Não sei |
 
 ### 3.4 X (Twitter)
@@ -141,7 +141,7 @@ Marque o que existe e libere **admin** (não só “editor”/“anunciante”, 
 |------|-----------|
 | Google Analytics — URL da propriedade | |
 | Conta Google dona | |
-| **OU** convite (e-mail concierge@doctor8.com.br) com permissão **Editor** ou **Administrador**? | [ ] Sim [ ] Não |
+| **OU** convite (e-mail portal.ajoiabrasil@gmail.com) com permissão **Editor** ou **Administrador**? | [ ] Sim [ ] Não |
 | Google Search Console — propriedade do domínio | [ ] Sim [ ] Não [ ] Não sei |
 | Convite Search Console enviado? | [ ] Sim [ ] Não |
 | Google Tag Manager | [ ] Não usa [ ] Usa — convite: [ ] Sim [ ] Não |
@@ -158,7 +158,7 @@ Marque o que existe e libere **admin** (não só “editor”/“anunciante”, 
 | Domínio de e-mail (@ajoiabrasil.com.br)? | [ ] Sim [ ] Não |
 | Onde hospeda o e-mail (Google Workspace, cPanel, outro) | |
 | Existe caixa contato@ajoiabrasil.com.br? | [ ] Sim [ ] Não |
-| Precisamos de caixa técnica? (ex.: tecnico@ ou digital@) | [ ] Criar: ________ [ ] Usar concierge@doctor8.com.br |
+| Precisamos de caixa técnica? (ex.: tecnico@ ou digital@) | [ ] Criar: ________ [ ] Usar portal.ajoiabrasil@gmail.com |
 | SMTP para formulários do site (se houver) | host / usuário / senha: ________ |
 
 ---
