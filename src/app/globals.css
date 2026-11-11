@@ -113,6 +113,12 @@ button {
   font-family: var(--font-serif), serif;
 }
 
+.admin-shell {
+  background: #070708;
+  color: #f2f2f3;
+  min-height: 100vh;
+}
+
 .site-shell {
   position: relative;
   isolation: isolate;

@@ -8,25 +8,25 @@ export async function AdminNav() {
 
   return (
     <header className="border-b border-white/10 bg-ink/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4">
-        <div className="flex items-center gap-6">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <div className="flex items-center gap-3">
             <BrandLogo href="/admin" size="sm" />
-            <span className="hidden text-[10px] uppercase tracking-[0.18em] text-mist-dim sm:inline">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-mist-dim">
               Admin
             </span>
           </div>
-          <nav className="hidden items-center gap-4 text-xs uppercase tracking-[0.16em] text-mist-muted sm:flex">
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs uppercase tracking-[0.16em] text-mist-muted">
             <Link href="/admin" className="hover:text-white">
-              Artigos
+              {session.user.role === "ADMIN" ? "Colunistas" : "Minhas matérias"}
             </Link>
             <Link href="/admin/artigos/novo" className="hover:text-white">
-              Novo
+              Nova matéria
             </Link>
             {session.user.role === "ADMIN" && (
               <>
                 <Link href="/admin/usuarios" className="hover:text-white">
-                  Usuários
+                  Contas
                 </Link>
                 <Link href="/admin/mensagens" className="hover:text-white">
                   Caixa

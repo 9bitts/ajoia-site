@@ -24,11 +24,14 @@ export default async function UsersAdminPage() {
         <p className="text-[11px] uppercase tracking-[0.22em] text-mist-dim">
           Administração
         </p>
-        <h1 className="mt-2 font-display text-4xl text-white">Usuários</h1>
+        <h1 className="mt-2 font-display text-4xl text-white">Contas</h1>
         <p className="mt-3 text-sm leading-relaxed text-mist-muted">
-          O jornalista cria a conta com o próprio e-mail. Libere o acesso
-          antes que ele possa enviar matérias. Quem já está liberado aparece
-          abaixo; contas novas ficam no topo até você autorizar.
+          Libere o acesso de quem criou conta. Para ler as matérias de alguém,
+          use o botão Matérias — ou volte para a{" "}
+          <a href="/admin" className="text-gold">
+            lista de colunistas
+          </a>
+          .
           {waiting > 0 && (
             <>
               {" "}

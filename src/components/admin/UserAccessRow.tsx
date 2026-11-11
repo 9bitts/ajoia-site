@@ -13,7 +13,13 @@ type UserRow = {
   createdLabel: string;
 };
 
-export function UserAccessRow({ user }: { user: UserRow }) {
+export function UserAccessRow({
+  user,
+  showArticles = true,
+}: {
+  user: UserRow;
+  showArticles?: boolean;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -57,14 +63,24 @@ export function UserAccessRow({ user }: { user: UserRow }) {
           </p>
           {error && <p className="mt-2 text-xs text-red-300">{error}</p>}
         </div>
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => void setApproved(!user.approved)}
-          className="border border-white/20 px-3 py-2 text-[11px] uppercase tracking-[0.14em] text-mist hover:border-mist/50 hover:text-white disabled:opacity-50"
-        >
-          {loading ? "Salvando…" : user.approved ? "Suspender" : "Liberar"}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {showArticles && (
+            <a
+              href={`/admin/colunistas/${user.slug}`}
+              className="border border-white/20 px-3 py-2 text-[11px] uppercase tracking-[0.14em] text-white hover:border-gold/60"
+            >
+              Matérias
+            </a>
+          )}
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => void setApproved(!user.approved)}
+            className="border border-white/20 px-3 py-2 text-[11px] uppercase tracking-[0.14em] text-mist hover:border-mist/50 hover:text-white disabled:opacity-50"
+          >
+            {loading ? "Salvando…" : user.approved ? "Suspender" : "Liberar"}
+          </button>
+        </div>
       </div>
     </li>
   );

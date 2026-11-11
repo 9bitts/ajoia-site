@@ -13,8 +13,10 @@ export default function AdminLayout({
 }) {
   return (
     <SessionProvider>
-      <AdminNav />
-      <div className="mx-auto max-w-5xl px-5 py-10">{children}</div>
+      <div className="admin-shell min-h-screen">
+        <AdminNav />
+        <div className="mx-auto max-w-6xl px-5 py-10">{children}</div>
+      </div>
     </SessionProvider>
   );
 }
