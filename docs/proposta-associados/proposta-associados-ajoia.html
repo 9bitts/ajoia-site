@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Ajoia Brasil — Proposta aos associados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,520;9..144,620&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,460;8..60,560&display=swap" rel="stylesheet" />
+  <style>
+    @page { size: A4 portrait; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #141416;
+      --muted: #4a4e57;
+      --dim: #6b6f78;
+      --gold: #8d6a2f;
+      --gold-bright: #c6a35a;
+      --gold-deep: #6e5224;
+      --line: rgba(17, 17, 19, 0.12);
+      --soft: #f3f3f4;
+      --night: #070708;
+      --mast: #111113;
+    }
+    html, body { background: #9a9aa3; }
+    body {
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .mast {
+      background: var(--mast);
+      padding: 7mm 16mm 6mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mast img { height: 11mm; width: auto; display: block; }
+    .mast span {
+      color: var(--gold-bright);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .body { padding: 11mm 16mm 16mm; }
+    .kicker {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    h1, h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 560;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+    h2 { font-size: 30px; line-height: 1.08; margin-top: 3mm; }
+    p, li { font-size: 12.5px; line-height: 1.48; color: var(--muted); }
+    .lede {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 16px;
+      line-height: 1.45;
+      color: #2a2c31;
+      margin-top: 4mm;
+    }
+    .rule { width: 28mm; height: 2px; background: var(--gold-bright); margin-top: 4mm; }
+    .foot {
+      position: absolute;
+      left: 16mm; right: 16mm; bottom: 7mm;
+      display: flex; justify-content: space-between;
+      font-size: 9px; letter-spacing: 0.04em; color: #8a8d96;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+    .card {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 5mm 5mm 5.5mm;
+    }
+    .card.soft { background: var(--soft); border-color: transparent; }
+    .card.gold {
+      background: #f8f3ea;
+      border-color: transparent;
+    }
+    .n {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      margin-bottom: 2mm;
+    }
+    h3 {
+      font-family: "Manrope", sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .card p { margin-top: 2mm; font-size: 12px; }
+    ul { padding-left: 4.2mm; }
+    li { margin: 1.4mm 0; }
+    li strong { color: var(--ink); font-weight: 700; }
+
+    .cover {
+      background: var(--night);
+      color: #fff;
+      padding: 16mm 16mm 18mm;
+    }
+    .cover .kicker { color: var(--gold-bright); }
+    .cover h1 {
+      color: #fff;
+      font-size: 52px;
+      line-height: 0.98;
+      margin-top: 8mm;
+      max-width: 170mm;
+    }
+    .cover .lede {
+      color: rgba(255,255,255,0.86);
+      max-width: 158mm;
+      margin-top: 6mm;
+      font-size: 17px;
+    }
+    .cover .rule { background: var(--gold-bright); margin-top: 7mm; }
+    .prices {
+      display: grid;
+      grid-template-columns: 1fr 18mm 1fr;
+      gap: 0;
+      margin-top: 14mm;
+      align-items: stretch;
+    }
+    .price {
+      border: 1px solid rgba(198, 163, 90, 0.45);
+      padding: 7mm 7mm 6mm;
+    }
+    .price b {
+      display: block;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 40px;
+      font-weight: 560;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1;
+    }
+    .price b small {
+      font-family: "Manrope", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--gold-bright);
+      margin-left: 2mm;
+    }
+    .price span {
+      display: block;
+      margin-top: 3mm;
+      font-size: 12px;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.72);
+    }
+    .or {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-bright);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+    .cover-note {
+      position: absolute;
+      left: 16mm; right: 16mm; bottom: 16mm;
+      font-size: 12px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.62);
+    }
+    .pills { margin-top: 8mm; }
+    .pill {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      border-radius: 999px;
+      padding: 2mm 3.5mm;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin: 0 2mm 2mm 0;
+    }
+    .price-bar {
+      margin-top: 6mm;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--mast);
+      color: #fff;
+    }
+    .price-bar div { padding: 5mm 6mm; }
+    .price-bar div + div { border-left: 1px solid rgba(198,163,90,0.35); }
+    .price-bar strong {
+      display: block;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 26px;
+      font-weight: 560;
+      color: #fff;
+    }
+    .price-bar em {
+      display: block;
+      margin-top: 1mm;
+      font-style: normal;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      font-weight: 800;
+    }
+    .price-bar p { color: rgba(255,255,255,0.72); margin-top: 1.5mm; font-size: 11.5px; }
+    .steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3.5mm; margin-top: 6mm; }
+    .step-n {
+      width: 7mm; height: 7mm; border-radius: 999px;
+      background: var(--gold-deep); color: #fff;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2.5mm;
+    }
+    .pct {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 26px;
+      line-height: 1;
+      color: var(--gold-deep);
+      margin-bottom: 2mm;
+    }
+    .tags { margin-top: 3mm; }
+    .tag {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--ink);
+      padding: 1.3mm 2.6mm;
+      font-size: 10.5px;
+      font-weight: 700;
+      margin: 0 1.5mm 1.5mm 0;
+    }
+    .note {
+      margin-top: 5mm;
+      border-left: 3px solid var(--gold-bright);
+      background: var(--soft);
+      padding: 4mm 5mm;
+    }
+    .note h3 { font-size: 13px; }
+    .note p { margin-top: 1.5mm; font-size: 12px; }
+    .legal {
+      margin-top: 5mm;
+      font-size: 10.5px;
+      line-height: 1.45;
+      color: #6b6f78;
+    }
+    .close {
+      margin-top: 6mm;
+      background: var(--night);
+      color: #fff;
+      padding: 7mm 7mm 6mm;
+    }
+    .close h2 { color: #fff; font-size: 26px; }
+    .close p { color: rgba(255,255,255,0.78); margin-top: 2mm; }
+    .close .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+      margin-top: 5mm;
+    }
+    .close .row div {
+      border-top: 1px solid rgba(198,163,90,0.4);
+      padding-top: 3mm;
+    }
+    .close b {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      font-weight: 800;
+    }
+    .close span {
+      display: block;
+      margin-top: 1mm;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 650;
+    }
+  </style>
+</head>
+<body>
+
+<section class="page cover">
+  <img src="../../public/images/logo-ajoia.png" alt="Ajoia Brasil" style="height: 16mm; width: auto;" />
+  <p class="kicker" style="margin-top: 18mm;">Proposta aos associados</p>
+  <h1>Participação<br />Ajoia.</h1>
+  <div class="rule"></div>
+  <p class="lede">Quem participa tem divulgação exclusiva no site e nas redes da Ajoia, e os benefícios do Club Doctor, na parceria com a Doctor8.</p>
+  <div class="pills">
+    <span class="pill">Adesão voluntária</span>
+    <span class="pill">Site e redes</span>
+    <span class="pill">Club Doctor</span>
+    <span class="pill">Doze estados e o exterior</span>
+  </div>
+  <div class="prices">
+    <div class="price">
+      <b>R$ 50<small>/mês</small></b>
+      <span>Participação mensal, paga à Ajoia. Vale enquanto o mês estiver pago.</span>
+    </div>
+    <div class="or">ou</div>
+    <div class="price">
+      <b>R$ 500<small>/ano</small></b>
+      <span>O ano inteiro em um pagamento. Doze meses avulsos somariam R$ 600.</span>
+    </div>
+  </div>
+  <p class="lede" style="margin-top: 7mm; font-size: 15px;">Familiar do associado pode pagar à parte, <strong style="color: var(--gold-bright); font-weight: 650;">R$ 19,90</strong>, e ter os benefícios do Club Doctor.</p>
+  <p class="cover-note">Associação Brasileira de Jornalistas Independentes e Afiliados · Belo Horizonte<br />A Ajoia cobra o associado. A Doctor8 entrega o Club Doctor a quem estiver em dia.</p>
+</section>
+
+<section class="page">
+  <div class="mast">
+    <img src="../../public/images/logo-ajoia.png" alt="Ajoia Brasil" />
+    <span>Aos associados</span>
+  </div>
+  <div class="body">
+    <p class="kicker">A participação</p>
+    <h2>Quem paga, entra<br />nos dois benefícios.</h2>
+    <p class="lede">A participação é de quem quiser. A Ajoia cobra R$ 50 por mês ou R$ 500 por ano. Em dia com esse valor, o associado tem divulgação exclusiva nas redes sociais e no site, e os benefícios do Club Doctor.</p>
+    <div class="grid-2" style="margin-top: 7mm;">
+      <article class="card gold">
+        <p class="n">01 · Ajoia</p>
+        <h3>Divulgação exclusiva</h3>
+        <p>Espaço no site e presença nas redes da associação, reservados a quem mantém a participação. Foto, nome, cargo e a trajetória de quem sustenta a Ajoia.</p>
+      </article>
+      <article class="card gold">
+        <p class="n">02 · Doctor8</p>
+        <h3>Club Doctor</h3>
+        <p>Descontos de membro na rede Doctor8: consultas, medicamentos, exames, insumos e o Clube de Compras. A consulta é paga à parte, já com desconto.</p>
+      </article>
+    </div>
+    <div class="price-bar">
+      <div>
+        <em>Mensal</em>
+        <strong>R$ 50</strong>
+        <p>Vale o mês pago. Divulgação e Club Doctor seguem juntos, enquanto a participação estiver em dia.</p>
+      </div>
+      <div>
+        <em>Anual</em>
+        <strong>R$ 500</strong>
+        <p>Doze meses num pagamento só. A diferença para doze parcelas de R$ 50 é de R$ 100.</p>
+      </div>
+    </div>
+    <div class="note">
+      <h3>Familiar, à parte · R$ 19,90</h3>
+      <p>O familiar do associado pode pagar à parte, R$ 19,90, e ter os benefícios do Club Doctor. A divulgação exclusiva no site e nas redes continua do associado. A participação do associado segue voluntária: entra quem decidir, paga à Ajoia, e a Ajoia confirma o acesso junto à Doctor8.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Ajoia Brasil · Proposta aos associados</span><span>02</span></div>
+</section>
+
+<section class="page">
+  <div class="mast">
+    <img src="../../public/images/logo-ajoia.png" alt="Ajoia Brasil" />
+    <span>A parceria</span>
+  </div>
+  <div class="body">
+    <p class="kicker">Doctor8</p>
+    <h2>O cuidado fica com<br />a Doctor8. O associado,<br />com a Ajoia.</h2>
+    <p class="lede">A Doctor8 é uma plataforma de cuidado em saúde. Reúne mais de 80 especialidades, com atendimento sobretudo online, e uma rede de farmácia, laboratório, insumos e compra coletiva.</p>
+    <div class="grid-2" style="margin-top: 6mm;">
+      <article class="card soft">
+        <p class="n">A Doctor8</p>
+        <h3>Rede de cuidado</h3>
+        <p>Médico, psicólogo, nutricionista, psicanalista, terapeuta integrativo, fisioterapeuta, dentista, enfermagem e outras áreas na mesma plataforma. O associado agenda, recebe orientação e acompanha o próprio cuidado.</p>
+      </article>
+      <article class="card soft">
+        <p class="n">A Ajoia</p>
+        <h3>Quem cobra e quem divulga</h3>
+        <p>A associação oferece a participação, cobra R$ 50 por mês ou R$ 500 por ano e faz a divulgação exclusiva de quem está em dia. O associado trata com a Ajoia. A Doctor8 libera o Club Doctor.</p>
+      </article>
+    </div>
+    <p class="lede" style="font-size: 14.5px; margin-top: 5mm;">A Ajoia reúne jornalistas em doze estados, no Distrito Federal e no exterior. O atendimento online acompanha essa geografia: o associado usa de onde estiver.</p>
+    <div class="steps">
+      <article>
+        <div class="step-n">1</div>
+        <h3>Paga à Ajoia</h3>
+        <p style="margin-top: 2mm;">O associado escolhe o mês, a R$ 50, ou o ano, a R$ 500.</p>
+      </article>
+      <article>
+        <div class="step-n">2</div>
+        <h3>A Ajoia confirma</h3>
+        <p style="margin-top: 2mm;">A associação registra quem está em dia e aciona a Doctor8.</p>
+      </article>
+      <article>
+        <div class="step-n">3</div>
+        <h3>Os dois benefícios</h3>
+        <p style="margin-top: 2mm;">Entra a divulgação exclusiva e abre o Club Doctor.</p>
+      </article>
+    </div>
+    <div class="note">
+      <h3>Parceria de cuidado, com a linguagem certa</h3>
+      <p>O Club Doctor é um clube de cuidados e de descontos. A consulta continua paga ao profissional, com desconto de membro. Não há cobertura de emergência. Os descontos valem com a participação em dia e conforme a rede disponível.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Ajoia Brasil · Parceria com a Doctor8</span><span>03</span></div>
+</section>
+
+<section class="page">
+  <div class="mast">
+    <img src="../../public/images/logo-ajoia.png" alt="Ajoia Brasil" />
+    <span>Divulgação</span>
+  </div>
+  <div class="body">
+    <p class="kicker">Site e redes sociais</p>
+    <h2>Divulgação exclusiva<br />de quem participa.</h2>
+    <p class="lede">Quem paga tem um lugar próprio na Ajoia: no site e nas redes sociais da associação. Esse espaço é de quem mantém a participação em dia.</p>
+    <div class="grid-2" style="margin-top: 7mm;">
+      <article class="card">
+        <p class="n">No site</p>
+        <h3>A página do associado</h3>
+        <p>Foto, nome, cargo e um texto sobre a trajetória. Uma página da pessoa dentro da Ajoia, além da coluna e da notícia. O nome passa a ter um endereço próprio no portal.</p>
+      </article>
+      <article class="card">
+        <p class="n">Nas redes</p>
+        <h3>Presença nos canais da Ajoia</h3>
+        <p>A associação publica o associado nas redes sociais da Ajoia. A divulgação apresenta o jornalista, o trabalho e o vínculo com a associação.</p>
+      </article>
+    </div>
+    <div class="card soft" style="margin-top: 4mm;">
+      <p class="n">Exclusiva</p>
+      <h3>Reservada a quem está em dia</h3>
+      <p>A divulgação não é de toda a lista de associados. Entra quem participa e paga. No plano mensal, vale o mês pago. No anual, vale os doze meses cobertos pelos R$ 500. Se a participação para, a divulgação exclusiva para junto com o acesso ao Club Doctor.</p>
+    </div>
+    <div class="tags">
+      <span class="tag">Foto</span>
+      <span class="tag">Nome</span>
+      <span class="tag">Cargo</span>
+      <span class="tag">Trajetória</span>
+      <span class="tag">Site da Ajoia</span>
+      <span class="tag">Redes da Ajoia</span>
+    </div>
+    <div class="note">
+      <h3>O que o associado envia</h3>
+      <p>Foto, nome completo, cargo e um texto curto sobre a própria trajetória. Com esse material, a Ajoia monta a página e a publicação nas redes.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Ajoia Brasil · Divulgação exclusiva</span><span>04</span></div>
+</section>
+
+<section class="page">
+  <div class="mast">
+    <img src="../../public/images/logo-ajoia.png" alt="Ajoia Brasil" />
+    <span>Club Doctor</span>
+  </div>
+  <div class="body">
+    <p class="kicker">Benefícios do clube</p>
+    <h2>O Club Doctor entra<br />nesta participação.</h2>
+    <p class="lede">O Club Doctor é o clube de cuidados da Doctor8. Nesta parceria, o associado da Ajoia não contrata o clube à parte: ele entra junto com a divulgação, nos R$ 50 por mês ou nos R$ 500 por ano.</p>
+    <div class="grid-2" style="margin-top: 6mm;">
+      <article class="card gold">
+        <p class="pct">até 30%</p>
+        <h3>Consultas</h3>
+        <p>O desconto é para consultas por telessaúde. Médico, psicologia, nutrição, psicanálise, terapia integrativa, fisioterapia, odontologia, enfermagem e as demais especialidades da rede.</p>
+      </article>
+      <article class="card gold">
+        <p class="pct">5% a 50%</p>
+        <h3>Medicamentos</h3>
+        <p>Desconto na farmácia e na rede parceira Doctor8. Depende da cidade e da disponibilidade.</p>
+      </article>
+      <article class="card" style="background: var(--soft); border-color: transparent;">
+        <p class="pct">15% a 45%</p>
+        <h3>Insumos e fraldas</h3>
+        <p>Catálogo de insumos e fraldas da rede, com preço de membro. Depende da cidade e da disponibilidade.</p>
+      </article>
+      <article class="card" style="background: var(--soft); border-color: transparent;">
+        <p class="pct">até 30%</p>
+        <h3>Exames</h3>
+        <p>Cotação em laboratórios parceiros da rede Doctor8. Depende da cidade e da disponibilidade.</p>
+      </article>
+    </div>
+    <div class="note">
+      <h3>A consulta é paga à parte, com desconto de membro</h3>
+      <p>A participação abre o desconto nas consultas por telessaúde. O valor da consulta é do profissional. O retorno depende de cada um: na rede, a maioria oferece retorno em até 30 dias. Exame e imagem podem seguir junto, quando o associado quiser uma segunda leitura clínica. Medicamentos, insumos e exames dependem da cidade e da disponibilidade.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Ajoia Brasil · Club Doctor · Doctor8</span><span>05</span></div>
+</section>
+
+<section class="page">
+  <div class="mast">
+    <img src="../../public/images/logo-ajoia.png" alt="Ajoia Brasil" />
+    <span>Club Doctor</span>
+  </div>
+  <div class="body">
+    <p class="kicker">Compra coletiva e familiar</p>
+    <h2>A Doctor8 negocia.<br />O familiar entra à parte.</h2>
+    <div class="steps" style="margin-top: 5mm;">
+      <article class="card soft">
+        <div class="step-n">1</div>
+        <h3>Lista o que precisa</h3>
+        <p>Medicamento, insumo, fralda, higiene, dermocosmético, vitamina ou suplemento.</p>
+      </article>
+      <article class="card soft">
+        <div class="step-n">2</div>
+        <h3>A Doctor8 negocia</h3>
+        <p>A compra coletiva busca preço de volume para quem está no Club Doctor.</p>
+      </article>
+      <article class="card soft">
+        <div class="step-n">3</div>
+        <h3>Familiar · R$ 19,90</h3>
+        <p>O familiar do associado pode pagar à parte, R$ 19,90, e ter os benefícios do Club Doctor.</p>
+      </article>
+    </div>
+    <div class="tags">
+      <span class="tag">Medicamentos</span>
+      <span class="tag">Insumos</span>
+      <span class="tag">Fraldas</span>
+      <span class="tag">Higiene</span>
+      <span class="tag">Dermocosméticos</span>
+      <span class="tag">Vitaminas</span>
+      <span class="tag">Suplementos</span>
+    </div>
+    <div class="close">
+      <p class="kicker" style="color: var(--gold-bright);">Para entrar</p>
+      <h2>R$ 50 por mês<br />ou R$ 500 por ano.</h2>
+      <p>Pagos à Ajoia. Divulgação exclusiva no site e nas redes. Benefícios do Club Doctor, pela parceria com a Doctor8. Familiar do associado: R$ 19,90, pagos à parte.</p>
+      <div class="row">
+        <div>
+          <b>Ajoia Brasil</b>
+          <span>ajoiabrasil.com.br</span>
+        </div>
+        <div>
+          <b>Contato</b>
+          <span>portal.ajoiabrasil@gmail.com</span>
+        </div>
+      </div>
+    </div>
+    <p class="legal">O Club Doctor é um clube de cuidados e de descontos da Doctor8, oferecido ao associado pela parceria com a Ajoia. A consulta é paga ao profissional, com desconto de membro. Não há cobertura de emergência. O desconto de consulta vale para telessaúde. Medicamentos, insumos e exames dependem da cidade e da disponibilidade, e valem com a participação em dia. A Doctor8 trata os dados conforme a LGPD. A divulgação exclusiva no site e nas redes é da Ajoia e acompanha o mesmo período pago. O familiar paga à parte, R$ 19,90, e recebe os benefícios do Club Doctor.</p>
+  </div>
+  <div class="foot"><span>Ajoia Brasil · Proposta aos associados · 2026</span><span>06</span></div>
+</section>
+
+</body>
+</html>
