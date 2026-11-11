@@ -423,22 +423,13 @@ async function main() {
   for (const a of articles) {
     const author = bySlug[a.authorSlug];
     if (!author) continue;
-    const publishedAt = new Date(`${a.date}T12:00:00.000Z`);
-    await prisma.article.upsert({
+    const existing = await prisma.article.findUnique({
       where: { slug: a.slug },
-      update: {
-        title: a.title,
-        dek: a.dek,
-        body: a.body.join("\n\n"),
-        section: a.section,
-        featured: a.featured,
-        breaking: a.breaking,
-        status: "PUBLISHED",
-        publishedAt,
-        authorId: author.id,
-        imageUrl: `/images/sections/${a.section}.jpg`,
-      },
-      create: {
+    });
+    if (existing) continue;
+    const publishedAt = new Date(`${a.date}T12:00:00.000Z`);
+    await prisma.article.create({
+      data: {
         slug: a.slug,
         title: a.title,
         dek: a.dek,

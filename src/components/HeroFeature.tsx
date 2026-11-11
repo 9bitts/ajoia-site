@@ -30,6 +30,7 @@ export function HeroFeature({ lead, side, latest }: Props) {
                 alt={lead.imageAlt}
                 fill
                 priority
+                unoptimized={lead.image.startsWith("/uploads/")}
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />

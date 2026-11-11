@@ -1,4 +1,5 @@
 import type { Article, User } from "@prisma/client";
+import { isHtmlBody, normalizeArticleHtml, sanitizeArticleHtml } from "@/lib/article-html";
 import { prisma } from "@/lib/db";
 import { getSectionImage } from "@/lib/images";
 import {
@@ -13,6 +14,7 @@ export type PublicArticle = {
   title: string;
   dek: string;
   body: string[];
+  html: string;
   section: SectionSlug;
   authorSlug: string;
   authorName: string;
@@ -49,16 +51,20 @@ export function mapArticle(article: ArticleWithAuthor): PublicArticle {
   const section = isSectionSlug(article.section)
     ? article.section
     : ("tema-livre" as SectionSlug);
+  const html = isHtmlBody(article.body);
 
   return {
     id: article.id,
     slug: article.slug,
     title: article.title,
     dek: article.dek,
-    body: article.body
-      .split(/\n\s*\n/)
-      .map((p) => p.trim())
-      .filter(Boolean),
+    html: html ? sanitizeArticleHtml(normalizeArticleHtml(article.body)) : "",
+    body: html
+      ? []
+      : article.body
+          .split(/\n\s*\n/)
+          .map((p) => p.trim())
+          .filter(Boolean),
     section,
     authorSlug: article.author.slug,
     authorName: article.author.name,

@@ -27,6 +27,7 @@
     "nodemailer": "^7.0.13",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sanitize-html": "^2.18.1",
     "sharp": "^0.35.3",
     "zod": "^4.4.3"
   },
@@ -37,6 +38,7 @@
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.2",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "^15.5.21",

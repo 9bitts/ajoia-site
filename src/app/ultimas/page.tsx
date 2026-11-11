@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
 export const dynamic = "force-dynamic";
 
 export default async function UltimasPage() {
-  const list = await getLatestArticles(24);
+  const list = await getLatestArticles(400);
 
   const [lead, ...rest] = list;
 

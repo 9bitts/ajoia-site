@@ -36,6 +36,8 @@ export const institutionalLinks = [
   { href: "/midia-kit", label: "Mídia Kit" },
   { href: "/contato", label: "Contato" },
   { href: "/correcoes", label: "Correções" },
+  { href: "/artigo/politica-de-privacidade", label: "Privacidade" },
+  { href: "/artigo/termos-de-uso", label: "Termos de uso" },
 ] as const;
 
 export const missao =

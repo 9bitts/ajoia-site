@@ -24,10 +24,22 @@ export async function GET(_req: Request, { params }: Params) {
   const stat = statSync(fullPath);
   const stream = createReadStream(fullPath);
   const webStream = Readable.toWeb(stream) as ReadableStream;
+  const ext = path.extname(fullPath).toLowerCase();
+  const types: Record<string, string> = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+    ".avif": "image/avif",
+  };
+  if (!types[ext]) {
+    return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
+  }
 
   return new NextResponse(webStream, {
     headers: {
-      "Content-Type": "image/jpeg",
+      "Content-Type": types[ext],
       "Content-Length": String(stat.size),
       "Cache-Control": "public, max-age=31536000, immutable",
     },

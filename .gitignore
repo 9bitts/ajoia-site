@@ -36,6 +36,15 @@ yarn-error.log*
 .env.*.local
 !.env.example
 
+# importados do WordPress (conteúdo e mídia ficam no banco e no volume)
+/scripts/wp-export.json
+/scripts/import-ready.json
+/scripts/media-paths.txt
+/scripts/media-missing.txt
+/scripts/.vars-*.json
+/scripts/_rewrite_media.ts
+/tmp/
+
 # uploaded article images
 /public/uploads/*
 !/public/uploads/.gitkeep

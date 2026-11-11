@@ -73,6 +73,15 @@ export default function QuemSomosPage() {
           <Link href="/colunistas" className="btn-ghost">
             Conhecer colunistas →
           </Link>
+          <Link href="/artigo/fundadores" className="btn-ghost">
+            Fundadores
+          </Link>
+          <Link href="/artigo/diretoria-executiva" className="btn-ghost">
+            Diretoria
+          </Link>
+          <Link href="/artigo/conselhos" className="btn-ghost">
+            Conselhos
+          </Link>
         </div>
       </section>
     </div>

@@ -36,6 +36,41 @@ export default function ExpedientePage() {
         ))}
       </dl>
 
+      <section className="mt-14">
+        <h2 className="font-display text-3xl text-white">Redação</h2>
+        <dl className="mt-8 space-y-6">
+          {[
+            ["Presidente", "José Aparecido Ribeiro"],
+            ["Editor-chefe", "Luís Otávio de Vasconcelos Pires"],
+            ["Editor-assistente", "Vago"],
+            ["Minas Gerais", "Alexandre Siqueira, José Aparecido Ribeiro e Neimar Fernandes"],
+            ["Rio Grande do Sul", "Profe Borto"],
+            ["Brasília", "Ray Cunha"],
+            ["Diretor técnico digital", "Juan Carlos Sainz Perez"],
+          ].map(([label, value]) => (
+            <div key={label} className="border-b border-white/10 pb-5">
+              <dt className="text-[11px] uppercase tracking-[0.2em] text-mist-dim">
+                {label}
+              </dt>
+              <dd className="mt-2 text-lg text-white">{value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-8 text-sm text-mist-muted">
+          <Link href="/artigo/diretoria-executiva" className="text-gold">
+            Diretoria executiva
+          </Link>
+          {" · "}
+          <Link href="/artigo/conselhos" className="text-gold">
+            Conselhos
+          </Link>
+          {" · "}
+          <Link href="/artigo/fundadores" className="text-gold">
+            Fundadores
+          </Link>
+        </p>
+      </section>
+
       <p className="mt-10 text-sm leading-relaxed text-mist-muted">
         Os artigos e opiniões publicados são de inteira responsabilidade e
         autoria dos colunistas. O portal não se responsabiliza pelo conteúdo,

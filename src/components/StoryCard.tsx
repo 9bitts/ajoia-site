@@ -44,6 +44,7 @@ export function StoryCard({
                 src={image}
                 alt={article.imageAlt}
                 fill
+                unoptimized={image.startsWith("/uploads/")}
                 sizes="112px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
@@ -76,6 +77,7 @@ export function StoryCard({
               src={image}
               alt={article.imageAlt}
               fill
+              unoptimized={image.startsWith("/uploads/")}
               sizes={
                 size === "lg"
                   ? "(max-width: 1024px) 100vw, 50vw"

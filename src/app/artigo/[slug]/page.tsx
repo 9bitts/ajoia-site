@@ -95,6 +95,7 @@ export default async function ArticlePage({ params }: Props) {
                 alt={article.imageAlt || article.title}
                 fill
                 priority
+                unoptimized={image.startsWith("/uploads/")}
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-cover"
               />
@@ -108,9 +109,13 @@ export default async function ArticlePage({ params }: Props) {
           )}
 
           <div className="prose-ajoia mt-8">
-            {article.body.map((paragraph) => (
-              <p key={paragraph.slice(0, 32)}>{paragraph}</p>
-            ))}
+            {article.html ? (
+              <div dangerouslySetInnerHTML={{ __html: article.html }} />
+            ) : (
+              article.body.map((paragraph) => (
+                <p key={paragraph.slice(0, 80)}>{paragraph}</p>
+              ))
+            )}
             <div className="mt-10 border-t border-[var(--line)] pt-6 text-sm text-mist-dim">
               <p>
                 Aviso: artigos e opiniões publicados são de inteira
