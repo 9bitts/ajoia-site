@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { TurnstileField } from "@/components/TurnstileField";
 
 export function RegisterForm() {
   const [error, setError] = useState("");
@@ -23,6 +24,8 @@ export function RegisterForm() {
         password: String(fd.get("password") || ""),
         bio: String(fd.get("bio") || ""),
         roleLabel: String(fd.get("roleLabel") || "Jornalista"),
+        website: String(fd.get("website") || ""),
+        turnstileToken: String(fd.get("cf-turnstile-response") || ""),
       }),
     });
     const json = await res.json().catch(() => ({}));
@@ -40,10 +43,10 @@ export function RegisterForm() {
       <div className="space-y-4">
         <p className="text-sm leading-relaxed text-emerald-300">{ok}</p>
         <Link
-          href="/admin/login"
+          href="/"
           className="btn-primary inline-block text-xs uppercase tracking-[0.14em]"
         >
-          Entrar
+          Voltar ao site
         </Link>
       </div>
     );
@@ -81,9 +84,13 @@ export function RegisterForm() {
           name="password"
           type="password"
           required
-          minLength={8}
+          minLength={10}
+          autoComplete="new-password"
           className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
         />
+        <span className="mt-2 block text-xs text-mist-dim">
+          Mínimo de 10 caracteres, com letras e números.
+        </span>
       </label>
       <label className="block">
         <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
@@ -105,6 +112,8 @@ export function RegisterForm() {
           className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
         />
       </label>
+      <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+      <TurnstileField />
       {error && <p className="text-sm text-red-300">{error}</p>}
       <button
         type="submit"

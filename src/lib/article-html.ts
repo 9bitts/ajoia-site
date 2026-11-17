@@ -20,6 +20,11 @@ export function normalizeArticleHtml(html: string) {
     .join("\n");
 }
 
+export function sanitizeStoredBody(body: string) {
+  if (!isHtmlBody(body)) return body;
+  return sanitizeArticleHtml(body);
+}
+
 export function sanitizeArticleHtml(html: string) {
   return sanitizeHtml(html, {
     allowedTags: [

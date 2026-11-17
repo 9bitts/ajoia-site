@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { ArticleForm } from "@/components/admin/ArticleForm";
+import { SocialPublish } from "@/components/admin/SocialPublish";
 import { prisma } from "@/lib/db";
 import { sectionDefaultsToOpinion } from "@/lib/sections";
 
@@ -28,10 +29,14 @@ export default async function EditArticlePage({ params }: Props) {
     redirect("/admin");
   }
 
-  const me = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { approved: true },
-  });
+  const [me, revision] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { approved: true },
+    }),
+    prisma.articleRevision.findUnique({ where: { articleId: article.id } }),
+  ]);
+  const source = revision ?? article;
 
   return (
     <div>
@@ -45,26 +50,35 @@ export default async function EditArticlePage({ params }: Props) {
           articleId={article.id}
           isAdmin={session.user.role === "ADMIN"}
           accountApproved={session.user.role === "ADMIN" || Boolean(me?.approved)}
+          hasProposal={Boolean(revision)}
           author={article.author}
           initial={{
-            title: article.title,
-            dek: article.dek,
-            body: article.body,
-            section: article.section,
+            title: source.title,
+            dek: source.dek,
+            body: source.body,
+            section: source.section,
             status: article.status,
             featured: article.featured,
             breaking: article.breaking,
-            imageUrl: article.imageUrl,
-            imageAlt: article.imageAlt,
-            seoTitle: article.seoTitle,
-            seoDescription: article.seoDescription,
+            imageUrl: source.imageUrl,
+            imageAlt: source.imageAlt,
+            seoTitle: source.seoTitle,
+            seoDescription: source.seoDescription,
             noindex: article.noindex,
             isOpinion:
-              article.isOpinion ?? sectionDefaultsToOpinion(article.section),
-            slug: article.slug,
+              source.isOpinion ?? sectionDefaultsToOpinion(source.section),
+            slug: source.slug,
           }}
         />
       </div>
+      {session.user.role === "ADMIN" && (
+        <div className="mt-12">
+          <SocialPublish
+            articleId={article.id}
+            published={article.status === "PUBLISHED"}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -23,6 +23,9 @@ export async function AdminNav() {
             <Link href="/admin/artigos/novo" className="hover:text-white">
               Nova matéria
             </Link>
+            <Link href="/admin/senha" className="hover:text-white">
+              Senha
+            </Link>
             {session.user.role === "ADMIN" && (
               <>
                 <Link href="/admin/usuarios" className="hover:text-white">
@@ -30,6 +33,15 @@ export async function AdminNav() {
                 </Link>
                 <Link href="/admin/mensagens" className="hover:text-white">
                   Caixa
+                </Link>
+                <Link href="/admin/redes" className="hover:text-white">
+                  Redes
+                </Link>
+                <Link href="/admin/seguranca" className="hover:text-white">
+                  Segurança
+                </Link>
+                <Link href="/admin/auditoria" className="hover:text-white">
+                  Auditoria
                 </Link>
               </>
             )}

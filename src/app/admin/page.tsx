@@ -217,6 +217,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
             <ArticleTable
               rows={matchRows}
               showAuthor
+              showSocial
               empty="Nenhuma matéria com esse termo."
             />
           </div>

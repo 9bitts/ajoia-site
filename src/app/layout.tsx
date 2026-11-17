@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Fraunces, Manrope, Source_Serif_4 } from "next/font/google";
 import Script from "next/script";
 import { Footer } from "@/components/Footer";
@@ -90,19 +91,30 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const turnstile = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
   return (
     <html lang="pt-BR" data-theme="light" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {analyticsOn && (
-          <Script id="consent-default" strategy="beforeInteractive">
+          <Script id="consent-default" nonce={nonce} strategy="beforeInteractive">
             {consentBoot}
           </Script>
+        )}
+        {turnstile && (
+          <Script
+            id="turnstile"
+            nonce={nonce}
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            strategy="afterInteractive"
+          />
         )}
       </head>
       <body

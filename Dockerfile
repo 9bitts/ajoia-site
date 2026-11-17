@@ -34,4 +34,4 @@ EXPOSE 3000
 ENV HOSTNAME=0.0.0.0
 ENV UPLOAD_DIR=/data/uploads
 
-CMD ["sh", "-c", "npx prisma db push && npx prisma db seed && npm run start -- -p ${PORT:-3000}"]
+CMD ["sh", "-c", "npx prisma db push --skip-generate && npm run start -- -p ${PORT:-3000}"]

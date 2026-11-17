@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { siteConfig } from "@/data/site";
+import { reportError } from "@/lib/report-error";
 
 export function portalInbox() {
   return (process.env.GMAIL_USER || siteConfig.email).trim();
@@ -32,13 +33,13 @@ export async function sendPortalMail(opts: {
       from: `${siteConfig.name} <${user}>`,
       to: opts.to || user,
       replyTo: opts.replyTo,
-      subject: opts.subject,
+      subject: opts.subject.replace(/[\r\n]+/g, " ").slice(0, 180),
       text: opts.text,
     });
 
     return { sent: true as const };
   } catch (error) {
-    console.error("gmail send failed", error);
+    reportError(error, "gmail");
     return { sent: false as const, reason: "failed" as const };
   }
 }

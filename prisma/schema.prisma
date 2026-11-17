@@ -28,11 +28,15 @@ model User {
   bio          String    @default("")
   roleLabel    String    @default("Colunista")
   featured     Boolean   @default(false)
-  active       Boolean   @default(true)
-  approved     Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  articles     Article[]
+  active              Boolean  @default(true)
+  approved            Boolean  @default(true)
+  credentialVersion   Int      @default(0)
+  mustChangePassword  Boolean  @default(false)
+  totpSecret          String?
+  totpEnabled         Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  articles            Article[]
 }
 
 model Article {
@@ -57,10 +61,31 @@ model Article {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
+  revision ArticleRevision?
+  socialPosts SocialPublication[]
+
   @@index([status, publishedAt])
   @@index([status, noindex, publishedAt])
   @@index([section])
   @@index([authorId])
+}
+
+model ArticleRevision {
+  id             String   @id @default(cuid())
+  articleId      String   @unique
+  article        Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  title          String
+  dek            String   @default("")
+  body           String
+  section        String
+  slug           String
+  imageUrl       String?
+  imageAlt       String   @default("")
+  seoTitle       String   @default("")
+  seoDescription String   @default("")
+  isOpinion      Boolean?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Redirect {
@@ -80,7 +105,79 @@ model ContactMessage {
 }
 
 model NewsletterSubscriber {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  confirmed    Boolean   @default(true)
+  confirmToken String?   @unique
+  unsubToken   String?   @unique
+  confirmedAt  DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+}
+
+model UploadEvent {
   id        String   @id @default(cuid())
-  email     String   @unique
+  userId    String
+  bytes     Int
   createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+enum SocialNetwork {
+  FACEBOOK
+  INSTAGRAM
+  X
+}
+
+model SocialConnection {
+  network      SocialNetwork @id
+  accountId    String
+  accountName  String
+  accessToken  String
+  refreshToken String?
+  expiresAt    DateTime?
+  updatedAt    DateTime      @updatedAt
+}
+
+model SocialPublication {
+  id          String        @id @default(cuid())
+  articleId   String
+  article     Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  network     SocialNetwork
+  text        String
+  externalId  String?
+  externalUrl String?
+  ok          Boolean
+  error       String?
+  createdAt   DateTime      @default(now())
+
+  @@index([articleId, network, createdAt])
+}
+
+model SocialHandoff {
+  id        String   @id
+  payload   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actorEmail String?
+  action     String
+  targetType String?
+  targetId   String?
+  detail     String?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([action])
 }

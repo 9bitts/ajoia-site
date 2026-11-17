@@ -93,6 +93,7 @@ export default async function ColumnistDeskPage({ params, searchParams }: Props)
             slug: user.slug,
             roleLabel: user.roleLabel,
             approved: user.approved,
+            active: user.active,
             createdLabel: formatDate(user.createdAt.toISOString().slice(0, 10)),
           }}
         />
@@ -114,6 +115,7 @@ export default async function ColumnistDeskPage({ params, searchParams }: Props)
       <div className="mt-6">
         <ArticleTable
           rows={rows}
+          showSocial
           empty={
             q || status
               ? "Nenhuma matéria com esse filtro."

@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { articleInputSchema, articleSeoData } from "@/lib/article-input";
+import { sanitizeStoredBody } from "@/lib/article-html";
 import { syncArticleSurfaces } from "@/lib/article-publish";
+import { recordAudit } from "@/lib/audit";
 import { prisma } from "@/lib/db";
 import { resolveArticleStatus } from "@/lib/editorial";
+import { imageUrlError } from "@/lib/image-url";
+import { sendPortalMail } from "@/lib/mail";
+import { clientIp } from "@/lib/rate-limit";
+import { rejectCrossOrigin } from "@/lib/same-origin";
 import { publishSeoError } from "@/lib/seo-rules";
 import { isSectionSlug } from "@/lib/sections";
 import { uniqueSlug } from "@/lib/slug";
@@ -31,6 +37,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const origin = rejectCrossOrigin(req);
+  if (origin) return origin;
+
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
@@ -46,6 +55,8 @@ export async function POST(req: Request) {
   }
 
   const data = parsed.data;
+  const imageError = imageUrlError(data.imageUrl);
+  if (imageError) return NextResponse.json({ error: imageError }, { status: 400 });
   if (!isSectionSlug(data.section)) {
     return NextResponse.json({ error: "Seção inválida" }, { status: 400 });
   }
@@ -80,7 +91,7 @@ export async function POST(req: Request) {
     data: {
       title: data.title,
       dek: data.dek,
-      body: data.body,
+      body: sanitizeStoredBody(data.body),
       section: data.section,
       status: resolved.status,
       featured: session.user.role === "ADMIN" ? Boolean(data.featured) : false,
@@ -100,6 +111,22 @@ export async function POST(req: Request) {
     authorSlug: article.author.slug,
     status: article.status,
   });
+
+  if (article.status === "PUBLISHED") {
+    await recordAudit({
+      action: "article.publish",
+      actorId: session.user.id,
+      actorEmail: session.user.email,
+      targetType: "article",
+      targetId: article.id,
+      detail: article.slug,
+      ip: clientIp(req),
+    });
+    void sendPortalMail({
+      subject: `[Publicação] ${article.title}`,
+      text: `${session.user.name} publicou ${article.slug}.`,
+    });
+  }
 
   return NextResponse.json({ article }, { status: 201 });
 }

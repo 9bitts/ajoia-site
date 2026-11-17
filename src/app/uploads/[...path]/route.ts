@@ -11,12 +11,16 @@ export const runtime = "nodejs";
 
 export async function GET(_req: Request, { params }: Params) {
   const { path: parts } = await params;
-  const filename = parts.join("/");
-  if (!filename || filename.includes("..")) {
+  if (parts.some((part) => !part || part === "." || part === ".." || part.includes("\\"))) {
     return NextResponse.json({ error: "Inválido" }, { status: 400 });
   }
-
-  const fullPath = path.join(getUploadDir(), filename);
+  const filename = parts.join("/");
+  const root = path.resolve(getUploadDir());
+  const fullPath = path.resolve(root, filename);
+  const relative = path.relative(root, fullPath);
+  if (!filename || relative.startsWith("..") || path.isAbsolute(relative)) {
+    return NextResponse.json({ error: "Inválido" }, { status: 400 });
+  }
   if (!existsSync(fullPath)) {
     return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
   }
@@ -42,6 +46,7 @@ export async function GET(_req: Request, { params }: Params) {
       "Content-Type": types[ext],
       "Content-Length": String(stat.size),
       "Cache-Control": "public, max-age=31536000, immutable",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

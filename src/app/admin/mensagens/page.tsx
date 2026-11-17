@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { mailConfigured, portalInbox } from "@/lib/mail";
+import { purgeExpiredPersonalData } from "@/lib/retention";
 
 export const dynamic = "force-dynamic";
 
@@ -10,9 +11,14 @@ export default async function MessagesAdminPage() {
   if (!session?.user) return null;
   if (session.user.role !== "ADMIN") redirect("/admin");
 
+  await purgeExpiredPersonalData().catch(() => undefined);
   const [messages, subscribers] = await Promise.all([
     prisma.contactMessage.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
-    prisma.newsletterSubscriber.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+    prisma.newsletterSubscriber.findMany({
+      where: { confirmed: true },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    }),
   ]);
 
   return (

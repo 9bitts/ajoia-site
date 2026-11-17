@@ -43,8 +43,8 @@ export function UserCreateForm() {
     <form onSubmit={onSubmit} className="space-y-4 border border-white/10 p-6">
       <h2 className="font-display text-2xl text-white">Novo jornalista</h2>
       <p className="text-sm text-mist-muted">
-        Conta criada por aqui já nasce liberada. Quem se cadastra sozinho
-        precisa da sua autorização.
+        Conta criada por aqui já nasce liberada e pede troca de senha no
+        primeiro acesso. Quem se cadastra sozinho precisa da sua autorização.
       </p>
       <input
         name="name"
@@ -63,8 +63,8 @@ export function UserCreateForm() {
         name="password"
         type="password"
         required
-        minLength={8}
-        placeholder="Senha (mín. 8)"
+        minLength={10}
+        placeholder="Senha (mín. 10, letras e números)"
         className="w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
       />
       <input

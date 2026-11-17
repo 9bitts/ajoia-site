@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { randomBytes } from "crypto";
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
@@ -355,64 +356,63 @@ const articles = [
   },
 ];
 
+function bootstrapPassword() {
+  return `Aj${randomBytes(9).toString("base64url")}9`;
+}
+
 async function main() {
   const adminEmail = (process.env.ADMIN_EMAIL || "admin@ajoiabrasil.com.br")
     .trim()
     .toLowerCase();
-  const adminPassword = process.env.ADMIN_PASSWORD || "AjoiaAdmin2026!";
-  const columnistPassword = process.env.COLUMNIST_PASSWORD || "Colunista2026!";
 
-  const adminHash = await bcrypt.hash(adminPassword, 10);
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: {
-      passwordHash: adminHash,
-      name: "Administrador Ajoia",
-      role: Role.ADMIN,
-      active: true,
-      approved: true,
-    },
-    create: {
-      email: adminEmail,
-      passwordHash: adminHash,
-      name: "Administrador Ajoia",
-      slug: "admin",
-      role: Role.ADMIN,
-      roleLabel: "Administração",
-      bio: "Conta administrativa do portal Ajoia Brasil.",
-      active: true,
-      approved: true,
-    },
-  });
-
-  const colHash = await bcrypt.hash(columnistPassword, 10);
-  for (const c of columnists) {
-    await prisma.user.upsert({
-      where: { email: c.email },
-      update: {
-        name: c.name,
-        slug: c.slug,
-        bio: c.bio,
-        roleLabel: c.roleLabel,
-        featured: c.featured,
-        role: Role.COLUMNIST,
+  const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
+  if (!existingAdmin) {
+    const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+    if (!adminPassword || adminPassword.length < 10) {
+      throw new Error(
+        "ADMIN_PASSWORD é obrigatório (mínimo 10 caracteres) para criar o primeiro administrador. O seed não inventa senha."
+      );
+    }
+    await prisma.user.create({
+      data: {
+        email: adminEmail,
+        passwordHash: await bcrypt.hash(adminPassword, 10),
+        name: "Administrador Ajoia",
+        slug: "admin",
+        role: Role.ADMIN,
+        roleLabel: "Administração",
+        bio: "Conta administrativa do portal Ajoia Brasil.",
         active: true,
         approved: true,
-        passwordHash: colHash,
-      },
-      create: {
-        email: c.email,
-        passwordHash: colHash,
-        name: c.name,
-        slug: c.slug,
-        bio: c.bio,
-        roleLabel: c.roleLabel,
-        featured: c.featured,
-        role: Role.COLUMNIST,
-        active: true,
-        approved: true,
+        mustChangePassword: true,
       },
     });
+    console.log(`Admin criado: ${adminEmail}. A senha do ambiente vale só neste primeiro acesso.`);
+  } else {
+    console.log(`Admin já existe: ${adminEmail}. Senha, papel e acesso mantidos.`);
+  }
+
+  for (const c of columnists) {
+    const found = await prisma.user.findUnique({ where: { email: c.email } });
+    if (found) continue;
+    const password = bootstrapPassword();
+    await prisma.user.create({
+      data: {
+        email: c.email,
+        passwordHash: await bcrypt.hash(password, 10),
+        name: c.name,
+        slug: c.slug,
+        bio: c.bio,
+        roleLabel: c.roleLabel,
+        featured: c.featured,
+        role: Role.COLUMNIST,
+        active: true,
+        approved: true,
+        mustChangePassword: true,
+      },
+    });
+    console.log(`Colunista criado: ${c.email}`);
+    console.log(`Senha inicial (uma vez, troque no primeiro acesso): ${password}`);
   }
 
   const users = await prisma.user.findMany({
@@ -445,9 +445,7 @@ async function main() {
     });
   }
 
-  console.log("Seed OK");
-  console.log(`Admin: ${adminEmail}`);
-  console.log(`Colunistas password: (COLUMNIST_PASSWORD)`);
+  console.log("Seed OK. Contas existentes não tiveram senha reescrita.");
 }
 
 main()

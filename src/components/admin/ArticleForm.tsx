@@ -37,6 +37,7 @@ type Props = {
   initial: ArticleFormValues;
   isAdmin?: boolean;
   accountApproved?: boolean;
+  hasProposal?: boolean;
   author?: { name: string; email: string; approved: boolean } | null;
 };
 
@@ -46,6 +47,7 @@ export function ArticleForm({
   initial,
   isAdmin,
   accountApproved = true,
+  hasProposal = false,
   author,
 }: Props) {
   const router = useRouter();
@@ -97,13 +99,15 @@ export function ArticleForm({
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Falha ao salvar");
-      setForm((f) => ({ ...f, status }));
+      setForm((f) => ({ ...f, status: json.proposal ? f.status : status }));
       setMessage(
-        status === "PUBLISHED"
-          ? "Publicado no site."
-          : status === "PENDING"
-            ? "Enviado para avaliação. A matéria só entra no ar quando a administração publicar."
-            : "Rascunho salvo."
+        json.proposal
+          ? "Revisão guardada. O texto no ar não mudou. A administração publica a revisão quando aprovar."
+          : status === "PUBLISHED"
+            ? "Publicado no site."
+            : status === "PENDING"
+              ? "Enviado para avaliação. A matéria só entra no ar quando a administração publicar."
+              : "Rascunho salvo."
       );
       if (mode === "create") {
         router.push(`/admin/artigos/${json.article.id}`);
@@ -172,9 +176,32 @@ export function ArticleForm({
       )}
       {!isAdmin && form.status === "PUBLISHED" && (
         <p className="text-sm text-amber-100">
-          Esta matéria está no ar. Salvar rascunho ou reenviar para avaliação
-          tira o texto do site até a administração publicar de novo.
+          Esta matéria está no ar. Salvar cria uma revisão e o texto publicado
+          continua no site até a administração publicar a versão nova.
         </p>
+      )}
+      {isAdmin && hasProposal && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border border-amber-200/30 bg-amber-200/10 px-4 py-3 text-sm text-amber-100">
+          <p>
+            Há uma revisão do colunista. O formulário mostra essa versão. O
+            site ainda exibe o texto publicado até você clicar em publicar.
+          </p>
+          <button
+            type="button"
+            className="border border-white/20 px-3 py-2 text-[11px] uppercase tracking-[0.14em]"
+            onClick={async () => {
+              if (!articleId) return;
+              const res = await fetch(`/api/articles/${articleId}/revision`, {
+                method: "DELETE",
+              });
+              if (res.ok) {
+                router.refresh();
+              }
+            }}
+          >
+            Descartar revisão
+          </button>
+        </div>
       )}
       <div className="grid gap-5">
         <label className="block">

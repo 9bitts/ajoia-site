@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TurnstileField } from "@/components/TurnstileField";
 
 export function Newsletter() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "already" | "error">("idle");
@@ -18,7 +19,7 @@ export function Newsletter() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    const json = (await res.json().catch(() => null)) as { error?: string; already?: boolean } | null;
+    const json = (await res.json().catch(() => null)) as { error?: string; message?: string } | null;
 
     if (!res.ok) {
       setStatus("error");
@@ -27,7 +28,8 @@ export function Newsletter() {
     }
 
     form.reset();
-    setStatus(json?.already ? "already" : "sent");
+    setStatus("sent");
+    if (json?.message) setError(json.message);
   }
 
   return (
@@ -67,14 +69,15 @@ export function Newsletter() {
             </button>
           </div>
           <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+          <div className="mt-3">
+            <TurnstileField />
+          </div>
           <p className="mt-3 text-[11px] text-white/50">
-            Ao assinar, você concorda em receber comunicações da Ajoia Brasil.
+            A inscrição só entra na lista depois da confirmação por e-mail. Dá
+            para sair quando quiser pelo link da mensagem.
           </p>
           {status === "sent" && (
-            <p className="mt-2 text-sm text-[#e8c56b]">Inscrição confirmada.</p>
-          )}
-          {status === "already" && (
-            <p className="mt-2 text-sm text-white/80">Este e-mail já está na lista.</p>
+            <p className="mt-2 text-sm text-[#e8c56b]">{error || "Veja seu e-mail para confirmar."}</p>
           )}
           {status === "error" && <p className="mt-2 text-sm text-red-300">{error}</p>}
         </form>

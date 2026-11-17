@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TurnstileField } from "@/components/TurnstileField";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -104,6 +105,7 @@ export function ContactForm() {
           className="hidden"
           aria-hidden="true"
         />
+        <TurnstileField />
         <button
           type="submit"
           disabled={status === "sending"}

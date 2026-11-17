@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { clientIp, isRateLimited, recordUpload, uploadOverQuota } from "@/lib/rate-limit";
+import { rejectCrossOrigin } from "@/lib/same-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  const origin = rejectCrossOrigin(req);
+  if (origin) return origin;
+
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
+
+  const ip = clientIp(req);
+  if (await isRateLimited(`upload:${session.user.id}:${ip}`, 20, 60 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: "Muitos envios em pouco tempo. Tente de novo mais tarde." },
+      { status: 429 }
+    );
   }
 
   const form = await req.formData();
@@ -30,9 +43,17 @@ export async function POST(req: Request) {
     );
   }
 
+  if (await uploadOverQuota(session.user.id, file.size)) {
+    return NextResponse.json(
+      { error: "Cota diária de imagens esgotada (15 arquivos ou 40 MB)." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { saveUploadedImage } = await import("@/lib/upload");
     const url = await saveUploadedImage(file);
+    await recordUpload(session.user.id, file.size);
     return NextResponse.json({ url });
   } catch {
     return NextResponse.json(

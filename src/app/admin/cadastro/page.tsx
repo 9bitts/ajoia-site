@@ -16,9 +16,9 @@ export default async function RegisterPage() {
       </p>
       <h1 className="mt-2 font-display text-4xl text-white">Criar conta</h1>
       <p className="mt-3 text-sm leading-relaxed text-mist-muted">
-        Cada jornalista entra com o próprio e-mail e já pode escrever. A
-        matéria só vai ao ar depois que a administração liberar a conta e
-        publicar o texto.
+        O pedido fica parado até a administração liberar a conta. Sem essa
+        liberação, o login não abre. A matéria só vai ao ar depois da
+        publicação por um administrador.
       </p>
       <div className="mt-8 border border-white/10 bg-ink-elevated/40 p-6">
         <RegisterForm />

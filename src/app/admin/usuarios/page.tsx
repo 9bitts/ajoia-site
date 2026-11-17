@@ -16,7 +16,7 @@ export default async function UsersAdminPage() {
     where: { role: "COLUMNIST" },
     orderBy: [{ approved: "asc" }, { createdAt: "desc" }],
   });
-  const waiting = users.filter((user) => !user.approved).length;
+  const waiting = users.filter((user) => !user.active || !user.approved).length;
 
   return (
     <div className="grid gap-10 lg:grid-cols-2">
@@ -53,6 +53,7 @@ export default async function UsersAdminPage() {
                 slug: user.slug,
                 roleLabel: user.roleLabel,
                 approved: user.approved,
+                active: user.active,
                 createdLabel: formatDate(user.createdAt.toISOString().slice(0, 10)),
               }}
             />

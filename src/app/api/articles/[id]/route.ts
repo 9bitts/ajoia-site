@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { articleInputSchema, articleSeoData } from "@/lib/article-input";
+import { sanitizeStoredBody } from "@/lib/article-html";
 import { syncArticleSurfaces } from "@/lib/article-publish";
+import { recordAudit } from "@/lib/audit";
 import { prisma } from "@/lib/db";
 import { resolveArticleStatus } from "@/lib/editorial";
+import { imageUrlError } from "@/lib/image-url";
+import { sendPortalMail } from "@/lib/mail";
+import { clientIp } from "@/lib/rate-limit";
 import { rememberSlug } from "@/lib/redirects";
+import { rejectCrossOrigin } from "@/lib/same-origin";
 import { publishSeoError } from "@/lib/seo-rules";
 import { isSectionSlug } from "@/lib/sections";
 import { slugify } from "@/lib/slug";
@@ -39,6 +45,9 @@ export async function GET(_req: Request, { params }: Params) {
 }
 
 export async function PUT(req: Request, { params }: Params) {
+  const origin = rejectCrossOrigin(req);
+  if (origin) return origin;
+
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
@@ -63,8 +72,54 @@ export async function PUT(req: Request, { params }: Params) {
   }
 
   const data = parsed.data;
+  const imageError = imageUrlError(data.imageUrl);
+  if (imageError) return NextResponse.json({ error: imageError }, { status: 400 });
   if (!isSectionSlug(data.section)) {
     return NextResponse.json({ error: "Seção inválida" }, { status: 400 });
+  }
+
+  const body = sanitizeStoredBody(data.body);
+  const proposedSlug = data.slug ? slugify(data.slug) : existing.slug;
+
+  if (session.user.role !== "ADMIN" && existing.status === "PUBLISHED") {
+    const revision = await prisma.articleRevision.upsert({
+      where: { articleId: id },
+      create: {
+        articleId: id,
+        title: data.title,
+        dek: data.dek,
+        body,
+        section: data.section,
+        slug: proposedSlug,
+        imageUrl: data.imageUrl || null,
+        imageAlt: data.imageAlt.trim(),
+        seoTitle: data.seoTitle.trim(),
+        seoDescription: data.seoDescription.trim(),
+        isOpinion: Boolean(data.isOpinion),
+      },
+      update: {
+        title: data.title,
+        dek: data.dek,
+        body,
+        section: data.section,
+        slug: proposedSlug,
+        imageUrl: data.imageUrl || null,
+        imageAlt: data.imageAlt.trim(),
+        seoTitle: data.seoTitle.trim(),
+        seoDescription: data.seoDescription.trim(),
+        isOpinion: Boolean(data.isOpinion),
+      },
+    });
+    await recordAudit({
+      action: "article.revision",
+      actorId: session.user.id,
+      actorEmail: session.user.email,
+      targetType: "article",
+      targetId: id,
+      detail: existing.slug,
+      ip: clientIp(req),
+    });
+    return NextResponse.json({ article: existing, revision, proposal: true });
   }
 
   const resolved = await resolveArticleStatus({
@@ -112,7 +167,7 @@ export async function PUT(req: Request, { params }: Params) {
       data: {
         title: data.title,
         dek: data.dek,
-        body: data.body,
+        body,
         section: data.section,
         status: resolved.status,
         slug,
@@ -135,6 +190,8 @@ export async function PUT(req: Request, { params }: Params) {
     });
   });
 
+  await prisma.articleRevision.deleteMany({ where: { articleId: id } });
+
   syncArticleSurfaces({
     slug: article.slug,
     previousSlug: existing.slug,
@@ -144,10 +201,31 @@ export async function PUT(req: Request, { params }: Params) {
     status: article.status,
   });
 
+  if (article.status === "PUBLISHED") {
+    await recordAudit({
+      action: "article.publish",
+      actorId: session.user.id,
+      actorEmail: session.user.email,
+      targetType: "article",
+      targetId: article.id,
+      detail: article.slug,
+      ip: clientIp(req),
+    });
+    if (becomingPublished) {
+      void sendPortalMail({
+        subject: `[Publicação] ${article.title}`,
+        text: `${session.user.name} publicou ${article.slug}.`,
+      });
+    }
+  }
+
   return NextResponse.json({ article });
 }
 
-export async function DELETE(_req: Request, { params }: Params) {
+export async function DELETE(req: Request, { params }: Params) {
+  const origin = rejectCrossOrigin(req);
+  if (origin) return origin;
+
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
@@ -164,10 +242,7 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!(await canEdit(existing.authorId, session.user.id, session.user.role))) {
     return NextResponse.json({ error: "Sem permissão" }, { status: 403 });
   }
-  if (
-    session.user.role !== "ADMIN" &&
-    existing.status === "PUBLISHED"
-  ) {
+  if (session.user.role !== "ADMIN" && existing.status === "PUBLISHED") {
     return NextResponse.json(
       { error: "Matéria publicada só pode ser retirada pela administração." },
       { status: 403 }
@@ -175,6 +250,15 @@ export async function DELETE(_req: Request, { params }: Params) {
   }
 
   await prisma.article.delete({ where: { id } });
+  await recordAudit({
+    action: "article.delete",
+    actorId: session.user.id,
+    actorEmail: session.user.email,
+    targetType: "article",
+    targetId: id,
+    detail: existing.slug,
+    ip: clientIp(req),
+  });
   syncArticleSurfaces({
     slug: existing.slug,
     section: existing.section,

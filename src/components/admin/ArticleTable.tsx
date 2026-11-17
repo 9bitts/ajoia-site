@@ -27,10 +27,12 @@ function when(article: ArticleRow) {
 export function ArticleTable({
   rows,
   showAuthor = false,
+  showSocial = false,
   empty,
 }: {
   rows: ArticleRow[];
   showAuthor?: boolean;
+  showSocial?: boolean;
   empty: string;
 }) {
   if (rows.length === 0) {
@@ -75,6 +77,14 @@ export function ArticleTable({
                   >
                     ver
                   </a>
+                )}
+                {showSocial && article.status === "PUBLISHED" && (
+                  <Link
+                    href={`/admin/artigos/${article.id}#redes`}
+                    className="ml-3 text-[11px] uppercase tracking-[0.12em] text-mist-dim hover:text-white"
+                  >
+                    redes
+                  </Link>
                 )}
               </td>
               <td className="px-4 py-3 text-mist-muted">
