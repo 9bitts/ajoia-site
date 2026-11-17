@@ -528,7 +528,7 @@ function SerpPreview({
   slug: string;
 }) {
   return (
-    <div className="bg-white px-4 py-3 text-black">
+    <div className="bg-[#fff] px-4 py-3 text-black">
       <p className="text-xs text-[#4d5156]">
         ajoiabrasil.com.br/artigo/{slug}
       </p>

@@ -115,8 +115,23 @@ button {
 
 .admin-shell {
   background: #070708;
-  color: #f2f2f3;
+  color: #f4f4f5;
   min-height: 100vh;
+  color-scheme: dark;
+  /* Public light theme must not leak onto this dark shell. */
+  --bg: #070708;
+  --bg-elevated: #141418;
+  --bg-soft: #1c1c22;
+  --line: rgba(255, 255, 255, 0.16);
+  --line-strong: rgba(255, 255, 255, 0.24);
+  --text: #f4f4f5;
+  --text-muted: #c4c6ce;
+  --text-dim: #aeb0b8;
+  --accent: #d8dbe2;
+  --accent-soft: #b7bac4;
+  --gold: #d4b56a;
+  --gold-deep: #c6a35a;
+  --logo-filter: none;
 }
 
 .site-shell {
@@ -498,6 +513,26 @@ html[data-theme="light"] .btn-primary:hover {
 html[data-theme="light"] ::selection {
   background: rgba(42, 46, 56, 0.2);
   color: #12141a;
+}
+
+/* Light-theme bridges hardcode surfaces. Keep them dark inside the admin. */
+html[data-theme="light"] .admin-shell .bg-black\/40,
+html[data-theme="light"] .admin-shell .bg-black\/50 {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="light"] .admin-shell .btn-primary {
+  background: linear-gradient(135deg, #e8e9ed 0%, #b8bcc6 100%);
+  color: #0a0a0b;
+}
+
+html[data-theme="light"] .admin-shell .btn-primary:hover {
+  box-shadow: 0 12px 40px rgba(200, 204, 212, 0.18);
+}
+
+html[data-theme="light"] .admin-shell ::selection {
+  background: rgba(200, 204, 212, 0.28);
+  color: #fff;
 }
 
 /* —— Intro splash —— */
