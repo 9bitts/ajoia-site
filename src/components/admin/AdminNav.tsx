@@ -11,10 +11,13 @@ export async function AdminNav() {
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <div className="flex items-center gap-3">
-            <BrandLogo href="/admin" size="sm" />
-            <span className="text-[10px] uppercase tracking-[0.18em] text-mist-dim">
+            <BrandLogo href="/" size="sm" />
+            <Link
+              href="/admin"
+              className="text-[10px] uppercase tracking-[0.18em] text-mist-dim hover:text-white"
+            >
               Admin
-            </span>
+            </Link>
           </div>
           <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs uppercase tracking-[0.16em] text-mist-muted">
             <Link href="/admin" className="hover:text-white">
@@ -45,7 +48,7 @@ export async function AdminNav() {
                 </Link>
               </>
             )}
-            <Link href="/" className="hover:text-white" target="_blank">
+            <Link href="/" className="hover:text-white">
               Ver site
             </Link>
           </nav>

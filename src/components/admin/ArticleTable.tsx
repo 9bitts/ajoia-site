@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArticleClickRow } from "@/components/admin/ArticleClickRow";
 import { articleStatusLabel, type ArticleStatusValue } from "@/lib/editorial";
 import { saoPauloDay, formatDate } from "@/lib/format";
 import { isSectionSlug, sectionMeta } from "@/lib/sections";
@@ -57,13 +58,11 @@ export function ArticleTable({
         </thead>
         <tbody>
           {rows.map((article) => (
-            <tr
-              key={article.id}
-              className="border-b border-white/5 hover:bg-white/[0.03]"
-            >
+            <ArticleClickRow key={article.id} href={`/admin/artigos/${article.id}`}>
               <td className="px-4 py-3">
                 <Link
                   href={`/admin/artigos/${article.id}`}
+                  onClick={(event) => event.stopPropagation()}
                   className="font-medium text-white hover:text-gold"
                 >
                   {article.title}
@@ -73,7 +72,8 @@ export function ArticleTable({
                     href={`/artigo/${article.slug}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="ml-3 text-[11px] uppercase tracking-[0.12em] text-mist-dim hover:text-white"
+                    onClick={(event) => event.stopPropagation()}
+                    className="relative z-10 ml-3 text-[11px] uppercase tracking-[0.12em] text-mist-dim hover:text-white"
                   >
                     ver
                   </a>
@@ -81,7 +81,8 @@ export function ArticleTable({
                 {showSocial && article.status === "PUBLISHED" && (
                   <Link
                     href={`/admin/artigos/${article.id}#redes`}
-                    className="ml-3 text-[11px] uppercase tracking-[0.12em] text-mist-dim hover:text-white"
+                    onClick={(event) => event.stopPropagation()}
+                    className="relative z-10 ml-3 text-[11px] uppercase tracking-[0.12em] text-mist-dim hover:text-white"
                   >
                     redes
                   </Link>
@@ -108,7 +109,8 @@ export function ArticleTable({
                   {article.authorSlug ? (
                     <Link
                       href={`/admin/colunistas/${article.authorSlug}`}
-                      className="text-white hover:text-gold"
+                      onClick={(event) => event.stopPropagation()}
+                      className="relative z-10 text-white hover:text-gold"
                     >
                       {article.authorName}
                     </Link>
@@ -118,7 +120,7 @@ export function ArticleTable({
                 </td>
               )}
               <td className="px-4 py-3 text-mist-dim">{when(article)}</td>
-            </tr>
+            </ArticleClickRow>
           ))}
         </tbody>
       </table>
