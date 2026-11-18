@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArticleClickRow } from "@/components/admin/ArticleClickRow";
 import { articleStatusLabel, type ArticleStatusValue } from "@/lib/editorial";
 import { saoPauloDay, formatDate } from "@/lib/format";
@@ -58,69 +57,33 @@ export function ArticleTable({
         </thead>
         <tbody>
           {rows.map((article) => (
-            <ArticleClickRow key={article.id} href={`/admin/artigos/${article.id}`}>
-              <td className="px-4 py-3">
-                <Link
-                  href={`/admin/artigos/${article.id}`}
-                  onClick={(event) => event.stopPropagation()}
-                  className="font-medium text-white hover:text-gold"
-                >
-                  {article.title}
-                </Link>
-                {article.status === "PUBLISHED" && (
-                  <a
-                    href={`/artigo/${article.slug}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(event) => event.stopPropagation()}
-                    className="relative z-10 ml-3 text-[11px] uppercase tracking-[0.12em] text-mist-dim hover:text-white"
-                  >
-                    ver
-                  </a>
-                )}
-                {showSocial && article.status === "PUBLISHED" && (
-                  <Link
-                    href={`/admin/artigos/${article.id}#redes`}
-                    onClick={(event) => event.stopPropagation()}
-                    className="relative z-10 ml-3 text-[11px] uppercase tracking-[0.12em] text-mist-dim hover:text-white"
-                  >
-                    redes
-                  </Link>
-                )}
-              </td>
-              <td className="px-4 py-3 text-mist-muted">
-                {sectionLabel(article.section)}
-              </td>
-              <td className="px-4 py-3">
-                <span
-                  className={
-                    article.status === "PUBLISHED"
-                      ? "text-emerald-300"
-                      : article.status === "PENDING"
-                        ? "text-amber-200"
-                        : "text-mist-muted"
-                  }
-                >
-                  {articleStatusLabel(article.status)}
-                </span>
-              </td>
-              {showAuthor && (
-                <td className="px-4 py-3">
-                  {article.authorSlug ? (
-                    <Link
-                      href={`/admin/colunistas/${article.authorSlug}`}
-                      onClick={(event) => event.stopPropagation()}
-                      className="relative z-10 text-white hover:text-gold"
-                    >
-                      {article.authorName}
-                    </Link>
-                  ) : (
-                    <span className="text-mist-muted">{article.authorName}</span>
-                  )}
-                </td>
-              )}
-              <td className="px-4 py-3 text-mist-dim">{when(article)}</td>
-            </ArticleClickRow>
+            <ArticleClickRow
+              key={article.id}
+              href={`/admin/artigos/${article.id}`}
+              title={article.title}
+              publicHref={article.status === "PUBLISHED" ? `/artigo/${article.slug}` : null}
+              socialHref={
+                showSocial && article.status === "PUBLISHED"
+                  ? `/admin/artigos/${article.id}#redes`
+                  : null
+              }
+              section={sectionLabel(article.section)}
+              statusClass={
+                article.status === "PUBLISHED"
+                  ? "text-emerald-300"
+                  : article.status === "PENDING"
+                    ? "text-amber-200"
+                    : "text-mist-muted"
+              }
+              statusLabel={articleStatusLabel(article.status)}
+              authorName={showAuthor ? article.authorName || "" : undefined}
+              authorHref={
+                showAuthor && article.authorSlug
+                  ? `/admin/colunistas/${article.authorSlug}`
+                  : null
+              }
+              whenLabel={when(article)}
+            />
           ))}
         </tbody>
       </table>
