@@ -78,7 +78,8 @@ export function metaAuthorizeUrl(input: { redirectUri: string; nonce: string }) 
   } else {
     params.set("scope", META_SCOPES);
   }
-  return `https://www.facebook.com/${graphVersion()}/dialog/oauth?${params}`;
+  // A versão no caminho (/v25.0/dialog/oauth) faz a Meta dizer que o ID do app é inválido.
+  return `https://www.facebook.com/dialog/oauth?${params}`;
 }
 
 async function accessToken(params: Record<string, string>) {
