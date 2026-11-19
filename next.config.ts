@@ -13,6 +13,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  skipTrailingSlashRedirect: true,
   serverExternalPackages: ["sharp", "@prisma/client", "bcryptjs", "nodemailer"],
   async headers() {
     const headers = [...securityHeaders];

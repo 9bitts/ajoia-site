@@ -14,7 +14,9 @@ export function organizationNode() {
     url,
     logo: {
       "@type": "ImageObject",
-      url: absoluteUrl("/images/logo-ajoia.png"),
+      url: absoluteUrl("/images/logo-marca.png"),
+      width: 1168,
+      height: 550,
     },
     email: siteConfig.email,
     foundingDate: siteConfig.founded,
@@ -26,6 +28,15 @@ export function organizationNode() {
     ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }
+
+/** Cartão 1200×630 em JPEG, sem transparência: é o formato que o WhatsApp mostra. */
+export const shareImage = {
+  url: "/images/og.jpg",
+  width: 1200,
+  height: 630,
+  alt: siteConfig.name,
+  type: "image/jpeg" as const,
+};
 
 export function websiteNode() {
   const url = siteUrl();
@@ -63,6 +74,7 @@ export function pageMetadata(input: {
       locale: "pt_BR",
       type: "website",
       siteName: siteConfig.name,
+      images: [shareImage],
     },
   };
 }
@@ -82,7 +94,9 @@ export function articleMetadata(article: PublicArticle): Metadata {
   const section = sectionMeta[article.section];
   const image = article.image
     ? [{ url: article.image, alt: article.imageAlt || article.title }]
-    : undefined;
+    : [
+        shareImage,
+      ];
 
   return {
     title,
@@ -129,7 +143,7 @@ export function articleMetadata(article: PublicArticle): Metadata {
       card: "summary_large_image",
       title,
       description,
-      images: article.image ? [article.image] : undefined,
+      images: article.image ? [article.image] : [shareImage.url],
     },
   };
 }

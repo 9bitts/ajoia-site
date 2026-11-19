@@ -4,7 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { StoryCard } from "@/components/StoryCard";
 import { navSections, siteConfig } from "@/data/site";
 import { getArticlesBySection } from "@/lib/articles";
-import { sectionJsonLd } from "@/lib/seo";
+import { sectionJsonLd, shareImage } from "@/lib/seo";
 import {
   isSectionSlug,
   sectionMeta,
@@ -41,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: "pt_BR",
       type: "website",
       siteName: siteConfig.name,
+      images: [shareImage],
     },
   };
 }

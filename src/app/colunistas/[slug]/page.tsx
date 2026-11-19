@@ -8,7 +8,7 @@ import {
   getColumnistBySlug,
 } from "@/lib/articles";
 import { siteConfig } from "@/data/site";
-import { columnistJsonLd } from "@/lib/seo";
+import { columnistJsonLd, shareImage } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: "pt_BR",
       type: "website",
       siteName: siteConfig.name,
+      images: [shareImage],
     },
   };
 }

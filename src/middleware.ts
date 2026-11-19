@@ -15,6 +15,30 @@ const sections = new Set([
   "tema-livre",
 ]);
 
+/** Páginas do WordPress que mudaram de caminho no portal novo. */
+const legacyPaths: Record<string, string> = {
+  "/midia-kit-publicidade": "/midia-kit",
+  "/politica-de-privacidade": "/privacidade",
+  "/termos-de-uso": "/artigo/termos-de-uso",
+  "/diretoria-executiva": "/artigo/diretoria-executiva",
+  "/conselhos": "/artigo/conselhos",
+  "/fundadores": "/artigo/fundadores",
+  "/redacao": "/expediente",
+  "/responsabilidade-social": "/quem-somos",
+  "/1a-conferencia-ajoia-brasil-sao-paulo-2026":
+    "/artigo/1a-conferencia-ajoia-brasil-sao-paulo-2026",
+};
+
+function barePath(pathname: string) {
+  if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);
+  return pathname;
+}
+
+function requestHostname(req: { headers: Headers }) {
+  const raw = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+  return raw.split(",")[0].trim().split(":")[0].toLowerCase();
+}
+
 function contentSecurityPolicy(nonce: string) {
   const analytics = [
     "https://www.googletagmanager.com",
@@ -63,20 +87,33 @@ export default auth((req) => {
   const nonce = btoa(crypto.randomUUID());
   const csp = contentSecurityPolicy(nonce);
 
-  const dated = pathname.match(/^\/(\d{4})\/(\d{2})\/(\d{2})\/([^/]+)\/?$/);
-  if (dated) {
-    const url = req.nextUrl.clone();
-    url.pathname = `/artigo/${dated[4]}`;
-    return withSecurity(NextResponse.redirect(url, 308), csp);
-  }
+  const path = barePath(pathname);
+  const slash = pathname.length > 1 && pathname.endsWith("/");
+  let target: string | null = null;
 
-  if (pathname.startsWith("/categorias/")) {
-    const slug = pathname.split("/")[2] || "";
-    const url = req.nextUrl.clone();
-    if (sections.has(slug)) url.pathname = `/secao/${slug}`;
-    else if (slug === "ultimas") url.pathname = "/ultimas";
-    else url.pathname = "/colunistas";
-    return withSecurity(NextResponse.redirect(url, 308), csp);
+  const dated = path.match(/^\/(\d{4})\/(\d{2})\/(\d{2})\/([^/]+)$/);
+  if (dated) target = `/artigo/${dated[4]}`;
+  else if (legacyPaths[path]) target = legacyPaths[path];
+  else if (path === "/feed") target = "/feed.xml";
+  else if (path.startsWith("/author/")) {
+    const slug = path.split("/")[2] || "";
+    target = slug ? `/colunistas/${slug}` : "/colunistas";
+  } else if (path.startsWith("/categorias/") || path.startsWith("/category/")) {
+    const slug = path.split("/")[2] || "";
+    target = sections.has(slug)
+      ? `/secao/${slug}`
+      : slug === "ultimas"
+        ? "/ultimas"
+        : "/colunistas";
+  } else if (slash) target = path;
+
+  const www = requestHostname(req) === "www.ajoiabrasil.com.br";
+  if (www || target) {
+    const dest = new URL(
+      `${target || path}${req.nextUrl.search}`,
+      www ? "https://ajoiabrasil.com.br" : req.nextUrl.origin
+    );
+    return withSecurity(NextResponse.redirect(dest, 308), csp);
   }
 
   const publicAdmin =

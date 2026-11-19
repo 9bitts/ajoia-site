@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { SiteChrome } from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { siteConfig } from "@/data/site";
+import { shareImage } from "@/lib/seo";
 import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -71,13 +72,13 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     url: "/",
-    images: [{ url: "/images/logo-ajoia.png", alt: siteConfig.name }],
+    images: [shareImage],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: ["/images/logo-ajoia.png"],
+    images: [shareImage.url],
   },
 };
 
