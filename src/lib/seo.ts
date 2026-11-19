@@ -29,11 +29,11 @@ export function organizationNode() {
   };
 }
 
-/** Cartão 1200×630 em JPEG, sem transparência: é o formato que o WhatsApp mostra. */
+/** Quadrado preto com a pena branca. O WhatsApp corta o cartão largo no meio. */
 export const shareImage = {
   url: "/images/og.jpg",
   width: 1200,
-  height: 630,
+  height: 1200,
   alt: siteConfig.name,
   type: "image/jpeg" as const,
 };
