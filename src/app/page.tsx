@@ -8,7 +8,6 @@ import { SectionBlock } from "@/components/SectionBlock";
 import { Ticker } from "@/components/Ticker";
 import {
   getArticlesBySection,
-  getFeaturedArticles,
   getLatestArticles,
   getPrincipalArticle,
 } from "@/lib/articles";
@@ -27,16 +26,19 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [featured, principal] = await Promise.all([
-    getFeaturedArticles(),
+  const [latest, principal] = await Promise.all([
+    getLatestArticles(12),
     getPrincipalArticle(),
   ]);
-  const homepage = principal
-    ? [principal, ...featured.filter((article) => article.slug !== principal.slug)]
-    : featured;
-  const lead = homepage[0];
-  const side = homepage.slice(1, 4);
-  const latest = await getLatestArticles(12);
+  const newest = latest[0];
+  const principalIsCurrent =
+    principal != null &&
+    newest != null &&
+    principal.publishedAt >= newest.publishedAt;
+  const lead = principalIsCurrent ? principal : newest;
+  const side = latest
+    .filter((article) => article.slug !== lead?.slug)
+    .slice(0, 2);
   const politica = await getArticlesBySection("politica");
   const nacional = await getArticlesBySection("nacional");
   const opiniao = await getArticlesBySection("opiniao");

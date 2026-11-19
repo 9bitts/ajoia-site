@@ -1,3 +1,5 @@
+import { existsSync } from "fs";
+import path from "path";
 import type { Article, User } from "@prisma/client";
 import { isHtmlBody, normalizeArticleHtml, sanitizeArticleHtml } from "@/lib/article-html";
 import { prisma } from "@/lib/db";
@@ -71,7 +73,7 @@ export function mapArticle(article: ArticleWithAuthor): PublicArticle {
     date: toDateIso(article.publishedAt ?? article.createdAt),
     featured: article.featured,
     breaking: article.breaking,
-    image: article.imageUrl || getSectionImage(section),
+    image: coverImage(article.imageUrl, section),
     imageAlt: article.imageAlt,
     imageGradient: "from-zinc-800 via-neutral-900 to-black",
     seoTitle: article.seoTitle,
@@ -94,6 +96,14 @@ export function mapColumnist(user: User): PublicColumnist {
 }
 
 const publicWhere = { status: "PUBLISHED" as const, noindex: false };
+
+function coverImage(url: string | null, section: SectionSlug) {
+  const fallback = getSectionImage(section);
+  if (!url || !url.startsWith("/") || url.startsWith("//")) return fallback;
+  if (url.startsWith("/uploads/")) return url;
+  const file = path.join(process.cwd(), "public", url);
+  return existsSync(file) ? url : fallback;
+}
 
 export async function getLatestArticles(limit = 12) {
   const rows = await prisma.article.findMany({
