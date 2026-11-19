@@ -11,7 +11,7 @@ export async function AdminNav() {
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <div className="flex items-center gap-3">
-            <BrandLogo href="/" size="sm" />
+            <BrandLogo href="/" size="sm" native />
             <Link
               href="/admin"
               className="text-[10px] uppercase tracking-[0.18em] text-mist-dim hover:text-white"

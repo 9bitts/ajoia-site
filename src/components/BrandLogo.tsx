@@ -8,6 +8,8 @@ type Props = {
   /** Visual size preset */
   size?: "sm" | "md" | "lg";
   priority?: boolean;
+  /** Full browser navigation, outside the admin app transition. */
+  native?: boolean;
 };
 
 const sizes = {
@@ -21,6 +23,7 @@ export function BrandLogo({
   className = "",
   size = "md",
   priority = false,
+  native = false,
 }: Props) {
   const s = sizes[size];
   const image = (
@@ -36,11 +39,17 @@ export function BrandLogo({
 
   if (!href) return image;
 
+  const classNameLink = "inline-flex min-w-0 shrink transition-opacity hover:opacity-90";
+  if (native) {
+    return (
+      <a href={href} className={classNameLink}>
+        {image}
+      </a>
+    );
+  }
+
   return (
-    <Link
-      href={href}
-      className="inline-flex min-w-0 shrink transition-opacity hover:opacity-90"
-    >
+    <Link href={href} className={classNameLink}>
       {image}
     </Link>
   );

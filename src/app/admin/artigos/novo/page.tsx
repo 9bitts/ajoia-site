@@ -1,13 +1,16 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { ArticleForm } from "@/components/admin/ArticleForm";
+import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 
 export default async function NewArticlePage() {
   const session = await auth();
-  if (!session?.user) return null;
+  const id = accountId(session);
+  if (!session?.user || !id) redirect("/admin/login");
 
   const me = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id },
     select: { approved: true },
   });
 

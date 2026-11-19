@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { recordAudit } from "@/lib/audit";
+import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 import { clientIp } from "@/lib/rate-limit";
 import { rejectCrossOrigin } from "@/lib/same-origin";
@@ -19,7 +20,8 @@ export async function POST(req: Request) {
   if (origin) return origin;
 
   const session = await auth();
-  if (!session?.user || session.user.role !== "ADMIN") {
+  const id = accountId(session);
+  if (!session?.user || !id || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Sem permissão" }, { status: 403 });
   }
 
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
   }
 
-  const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  const user = await prisma.user.findUnique({ where: { id } });
   if (!user?.active) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }

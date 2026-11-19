@@ -4,6 +4,7 @@ import { articleInputSchema, articleSeoData } from "@/lib/article-input";
 import { sanitizeStoredBody } from "@/lib/article-html";
 import { syncArticleSurfaces } from "@/lib/article-publish";
 import { recordAudit } from "@/lib/audit";
+import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 import { resolveArticleStatus } from "@/lib/editorial";
 import { imageUrlError } from "@/lib/image-url";
@@ -16,14 +17,15 @@ import { uniqueSlug } from "@/lib/slug";
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user) {
+  const id = accountId(session);
+  if (!session?.user || !id) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   const where =
     session.user.role === "ADMIN"
       ? {}
-      : { authorId: session.user.id };
+      : { authorId: id };
 
   const articles = await prisma.article.findMany({
     where,
@@ -41,7 +43,8 @@ export async function POST(req: Request) {
   if (origin) return origin;
 
   const session = await auth();
-  if (!session?.user) {
+  const id = accountId(session);
+  if (!session?.user || !id) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
@@ -63,7 +66,7 @@ export async function POST(req: Request) {
 
   const resolved = await resolveArticleStatus({
     role: session.user.role,
-    userId: session.user.id,
+    userId: id,
     requested: data.status,
   });
   if ("error" in resolved) {
@@ -98,7 +101,7 @@ export async function POST(req: Request) {
       breaking: session.user.role === "ADMIN" ? Boolean(data.breaking) : false,
       imageUrl: data.imageUrl || null,
       slug,
-      authorId: session.user.id,
+      authorId: id,
       publishedAt: resolved.status === "PUBLISHED" ? new Date() : null,
       ...articleSeoData(data, session.user.role),
     },
@@ -115,7 +118,7 @@ export async function POST(req: Request) {
   if (article.status === "PUBLISHED") {
     await recordAudit({
       action: "article.publish",
-      actorId: session.user.id,
+      actorId: id,
       actorEmail: session.user.email,
       targetType: "article",
       targetId: article.id,

@@ -10,7 +10,12 @@ export const authConfig = {
   callbacks: {
     session({ session, token }) {
       if (!token.id || token.invalid) return null as unknown as typeof session;
+      session.user.id = token.id;
+      if (token.role) session.user.role = token.role;
+      if (token.slug) session.user.slug = token.slug;
       session.user.mustChangePassword = Boolean(token.mustChangePassword);
+      if (token.email) session.user.email = token.email;
+      if (typeof token.name === "string") session.user.name = token.name;
       return session;
     },
   },

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { recordAudit } from "@/lib/audit";
+import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 import { passwordError } from "@/lib/password";
 import { clientIp } from "@/lib/rate-limit";
@@ -18,7 +19,8 @@ export async function POST(req: Request) {
   if (origin) return origin;
 
   const session = await auth();
-  if (!session?.user) {
+  const id = accountId(session);
+  if (!session?.user || !id) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
@@ -31,7 +33,7 @@ export async function POST(req: Request) {
   const policy = passwordError(parsed.data.newPassword);
   if (policy) return NextResponse.json({ error: policy }, { status: 400 });
 
-  const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  const user = await prisma.user.findUnique({ where: { id } });
   if (!user || !user.active) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }

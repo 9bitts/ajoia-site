@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { accountId } from "@/lib/account-id";
 import { ArticleForm } from "@/components/admin/ArticleForm";
 import { SocialPublish } from "@/components/admin/SocialPublish";
 import { prisma } from "@/lib/db";
@@ -11,7 +12,8 @@ export const dynamic = "force-dynamic";
 
 export default async function EditArticlePage({ params }: Props) {
   const session = await auth();
-  if (!session?.user) return null;
+  const userId = accountId(session);
+  if (!session?.user || !userId) redirect("/admin/login");
 
   const { id } = await params;
   const article = await prisma.article.findUnique({
@@ -24,14 +26,14 @@ export default async function EditArticlePage({ params }: Props) {
 
   if (
     session.user.role !== "ADMIN" &&
-    article.authorId !== session.user.id
+    article.authorId !== userId
   ) {
     redirect("/admin");
   }
 
   const [me, revision] = await Promise.all([
     prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: userId },
       select: { approved: true },
     }),
     prisma.articleRevision.findUnique({ where: { articleId: article.id } }),

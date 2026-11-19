@@ -2,6 +2,8 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { ArticleTable, type ArticleRow } from "@/components/admin/ArticleTable";
 import { AdminSearch, StatusFilters } from "@/components/admin/AdminSearch";
+import { redirect } from "next/navigation";
+import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 import { articleStatuses, type ArticleStatusValue } from "@/lib/editorial";
 
@@ -24,11 +26,13 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
   const q = (query.q || "").trim().slice(0, 80);
   const status = asStatus(query.status);
   const isAdmin = session.user.role === "ADMIN";
+  const id = accountId(session);
+  if (!id) redirect("/admin/login");
 
   if (!isAdmin) {
     const articles = await prisma.article.findMany({
       where: {
-        authorId: session.user.id,
+        authorId: id,
         ...(status ? { status } : {}),
         ...(q ? { title: { contains: q, mode: "insensitive" } } : {}),
       },

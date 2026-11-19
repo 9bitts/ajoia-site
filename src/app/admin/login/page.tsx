@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { accountId } from "@/lib/account-id";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LoginForm } from "@/components/admin/LoginForm";
 
 export default async function AdminLoginPage() {
   const session = await auth();
-  if (session?.user) redirect("/admin");
+  if (accountId(session)) redirect("/admin");
 
   return (
     <div className="mx-auto max-w-md py-8">

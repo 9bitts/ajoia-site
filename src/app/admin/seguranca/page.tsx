@@ -1,17 +1,19 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { TotpForm } from "@/components/admin/TotpForm";
+import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function SecurityPage() {
   const session = await auth();
-  if (!session?.user) return null;
+  const id = accountId(session);
+  if (!session?.user || !id) redirect("/admin/login");
   if (session.user.role !== "ADMIN") redirect("/admin");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id },
     select: { totpEnabled: true },
   });
 
