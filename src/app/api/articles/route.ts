@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { articleInputSchema, articleSeoData } from "@/lib/article-input";
+import { articleInputError, articleInputSchema, articleSeoData, principalConflict } from "@/lib/article-input";
 import { sanitizeStoredBody } from "@/lib/article-html";
 import { syncArticleSurfaces } from "@/lib/article-publish";
 import { recordAudit } from "@/lib/audit";
@@ -51,10 +51,7 @@ export async function POST(req: Request) {
   const json = await req.json();
   const parsed = articleInputSchema.safeParse(json);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Dados inválidos", details: parsed.error.flatten() },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: articleInputError(parsed.error) }, { status: 400 });
   }
 
   const data = parsed.data;
@@ -84,28 +81,48 @@ export async function POST(req: Request) {
   if (seoError) {
     return NextResponse.json({ error: seoError }, { status: 400 });
   }
+  const coverError = principalConflict({
+    role: session.user.role,
+    principal: data.principal,
+    noindex: data.noindex,
+    status: resolved.status,
+  });
+  if (coverError) {
+    return NextResponse.json({ error: coverError }, { status: 400 });
+  }
 
   const slug = await uniqueSlug(data.slug || data.title, async (s) => {
     const existing = await prisma.article.findUnique({ where: { slug: s } });
     return Boolean(existing);
   });
 
-  const article = await prisma.article.create({
-    data: {
-      title: data.title,
-      dek: data.dek,
-      body: sanitizeStoredBody(data.body),
-      section: data.section,
-      status: resolved.status,
-      featured: session.user.role === "ADMIN" ? Boolean(data.featured) : false,
-      breaking: session.user.role === "ADMIN" ? Boolean(data.breaking) : false,
-      imageUrl: data.imageUrl || null,
-      slug,
-      authorId: id,
-      publishedAt: resolved.status === "PUBLISHED" ? new Date() : null,
-      ...articleSeoData(data, session.user.role),
-    },
-    include: { author: { select: { slug: true } } },
+  const principal = session.user.role === "ADMIN" && Boolean(data.principal);
+
+  const article = await prisma.$transaction(async (tx) => {
+    if (principal && resolved.status === "PUBLISHED") {
+      await tx.article.updateMany({
+        where: { principal: true },
+        data: { principal: false },
+      });
+    }
+    return tx.article.create({
+      data: {
+        title: data.title,
+        dek: data.dek,
+        body: sanitizeStoredBody(data.body),
+        section: data.section,
+        status: resolved.status,
+        featured: session.user.role === "ADMIN" ? Boolean(data.featured) : false,
+        principal,
+        breaking: session.user.role === "ADMIN" ? Boolean(data.breaking) : false,
+        imageUrl: data.imageUrl || null,
+        slug,
+        authorId: id,
+        publishedAt: resolved.status === "PUBLISHED" ? new Date() : null,
+        ...articleSeoData(data, session.user.role),
+      },
+      include: { author: { select: { slug: true } } },
+    });
   });
 
   syncArticleSurfaces({

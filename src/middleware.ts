@@ -6,13 +6,19 @@ const { auth } = NextAuth(authConfig);
 
 const sections = new Set([
   "politica",
+  "editorial",
+  "nacional",
+  "internacional",
+  "cultura",
+  "saude",
+  "colunistas",
+  "tema-livre",
+  "ultimas",
+  "opiniao",
+  "economia",
   "estado",
   "cidade",
   "mundo",
-  "cultura",
-  "opiniao",
-  "editorial",
-  "tema-livre",
 ]);
 
 /** Páginas do WordPress que mudaram de caminho no portal novo. */
@@ -100,11 +106,7 @@ export default auth((req) => {
     target = slug ? `/colunistas/${slug}` : "/colunistas";
   } else if (path.startsWith("/categorias/") || path.startsWith("/category/")) {
     const slug = path.split("/")[2] || "";
-    target = sections.has(slug)
-      ? `/secao/${slug}`
-      : slug === "ultimas"
-        ? "/ultimas"
-        : "/colunistas";
+    target = sections.has(slug) ? `/secao/${slug}` : "/colunistas";
   } else if (slash) target = path;
 
   const www = requestHostname(req) === "www.ajoiabrasil.com.br";

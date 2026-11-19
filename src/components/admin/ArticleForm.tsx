@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   SEO_DESCRIPTION_MAX,
   SEO_DESCRIPTION_MIN,
@@ -9,7 +9,12 @@ import {
   SEO_TITLE_MIN,
   publishSeoError,
 } from "@/lib/seo-rules";
-import { SECTIONS, sectionDefaultsToOpinion, sectionMeta } from "@/lib/sections";
+import {
+  SECTIONS,
+  isSectionSlug,
+  sectionDefaultsToOpinion,
+  sectionMeta,
+} from "@/lib/sections";
 import { slugify } from "@/lib/slug";
 
 type ArticleStatusValue = "DRAFT" | "PENDING" | "PUBLISHED";
@@ -21,6 +26,7 @@ type ArticleFormValues = {
   section: string;
   status: ArticleStatusValue;
   featured: boolean;
+  principal: boolean;
   breaking: boolean;
   imageUrl: string | null;
   imageAlt: string;
@@ -75,6 +81,28 @@ export function ArticleForm({
   }
 
   async function onSubmit(status: ArticleStatusValue) {
+    if (uploading) {
+      setError("Espere a imagem terminar de subir antes de salvar.");
+      setMessage("");
+      return;
+    }
+    if (form.title.trim().length < 3) {
+      setError("O título precisa ter pelo menos 3 caracteres.");
+      setMessage("");
+      return;
+    }
+    if (form.body.trim().length < 10) {
+      setError("Escreva o texto da matéria antes de salvar.");
+      setMessage("");
+      return;
+    }
+    if (status === "PUBLISHED" && form.principal && form.noindex) {
+      setError(
+        "A matéria principal entra na capa. Desmarque “Não indexar” para publicar assim.",
+      );
+      setMessage("");
+      return;
+    }
     const seoError = publishSeoError({
       status,
       dek: form.dek,
@@ -237,29 +265,36 @@ export function ArticleForm({
           />
         </label>
 
-        <label className="block">
-          <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
-            Seção
-          </span>
-          <select
-            value={form.section}
-            onChange={(e) => {
-              const section = e.target.value;
-              setForm({
-                ...form,
-                section,
-                isOpinion: sectionDefaultsToOpinion(section),
-              });
-            }}
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
-          >
-            {SECTIONS.map((s) => (
-              <option key={s} value={s}>
-                {sectionMeta[s].label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SectionPicker
+          value={form.section}
+          onChange={(section) =>
+            setForm({
+              ...form,
+              section,
+              isOpinion: sectionDefaultsToOpinion(section),
+            })
+          }
+        />
+
+        {isAdmin && (
+          <label className="flex items-start gap-3 border border-white/15 bg-black/40 px-4 py-3 text-sm text-white">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={form.principal}
+              onChange={(e) =>
+                setForm({ ...form, principal: e.target.checked })
+              }
+            />
+            <span>
+              Esta matéria também vai para a página inicial como principal.
+              <span className="mt-1 block text-xs text-mist-dim">
+                Ocupa o destaque grande da capa quando estiver publicada. A
+                seção da matéria continua no ar.
+              </span>
+            </span>
+          </label>
+        )}
 
         <label className="block">
           <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
@@ -461,7 +496,7 @@ export function ArticleForm({
       <div className="flex flex-wrap gap-3 border-t border-white/10 pt-6">
         <button
           type="button"
-          disabled={saving}
+          disabled={saving || uploading}
           onClick={() => void onSubmit("DRAFT")}
           className="border border-white/20 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-mist hover:border-mist/50 hover:text-white disabled:opacity-50"
         >
@@ -470,7 +505,7 @@ export function ArticleForm({
         {isAdmin ? (
           <button
             type="button"
-            disabled={saving}
+            disabled={saving || uploading}
             onClick={() => void onSubmit("PUBLISHED")}
             className="btn-primary text-xs uppercase tracking-[0.14em] disabled:opacity-50"
           >
@@ -479,7 +514,7 @@ export function ArticleForm({
         ) : (
           <button
             type="button"
-            disabled={saving || !accountApproved}
+            disabled={saving || uploading || !accountApproved}
             onClick={() => void onSubmit("PENDING")}
             className="btn-primary text-xs uppercase tracking-[0.14em] disabled:opacity-50"
           >
@@ -534,6 +569,90 @@ function SerpPreview({
       </p>
       <p className="mt-1 text-lg leading-snug text-[#1a0dab]">{title}</p>
       <p className="mt-1 text-sm leading-snug text-[#4d5156]">{description}</p>
+    </div>
+  );
+}
+
+function sectionLabel(slug: string) {
+  return isSectionSlug(slug) ? sectionMeta[slug].label : slug;
+}
+
+function SectionPicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (section: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
+  const options =
+    isSectionSlug(value) && !(SECTIONS as readonly string[]).includes(value)
+      ? [value, ...SECTIONS]
+      : SECTIONS;
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointer(event: MouseEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
+        Seção
+      </span>
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        onClick={() => setOpen((current) => !current)}
+        className="mt-2 flex w-full items-center justify-between border border-white/15 bg-black/40 px-4 py-3 text-left text-white outline-none focus:border-mist/50"
+      >
+        <span>{sectionLabel(value)}</span>
+        <span aria-hidden className="text-xs text-mist-dim">
+          {open ? "▴" : "▾"}
+        </span>
+      </button>
+      {open && (
+        <ul
+          id={listId}
+          role="listbox"
+          className="absolute z-30 mt-1 w-full border border-white/15 bg-[#141418] py-1 shadow-2xl"
+        >
+          {options.map((slug) => {
+            const selected = slug === value;
+            return (
+              <li key={slug} role="option" aria-selected={selected}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(slug);
+                    setOpen(false);
+                  }}
+                  className={`w-full px-4 py-2.5 text-left text-sm text-white hover:bg-white/10 ${
+                    selected ? "bg-[#2a4f86]" : ""
+                  }`}
+                >
+                  {sectionLabel(slug)}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }

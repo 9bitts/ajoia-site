@@ -7,7 +7,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { BrandLogo } from "@/components/BrandLogo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { headerAds } from "@/data/ads";
-import { institutionalLinks, navSections, siteConfig } from "@/data/site";
+import { institutionalLinks, navSections, sectionHref, siteConfig } from "@/data/site";
 
 export function Header() {
   const pathname = usePathname();
@@ -93,7 +93,7 @@ export function Header() {
             Capa
           </Link>
           {navSections.map((section) => {
-            const href = `/secao/${section.slug}`;
+            const href = sectionHref(section.slug);
             return (
               <Link
                 key={section.slug}
@@ -105,20 +105,6 @@ export function Header() {
               </Link>
             );
           })}
-          <Link
-            href="/colunistas"
-            data-active={pathname.startsWith("/colunistas")}
-            className="nav-link whitespace-nowrap text-[13px] font-semibold text-white/80 hover:text-white"
-          >
-            Colunistas
-          </Link>
-          <Link
-            href="/ultimas"
-            data-active={pathname.startsWith("/ultimas")}
-            className="nav-link whitespace-nowrap text-[13px] font-semibold text-white/80 hover:text-white"
-          >
-            Últimas
-          </Link>
         </div>
       </nav>
 
@@ -131,24 +117,12 @@ export function Header() {
             {navSections.map((section) => (
               <Link
                 key={section.slug}
-                href={`/secao/${section.slug}`}
+                href={sectionHref(section.slug)}
                 className="border-t border-[var(--line)] py-3 text-sm font-semibold"
               >
                 {section.label}
               </Link>
             ))}
-            <Link
-              href="/colunistas"
-              className="border-t border-[var(--line)] py-3 text-sm font-semibold"
-            >
-              Colunistas
-            </Link>
-            <Link
-              href="/ultimas"
-              className="border-t border-[var(--line)] py-3 text-sm font-semibold"
-            >
-              Últimas
-            </Link>
             {institutionalLinks.map((link) => (
               <Link
                 key={link.href}

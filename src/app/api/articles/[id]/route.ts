@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { articleInputSchema, articleSeoData } from "@/lib/article-input";
+import { articleInputError, articleInputSchema, articleSeoData, principalConflict } from "@/lib/article-input";
 import { sanitizeStoredBody } from "@/lib/article-html";
 import { syncArticleSurfaces } from "@/lib/article-publish";
 import { recordAudit } from "@/lib/audit";
@@ -68,7 +68,7 @@ export async function PUT(req: Request, { params }: Params) {
   const json = await req.json();
   const parsed = articleInputSchema.safeParse(json);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    return NextResponse.json({ error: articleInputError(parsed.error) }, { status: 400 });
   }
 
   const data = parsed.data;
@@ -142,6 +142,15 @@ export async function PUT(req: Request, { params }: Params) {
   if (seoError) {
     return NextResponse.json({ error: seoError }, { status: 400 });
   }
+  const coverError = principalConflict({
+    role: session.user.role,
+    principal: data.principal,
+    noindex: session.user.role === "ADMIN" ? data.noindex : existing.noindex,
+    status: resolved.status,
+  });
+  if (coverError) {
+    return NextResponse.json({ error: coverError }, { status: 400 });
+  }
 
   let slug = existing.slug;
   if (data.slug && data.slug !== existing.slug) {
@@ -162,6 +171,16 @@ export async function PUT(req: Request, { params }: Params) {
     if (slug !== existing.slug && existing.status === "PUBLISHED") {
       await rememberSlug(tx, existing.slug, slug);
     }
+    if (
+      session.user.role === "ADMIN" &&
+      data.principal &&
+      resolved.status === "PUBLISHED"
+    ) {
+      await tx.article.updateMany({
+        where: { principal: true, NOT: { id } },
+        data: { principal: false },
+      });
+    }
     return tx.article.update({
       where: { id },
       data: {
@@ -176,6 +195,10 @@ export async function PUT(req: Request, { params }: Params) {
           session.user.role === "ADMIN"
             ? Boolean(data.featured)
             : existing.featured,
+        principal:
+          session.user.role === "ADMIN"
+            ? Boolean(data.principal ?? existing.principal)
+            : existing.principal,
         breaking:
           session.user.role === "ADMIN"
             ? Boolean(data.breaking)

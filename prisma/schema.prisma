@@ -48,6 +48,7 @@ model Article {
   section     String
   status      ArticleStatus @default(DRAFT)
   featured    Boolean       @default(false)
+  principal   Boolean       @default(false)
   breaking    Boolean       @default(false)
   imageUrl       String?
   imageAlt       String        @default("")

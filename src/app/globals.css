@@ -134,6 +134,16 @@ button {
   --logo-filter: none;
 }
 
+/* Native menus on Windows paint a light popup. Force readable option text. */
+.admin-shell select {
+  color-scheme: light;
+}
+
+.admin-shell select option {
+  background-color: #ffffff;
+  color: #141418;
+}
+
 .site-shell {
   position: relative;
   isolation: isolate;

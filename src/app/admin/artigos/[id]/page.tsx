@@ -61,6 +61,7 @@ export default async function EditArticlePage({ params }: Props) {
             section: source.section,
             status: article.status,
             featured: article.featured,
+            principal: article.principal,
             breaking: article.breaking,
             imageUrl: source.imageUrl,
             imageAlt: source.imageAlt,

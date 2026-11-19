@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
-import { institutionalLinks, navSections, siteConfig } from "@/data/site";
+import { institutionalLinks, navSections, sectionHref, siteConfig } from "@/data/site";
 
 export function Footer() {
   return (
@@ -25,7 +25,7 @@ export function Footer() {
             {navSections.map((section) => (
               <li key={section.slug}>
                 <Link
-                  href={`/secao/${section.slug}`}
+                  href={sectionHref(section.slug)}
                   className="text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
                 >
                   {section.label}
@@ -50,14 +50,6 @@ export function Footer() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link
-                href="/colunistas"
-                className="text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
-              >
-                Colunistas
-              </Link>
-            </li>
             <li>
               <Link
                 href="/assine"

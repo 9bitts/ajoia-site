@@ -10,6 +10,7 @@ import {
   getArticlesBySection,
   getFeaturedArticles,
   getLatestArticles,
+  getPrincipalArticle,
 } from "@/lib/articles";
 import { missao, siteConfig } from "@/data/site";
 import { homeJsonLd } from "@/lib/seo";
@@ -26,14 +27,20 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const featured = await getFeaturedArticles();
-  const lead = featured[0];
-  const side = featured.slice(1, 4);
+  const [featured, principal] = await Promise.all([
+    getFeaturedArticles(),
+    getPrincipalArticle(),
+  ]);
+  const homepage = principal
+    ? [principal, ...featured.filter((article) => article.slug !== principal.slug)]
+    : featured;
+  const lead = homepage[0];
+  const side = homepage.slice(1, 4);
   const latest = await getLatestArticles(12);
   const politica = await getArticlesBySection("politica");
-  const cidade = await getArticlesBySection("cidade");
+  const nacional = await getArticlesBySection("nacional");
   const opiniao = await getArticlesBySection("opiniao");
-  const estado = await getArticlesBySection("estado");
+  const economia = await getArticlesBySection("economia");
 
   return (
     <>
@@ -84,10 +91,10 @@ export default async function HomePage() {
 
       {lead && (
         <>
-          <SectionBlock section="cidade" articles={cidade} />
+          <SectionBlock section="nacional" articles={nacional} />
           <ColumnistRail />
           <SectionBlock section="opiniao" articles={opiniao} />
-          <SectionBlock section="estado" articles={estado} />
+          <SectionBlock section="economia" articles={economia} />
           <Newsletter />
         </>
       )}

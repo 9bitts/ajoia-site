@@ -18,15 +18,24 @@ export const siteConfig = {
   },
 };
 
+export function sectionHref(slug: string) {
+  if (slug === "colunistas") return "/colunistas";
+  if (slug === "ultimas") return "/ultimas";
+  return `/secao/${slug}`;
+}
+
 export const navSections = [
   { slug: "politica", label: "Política" },
-  { slug: "estado", label: "Estado" },
-  { slug: "cidade", label: "Cidade" },
-  { slug: "mundo", label: "Mundo" },
-  { slug: "cultura", label: "Cultura" },
-  { slug: "opiniao", label: "Opinião" },
   { slug: "editorial", label: "Editorial" },
+  { slug: "nacional", label: "Nacional" },
+  { slug: "internacional", label: "Internacional" },
+  { slug: "cultura", label: "Cultura" },
+  { slug: "saude", label: "Saúde" },
+  { slug: "colunistas", label: "Colunistas" },
   { slug: "tema-livre", label: "Tema Livre" },
+  { slug: "ultimas", label: "Últimas" },
+  { slug: "opiniao", label: "Opinião" },
+  { slug: "economia", label: "Economia" },
 ] as const;
 
 export const institutionalLinks = [

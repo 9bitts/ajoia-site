@@ -32,6 +32,7 @@ export default async function NewArticlePage() {
             section: "politica",
             status: "DRAFT",
             featured: false,
+            principal: false,
             breaking: false,
             imageUrl: null,
             imageAlt: "",

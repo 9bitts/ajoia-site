@@ -105,6 +105,15 @@ export async function getLatestArticles(limit = 12) {
   return rows.map(mapArticle);
 }
 
+export async function getPrincipalArticle() {
+  const row = await prisma.article.findFirst({
+    where: { status: "PUBLISHED", noindex: false, principal: true },
+    include: { author: true },
+    orderBy: { updatedAt: "desc" },
+  });
+  return row ? mapArticle(row) : null;
+}
+
 export async function getFeaturedArticles(limit = 8) {
   const rows = await prisma.article.findMany({
     where: { status: "PUBLISHED", noindex: false, featured: true },
