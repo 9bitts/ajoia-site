@@ -20,7 +20,14 @@ export function fitSearchText(value: string, max: number) {
 /** Manchete que, com a marca, cabe no resultado. A página continua com o título inteiro. */
 export function fitSearchTitle(headline: string) {
   const budget = SEO_TITLE_MAX - SEARCH_TITLE_SUFFIX.length;
-  return fitSearchText(headline, budget);
+  const clean = headline.replace(/\s+/g, " ").trim();
+  if (clean.length <= budget) return clean;
+
+  const lead = clean.split(/\s*(?::|[—–])\s*|\s+-\s+/)[0]?.trim() ?? "";
+  if (lead.length >= 20 && lead.length <= budget) {
+    return lead.replace(/[\s.,;:!?–—-]+$/u, "");
+  }
+  return fitSearchText(clean, budget);
 }
 
 export function publishSeoError(input: {
