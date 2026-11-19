@@ -3,6 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import {
+  fitSearchText,
+  fitSearchTitle,
+  SEARCH_TITLE_SUFFIX,
   SEO_DESCRIPTION_MAX,
   SEO_DESCRIPTION_MIN,
   SEO_TITLE_MAX,
@@ -242,7 +245,7 @@ export function ArticleForm({
             className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
           />
           <FieldLength
-            value={form.seoTitle.trim() || form.title.trim()}
+            value={`${fitSearchTitle(form.seoTitle.trim() || form.title.trim())}${SEARCH_TITLE_SUFFIX}`}
             min={SEO_TITLE_MIN}
             max={SEO_TITLE_MAX}
           />
@@ -259,7 +262,10 @@ export function ArticleForm({
             className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
           />
           <FieldLength
-            value={form.seoDescription.trim() || form.dek.trim()}
+            value={fitSearchText(
+              form.seoDescription.trim() || form.dek.trim(),
+              SEO_DESCRIPTION_MAX
+            )}
             min={SEO_DESCRIPTION_MIN}
             max={SEO_DESCRIPTION_MAX}
           />
@@ -400,6 +406,10 @@ export function ArticleForm({
             <span className="text-xs text-mist-muted">
               Título no Google (opcional)
             </span>
+            <p className="mt-1 text-xs text-mist-dim">
+              Vazio, o Google recebe a manchete específica, cortada para caber
+              com a marca. A manchete da página continua inteira.
+            </p>
             <input
               value={form.seoTitle}
               onChange={(e) => setForm({ ...form, seoTitle: e.target.value })}
@@ -450,11 +460,16 @@ export function ArticleForm({
             </label>
           )}
           <SerpPreview
-            title={form.seoTitle.trim() || form.title.trim() || "Título da matéria"}
+            title={
+              form.seoTitle.trim() || form.title.trim()
+                ? `${fitSearchTitle(form.seoTitle.trim() || form.title.trim())}${SEARCH_TITLE_SUFFIX}`
+                : "Título da matéria"
+            }
             description={
-              form.seoDescription.trim() ||
-              form.dek.trim() ||
-              "A linha-fina aparece aqui como descrição."
+              fitSearchText(
+                form.seoDescription.trim() || form.dek.trim(),
+                SEO_DESCRIPTION_MAX
+              ) || "A linha-fina aparece aqui como descrição."
             }
             slug={
               mode === "edit"

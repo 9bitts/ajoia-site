@@ -95,7 +95,6 @@ export default async function ArticlePage({ params }: Props) {
                 alt={article.imageAlt || article.title}
                 fill
                 priority
-                unoptimized={image.startsWith("/uploads/")}
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-cover"
               />

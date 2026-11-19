@@ -40,7 +40,10 @@ export function syncArticleSurfaces(opts: {
 
   if (opts.status !== "PUBLISHED") return;
 
-  const urls = [absoluteUrl(`/artigo/${opts.slug}`)];
+  const urls = [
+    absoluteUrl(`/artigo/${opts.slug}`),
+    absoluteUrl(`/secao/${opts.section}`),
+  ];
   if (opts.previousSlug && opts.previousSlug !== opts.slug) {
     urls.push(absoluteUrl(`/artigo/${opts.previousSlug}`));
   }

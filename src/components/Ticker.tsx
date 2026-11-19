@@ -22,7 +22,6 @@ export async function Ticker() {
               src={article.image}
               alt={article.imageAlt}
               fill
-              unoptimized={article.image.startsWith("/uploads/")}
               sizes="96px"
               className="object-cover"
             />

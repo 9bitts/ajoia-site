@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/data/site";
 import type { PublicArticle } from "@/lib/articles";
+import { fitSearchText, fitSearchTitle, SEO_DESCRIPTION_MAX } from "@/lib/seo-rules";
 import { sectionMeta, type SectionSlug } from "@/lib/sections";
 import { absoluteUrl, organizationSameAs, siteUrl } from "@/lib/site-url";
 
@@ -80,11 +81,14 @@ export function pageMetadata(input: {
 }
 
 function searchHeadline(article: PublicArticle) {
-  return article.seoTitle.trim() || article.title;
+  return fitSearchTitle(article.seoTitle.trim() || article.title);
 }
 
 function searchDescription(article: PublicArticle) {
-  return article.seoDescription.trim() || article.dek;
+  return fitSearchText(
+    article.seoDescription.trim() || article.dek,
+    SEO_DESCRIPTION_MAX
+  );
 }
 
 export function articleMetadata(article: PublicArticle): Metadata {

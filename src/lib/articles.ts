@@ -60,7 +60,9 @@ export function mapArticle(article: ArticleWithAuthor): PublicArticle {
     slug: article.slug,
     title: article.title,
     dek: article.dek,
-    html: html ? sanitizeArticleHtml(normalizeArticleHtml(article.body)) : "",
+    html: html
+      ? sanitizeArticleHtml(normalizeArticleHtml(article.body), article.title)
+      : "",
     body: html
       ? []
       : article.body

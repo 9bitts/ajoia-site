@@ -1,7 +1,9 @@
+import { indexNowKey } from "@/lib/indexnow";
+
 export const dynamic = "force-dynamic";
 
 export function GET() {
-  const key = process.env.INDEXNOW_KEY?.trim();
+  const key = indexNowKey();
   if (!key) {
     return new Response("Not found", { status: 404 });
   }
