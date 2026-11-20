@@ -59,7 +59,7 @@ export default function MidiaKitPage() {
         </p>
         <a
           href={`mailto:${siteConfig.email}?subject=Mídia%20Kit%20Ajoia`}
-          className="mt-3 inline-block font-display text-2xl text-mist transition-colors hover:text-white"
+          className="mt-3 inline-block max-w-full break-words font-display text-2xl text-mist transition-colors hover:text-white"
         >
           {siteConfig.email}
         </a>

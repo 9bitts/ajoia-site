@@ -58,12 +58,12 @@ export function Newsletter() {
               type="email"
               required
               placeholder="seu@email.com"
-              className="w-full min-w-0 rounded-md border border-white/20 bg-white/10 px-4 py-3 text-base text-white outline-none placeholder:text-white/40 focus:border-[#e8c56b] sm:text-sm"
+              className="w-full min-w-0 rounded-md border border-white/20 bg-white/10 px-4 py-3 text-base text-white outline-none placeholder:text-white/40 focus:border-[#e8c56b]"
             />
             <button
               type="submit"
               disabled={status === "sending"}
-              className="w-full shrink-0 rounded-md bg-[#e8c56b] px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-[#111113] disabled:opacity-60 sm:w-auto"
+              className="inline-flex min-h-11 w-full shrink-0 items-center justify-center rounded-md bg-[#e8c56b] px-5 text-xs font-bold uppercase tracking-[0.14em] text-[#111113] disabled:opacity-60 sm:w-auto"
             >
               {status === "sending" ? "Enviando…" : "Assinar"}
             </button>

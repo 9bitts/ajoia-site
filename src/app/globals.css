@@ -72,6 +72,7 @@ html {
   overflow-x: clip;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scroll-padding-top: calc(env(safe-area-inset-top) + 11rem);
 }
 
 body {
@@ -98,6 +99,15 @@ select,
 button {
   font: inherit;
   max-width: 100%;
+}
+
+/* iOS Safari zooms the page when a focused field is under 16px. */
+@media (max-width: 1023px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
 }
 
 ::selection {
@@ -245,6 +255,21 @@ html[data-theme="light"] .on-dark .brand-logo-img {
 .prose-ajoia {
   overflow-wrap: anywhere;
   word-break: break-word;
+  max-width: 100%;
+}
+
+.prose-ajoia table,
+.prose-ajoia pre {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose-ajoia iframe,
+.prose-ajoia video,
+.prose-ajoia embed {
+  max-width: 100%;
 }
 
 .prose-ajoia p,
@@ -695,7 +720,11 @@ html.intro-lock body {
   z-index: 9000;
   display: grid;
   place-items: center;
-  padding: 1.25rem;
+  padding:
+    max(1.25rem, env(safe-area-inset-top))
+    max(1.25rem, env(safe-area-inset-right))
+    max(1.25rem, env(safe-area-inset-bottom))
+    max(1.25rem, env(safe-area-inset-left));
 }
 
 .maintenance-notice__backdrop {

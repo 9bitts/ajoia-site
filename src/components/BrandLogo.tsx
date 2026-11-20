@@ -39,7 +39,7 @@ export function BrandLogo({
 
   if (!href) return image;
 
-  const classNameLink = "inline-flex min-w-0 shrink transition-opacity hover:opacity-90";
+  const classNameLink = "inline-flex min-h-11 min-w-0 shrink items-center transition-opacity hover:opacity-90";
   if (native) {
     return (
       <a href={href} className={classNameLink}>

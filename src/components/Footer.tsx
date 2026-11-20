@@ -21,12 +21,12 @@ export function Footer() {
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/45">
             Seções
           </p>
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-3">
             {navSections.map((section) => (
               <li key={section.slug}>
                 <Link
                   href={sectionHref(section.slug)}
-                  className="text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
+                  className="flex min-h-11 items-center text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
                 >
                   {section.label}
                 </Link>
@@ -39,12 +39,12 @@ export function Footer() {
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/45">
             Institucional
           </p>
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-3">
             {institutionalLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
+                  className="flex min-h-11 items-center text-sm text-white/75 transition-colors hover:text-[#e8c56b]"
                 >
                   {link.label}
                 </Link>
@@ -53,7 +53,7 @@ export function Footer() {
             <li>
               <Link
                 href="/assine"
-                className="text-sm font-semibold text-[#e8c56b]"
+                className="flex min-h-11 items-center text-sm font-semibold text-[#e8c56b]"
               >
                 Assine
               </Link>
@@ -63,7 +63,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-6 text-xs text-white/45 md:flex-row md:items-center md:justify-between">
+        <div className="mx-auto flex max-w-content flex-col gap-3 px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 text-xs text-white/45 md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. Todos os direitos
             reservados.

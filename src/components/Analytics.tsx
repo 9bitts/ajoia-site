@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID || "";
 const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "";
@@ -50,6 +50,7 @@ function loadTags() {
 }
 
 export function Analytics() {
+  const bannerRef = useRef<HTMLDivElement>(null);
   const [choice, setChoice] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -66,7 +67,26 @@ export function Analytics() {
     if (stored === "granted") loadTags();
   }, []);
 
-  if (!enabled || !ready || choice) return null;
+  const visible = enabled && ready && !choice;
+
+  useEffect(() => {
+    if (!visible) return;
+    const banner = bannerRef.current;
+    if (!banner) return;
+
+    const apply = () => {
+      document.body.style.paddingBottom = `${banner.offsetHeight}px`;
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(banner);
+    return () => {
+      observer.disconnect();
+      document.body.style.paddingBottom = "";
+    };
+  }, [visible]);
+
+  if (!visible) return null;
 
   function choose(value: "granted" | "denied") {
     try {
@@ -83,24 +103,27 @@ export function Analytics() {
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--line)] bg-[var(--bg)] px-4 py-4 sm:px-6">
+    <div
+      ref={bannerRef}
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[var(--bg)] px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 sm:px-6"
+    >
       <div className="mx-auto flex max-w-content flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <p className="max-w-2xl text-sm leading-relaxed text-[var(--text)]">
           Medimos a audiência do jornal: páginas lidas e de onde vêm as visitas.
           Os dados servem à redação. Sem o seu aceite, essa medição não começa.
         </p>
-        <div className="flex shrink-0 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:flex sm:shrink-0">
           <button
             type="button"
             onClick={() => choose("denied")}
-            className="border border-[var(--line)] px-4 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-mist-muted"
+            className="inline-flex min-h-11 items-center justify-center border border-[var(--line)] px-4 text-xs font-bold uppercase tracking-[0.14em] text-mist-muted"
           >
             Recusar
           </button>
           <button
             type="button"
             onClick={() => choose("granted")}
-            className="btn-primary text-xs uppercase tracking-[0.14em]"
+            className="btn-primary min-h-11 text-xs uppercase tracking-[0.14em]"
           >
             Aceitar
           </button>

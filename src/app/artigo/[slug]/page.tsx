@@ -88,7 +88,7 @@ export default async function ArticlePage({ params }: Props) {
             </p>
           </header>
 
-          <div className="relative mt-8 aspect-[16/8] overflow-hidden rounded-2xl bg-[var(--bg-soft)]">
+          <div className="relative mt-8 aspect-[3/2] overflow-hidden rounded-2xl bg-[var(--bg-soft)] sm:aspect-[16/8]">
             {image && (
               <Image
                 src={image}

@@ -22,7 +22,7 @@ export function SectionBlock({ section, articles }: Props) {
         </h2>
         <Link
           href={`/secao/${section}`}
-          className="shrink-0 text-xs font-bold uppercase tracking-[0.14em] text-gold"
+          className="inline-flex min-h-11 shrink-0 items-center text-xs font-bold uppercase tracking-[0.14em] text-gold"
         >
           Ver seção →
         </Link>

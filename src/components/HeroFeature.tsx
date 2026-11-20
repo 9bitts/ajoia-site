@@ -71,7 +71,7 @@ export function HeroFeature({ lead, side, latest }: Props) {
           </div>
           <Link
             href="/ultimas"
-            className="mt-4 inline-flex text-xs font-bold uppercase tracking-[0.14em] text-gold"
+            className="mt-2 inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-[0.14em] text-gold"
           >
             Ver todas →
           </Link>

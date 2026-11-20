@@ -16,7 +16,7 @@ export async function ColumnistRail() {
           </h2>
           <Link
             href="/colunistas"
-            className="text-xs font-bold uppercase tracking-[0.14em] text-gold"
+            className="inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-[0.14em] text-gold"
           >
             Todos →
           </Link>

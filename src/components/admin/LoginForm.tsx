@@ -61,7 +61,7 @@ export function LoginForm() {
           autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
+          className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50"
         />
       </label>
       <label className="block">
@@ -74,7 +74,7 @@ export function LoginForm() {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
+          className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50"
         />
       </label>
       {needsCode && (
@@ -87,7 +87,7 @@ export function LoginForm() {
             autoComplete="one-time-code"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-white outline-none focus:border-mist/50"
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50"
           />
         </label>
       )}
@@ -95,7 +95,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="btn-primary w-full text-xs uppercase tracking-[0.14em] disabled:opacity-50"
+        className="btn-primary min-h-11 w-full text-xs uppercase tracking-[0.14em] disabled:opacity-50"
       >
         {loading ? "Entrando…" : "Entrar"}
       </button>

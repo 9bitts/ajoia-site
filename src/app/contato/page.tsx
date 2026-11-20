@@ -30,7 +30,7 @@ export default function ContatoPage() {
               </span>
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="mt-1 inline-block text-mist transition-colors hover:text-white"
+                className="mt-1 inline-flex min-h-11 max-w-full items-center break-all text-mist transition-colors hover:text-white"
               >
                 {siteConfig.email}
               </a>

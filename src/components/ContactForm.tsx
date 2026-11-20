@@ -50,7 +50,7 @@ export function ContactForm() {
             name="name"
             required
             autoComplete="name"
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50"
           />
         </div>
         <div>
@@ -66,7 +66,7 @@ export function ContactForm() {
             type="email"
             required
             autoComplete="email"
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50"
           />
         </div>
         <div>
@@ -80,7 +80,7 @@ export function ContactForm() {
             id="subject"
             name="subject"
             required
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
+            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50"
           />
         </div>
         <div>
@@ -95,7 +95,7 @@ export function ContactForm() {
             name="message"
             rows={6}
             required
-            className="mt-2 w-full resize-y border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50 sm:text-sm"
+            className="mt-2 w-full resize-y border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-mist/50"
           />
         </div>
         <input
@@ -109,7 +109,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="btn-primary w-full text-xs uppercase tracking-[0.14em] disabled:opacity-60 sm:w-fit"
+          className="btn-primary min-h-11 w-full text-xs uppercase tracking-[0.14em] disabled:opacity-60 sm:w-fit"
         >
           {status === "sending" ? "Enviando…" : "Enviar mensagem"}
         </button>

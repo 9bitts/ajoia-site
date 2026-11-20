@@ -14,11 +14,11 @@ export function AdminSearch({
         name="q"
         defaultValue={defaultValue}
         placeholder={placeholder}
-        className="min-w-[16rem] flex-1 border border-white/15 bg-black/40 px-4 py-2.5 text-sm text-white outline-none placeholder:text-mist-dim focus:border-gold/60"
+        className="min-h-11 w-full min-w-0 flex-1 border border-white/15 bg-black/40 px-4 py-2.5 text-base text-white outline-none placeholder:text-mist-dim focus:border-gold/60 sm:min-w-[16rem]"
       />
       <button
         type="submit"
-        className="border border-white/20 px-4 py-2.5 text-[11px] uppercase tracking-[0.14em] text-white hover:border-gold/60"
+        className="inline-flex min-h-11 items-center border border-white/20 px-4 text-[11px] uppercase tracking-[0.14em] text-white hover:border-gold/60"
       >
         Buscar
       </button>
