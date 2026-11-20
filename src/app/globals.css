@@ -687,3 +687,68 @@ html.intro-lock body {
   transform: scale(1.04);
   filter: blur(6px);
 }
+
+/* —— Maintenance notice —— */
+.maintenance-notice {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.maintenance-notice__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(5, 5, 6, 0.72);
+  cursor: pointer;
+}
+
+html[data-theme="light"] .maintenance-notice__backdrop {
+  background: rgba(20, 20, 22, 0.45);
+}
+
+.maintenance-notice__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 28rem);
+  padding: 2rem 1.75rem 1.75rem;
+  background: var(--bg-elevated);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+.maintenance-notice__kicker {
+  margin: 0 0 0.85rem;
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.maintenance-notice__title {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-size: clamp(1.75rem, 4vw, 2.15rem);
+  font-weight: 560;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.maintenance-notice__text {
+  margin: 0.9rem 0 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.maintenance-notice__close {
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+}

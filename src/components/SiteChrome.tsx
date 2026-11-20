@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Analytics } from "@/components/Analytics";
 import { IntroSplash } from "@/components/IntroSplash";
+import { MaintenanceNotice } from "@/components/MaintenanceNotice";
 
 export function SiteChrome({
   header,
@@ -23,6 +24,7 @@ export function SiteChrome({
   return (
     <>
       <IntroSplash />
+      <MaintenanceNotice />
       {header}
       <main>{children}</main>
       {footer}
