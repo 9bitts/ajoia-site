@@ -75,6 +75,12 @@ html {
   scroll-padding-top: calc(env(safe-area-inset-top) + 11rem);
 }
 
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: calc(env(safe-area-inset-top) + 16rem);
+  }
+}
+
 body {
   color: var(--text);
   background: var(--bg);

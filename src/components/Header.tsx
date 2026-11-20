@@ -9,6 +9,40 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { headerAds } from "@/data/ads";
 import { institutionalLinks, navSections, sectionHref, siteConfig } from "@/data/site";
 
+function SubscribeLink() {
+  return (
+    <Link
+      href="/assine"
+      className="inline-flex h-11 items-center border border-[#c6a35a] bg-[#111113] px-3 text-[11px] font-bold tracking-[0.16em] text-[#e8c56b] sm:px-4"
+    >
+      ASSINE
+    </Link>
+  );
+}
+
+function MenuButton({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label={open ? "Fechar menu" : "Abrir menu"}
+      aria-expanded={open}
+      className="flex h-11 w-11 items-center justify-center border border-[var(--line)]"
+      onClick={onClick}
+    >
+      <span className="sr-only">Menu</span>
+      <div className="flex w-4 flex-col gap-1.5">
+        <span
+          className={`h-px w-full bg-[var(--text)] transition ${open ? "translate-y-[7px] rotate-45" : ""}`}
+        />
+        <span className={`h-px w-full bg-[var(--text)] transition ${open ? "opacity-0" : ""}`} />
+        <span
+          className={`h-px w-full bg-[var(--text)] transition ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
+        />
+      </div>
+    </button>
+  );
+}
+
 export function Header() {
   const pathname = usePathname();
   const barRef = useRef<HTMLDivElement>(null);
@@ -81,50 +115,40 @@ export function Header() {
         ref={barRef}
         className="border-b border-[var(--line)] bg-[var(--bg)] pt-[env(safe-area-inset-top)]"
       >
-        <div className="mx-auto flex max-w-content items-center gap-3 px-4 py-3 sm:gap-4 sm:px-5">
-          <BrandLogo href="/" size="md" priority className="max-w-[46vw] shrink-0 sm:max-w-none" />
-
-          {headerAds[0] && (
-            <div className="hidden min-w-0 flex-1 lg:block">
-              <AdSlot ad={headerAds[0]} variant="leaderboard" />
+        <div className="mx-auto max-w-content px-4 py-3 sm:px-5">
+          <div className="flex items-center gap-3 sm:gap-4 lg:hidden">
+            <BrandLogo href="/" size="md" priority className="max-w-[46vw] shrink-0 sm:max-w-none" />
+            <div className="ml-auto flex shrink-0 items-center gap-3 sm:gap-4">
+              <ThemeToggle
+                compact
+                className="hidden text-[10px] tracking-[0.14em] text-mist-dim md:inline"
+              />
+              <SubscribeLink />
+              <MenuButton open={open} onClick={toggleMenu} />
             </div>
-          )}
+          </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-3 sm:gap-4">
-            <p className="hidden text-[11px] uppercase tracking-[0.14em] text-mist-dim xl:block">
-              {siteConfig.city}
-              {today ? ` · ${today}` : ""}
-            </p>
-            <ThemeToggle
-              compact
-              className="hidden text-[10px] tracking-[0.14em] text-mist-dim md:inline"
+          <div className="hidden items-center gap-8 lg:flex">
+            <BrandLogo
+              href="/"
+              size="md"
+              priority
+              className="!h-24 !w-auto max-w-none shrink-0"
             />
-            <Link
-              href="/assine"
-              className="inline-flex h-11 items-center border border-[#c6a35a] bg-[#111113] px-3 text-[11px] font-bold tracking-[0.16em] text-[#e8c56b] sm:px-4"
-            >
-              ASSINE
-            </Link>
-            <button
-              type="button"
-              aria-label={open ? "Fechar menu" : "Abrir menu"}
-              aria-expanded={open}
-              className="flex h-11 w-11 items-center justify-center border border-[var(--line)] lg:hidden"
-              onClick={toggleMenu}
-            >
-              <span className="sr-only">Menu</span>
-              <div className="flex w-4 flex-col gap-1.5">
-                <span
-                  className={`h-px w-full bg-[var(--text)] transition ${open ? "translate-y-[7px] rotate-45" : ""}`}
+            <div className="min-w-0 flex-1">
+              {headerAds[0] && <AdSlot ad={headerAds[0]} variant="leaderboard" />}
+              <div className="mt-2.5 flex items-center justify-center gap-5">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-mist-dim">
+                  {siteConfig.city}
+                  {today ? ` · ${today}` : ""}
+                </p>
+                <ThemeToggle
+                  compact
+                  className="text-[10px] tracking-[0.14em] text-mist-dim"
                 />
-                <span
-                  className={`h-px w-full bg-[var(--text)] transition ${open ? "opacity-0" : ""}`}
-                />
-                <span
-                  className={`h-px w-full bg-[var(--text)] transition ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
-                />
+                <SubscribeLink />
               </div>
-            </button>
+            </div>
           </div>
         </div>
         {headerAds[0] && (
