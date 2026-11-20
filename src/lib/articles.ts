@@ -1,7 +1,11 @@
 import { existsSync } from "fs";
 import path from "path";
 import type { Article, User } from "@prisma/client";
-import { isHtmlBody, normalizeArticleHtml, sanitizeArticleHtml } from "@/lib/article-html";
+import {
+  normalizeArticleHtml,
+  presentableDek,
+  sanitizeArticleHtml,
+} from "@/lib/article-html";
 import { prisma } from "@/lib/db";
 import { getSectionImage } from "@/lib/images";
 import {
@@ -53,22 +57,16 @@ export function mapArticle(article: ArticleWithAuthor): PublicArticle {
   const section = isSectionSlug(article.section)
     ? article.section
     : ("tema-livre" as SectionSlug);
-  const html = isHtmlBody(article.body);
-
   return {
     id: article.id,
     slug: article.slug,
     title: article.title,
-    dek: article.dek,
-    html: html
-      ? sanitizeArticleHtml(normalizeArticleHtml(article.body), article.title)
-      : "",
-    body: html
-      ? []
-      : article.body
-          .split(/\n\s*\n/)
-          .map((p) => p.trim())
-          .filter(Boolean),
+    dek: presentableDek(article.dek, article.body),
+    html: sanitizeArticleHtml(
+      normalizeArticleHtml(article.body),
+      article.title
+    ),
+    body: [],
     section,
     authorSlug: article.author.slug,
     authorName: article.author.name,
@@ -79,7 +77,9 @@ export function mapArticle(article: ArticleWithAuthor): PublicArticle {
     imageAlt: article.imageAlt,
     imageGradient: "from-zinc-800 via-neutral-900 to-black",
     seoTitle: article.seoTitle,
-    seoDescription: article.seoDescription,
+    seoDescription: article.seoDescription.trim()
+      ? presentableDek(article.seoDescription, article.body)
+      : "",
     noindex: article.noindex,
     isOpinion: article.isOpinion ?? sectionDefaultsToOpinion(section),
     publishedAt: (article.publishedAt ?? article.createdAt).toISOString(),

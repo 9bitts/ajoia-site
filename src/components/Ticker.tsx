@@ -14,7 +14,7 @@ export async function Ticker() {
         className="group flex items-center gap-4 rounded-xl border border-[var(--line)] px-3 py-3 transition-colors hover:border-gold/50 sm:px-4"
       >
         <span className="kicker shrink-0 rounded-md border border-gold/40 px-2 py-1">
-          Ao vivo
+          {article.breaking ? "Em destaque" : "Última"}
         </span>
         {article.image && (
           <div className="relative hidden h-14 w-24 shrink-0 overflow-hidden rounded-md sm:block">

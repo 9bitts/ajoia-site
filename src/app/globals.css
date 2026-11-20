@@ -280,6 +280,9 @@ html[data-theme="light"] .on-dark .brand-logo-img {
 
 .prose-ajoia p,
 .prose-ajoia li {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
   margin-bottom: 1.35rem;
   font-size: 1.0625rem;
   line-height: 1.8;
@@ -304,6 +307,7 @@ html[data-theme="light"] .on-dark .brand-logo-img {
 
 .prose-ajoia ul,
 .prose-ajoia ol {
+  max-width: 100%;
   margin: 0 0 1.35rem;
   padding-left: 1.25rem;
 }
