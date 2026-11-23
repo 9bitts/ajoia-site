@@ -1,16 +1,18 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { ColumnistAvatar } from "@/components/ColumnistAvatar";
 import { JsonLd } from "@/components/JsonLd";
+import { PageNumbers } from "@/components/PageNumbers";
 import { StoryCard } from "@/components/StoryCard";
-import {
-  getArticlesByAuthor,
-  getColumnistBySlug,
-} from "@/lib/articles";
+import { archivePage, getColumnistBySlug, getPublishedPage } from "@/lib/articles";
 import { siteConfig } from "@/data/site";
 import { columnistJsonLd, shareImage } from "@/lib/seo";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
+};
 
 export const dynamic = "force-dynamic";
 
@@ -34,12 +36,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ColumnistPage({ params }: Props) {
+export default async function ColumnistPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const columnist = await getColumnistBySlug(slug);
   if (!columnist) notFound();
 
-  const posts = await getArticlesByAuthor(columnist.slug);
+  const requested = archivePage((await searchParams).page);
+  const result = await getPublishedPage({ page: requested, authorSlug: columnist.slug });
+  const path = `/colunistas/${columnist.slug}`;
+  if (requested > result.pages) {
+    redirect(result.pages <= 1 ? path : `${path}?page=${result.pages}`);
+  }
 
   return (
     <div className="mx-auto max-w-content px-5 py-12 md:py-16">
@@ -50,13 +57,11 @@ export default async function ColumnistPage({ params }: Props) {
 
       <header className="mt-8 grid gap-8 border-b border-[var(--line)] pb-10 md:grid-cols-12">
         <div className="md:col-span-3">
-          <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-gold font-display text-3xl text-[var(--text)]">
-            {columnist.name
-              .split(" ")
-              .slice(0, 2)
-              .map((n) => n[0])
-              .join("")}
-          </div>
+          <ColumnistAvatar
+            name={columnist.name}
+            avatarUrl={columnist.avatarUrl}
+            size="lg"
+          />
         </div>
         <div className="md:col-span-9">
           <p className="kicker">{columnist.role}</p>
@@ -73,10 +78,10 @@ export default async function ColumnistPage({ params }: Props) {
         <h2 className="border-b-2 border-gold pb-1 font-display text-2xl text-[var(--text)]">
           Publicações
         </h2>
-        {posts.length > 0 ? (
+        {result.articles.length > 0 ? (
           <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((article) => (
-              <StoryCard key={article.slug} article={article} showDek />
+            {result.articles.map((article) => (
+              <StoryCard key={article.slug} article={article} />
             ))}
           </div>
         ) : (
@@ -84,6 +89,7 @@ export default async function ColumnistPage({ params }: Props) {
             Em breve, novos textos deste colunista.
           </p>
         )}
+        <PageNumbers page={requested} pages={result.pages} path={path} />
       </section>
     </div>
   );

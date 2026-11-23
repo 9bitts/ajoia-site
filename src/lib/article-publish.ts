@@ -10,6 +10,8 @@ export function syncArticleSurfaces(opts: {
   previousSlug?: string;
   section: string;
   previousSection?: string;
+  sections?: string[];
+  previousSections?: string[];
   authorSlug: string;
   status: Status;
 }) {
@@ -27,6 +29,17 @@ export function syncArticleSurfaces(opts: {
     "/sitemap-articles.xml",
     "/news-sitemap.xml",
   ];
+
+  const extra = new Set<string>([
+    ...(opts.sections ?? []),
+    ...(opts.previousSections ?? []),
+  ]);
+  extra.delete(opts.section);
+  if (opts.previousSection) extra.delete(opts.previousSection);
+  for (const section of extra) {
+    paths.push(`/secao/${section}`);
+    paths.push(`/secao/${section}/feed.xml`);
+  }
 
   if (opts.previousSection && opts.previousSection !== opts.section) {
     paths.push(`/secao/${opts.previousSection}`);

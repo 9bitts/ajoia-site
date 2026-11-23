@@ -34,6 +34,12 @@ export async function AdminNav() {
                 <Link href="/admin/usuarios" className="inline-flex min-h-11 items-center hover:text-white">
                   Contas
                 </Link>
+                <Link href="/admin/pendencias" className="inline-flex min-h-11 items-center hover:text-white">
+                  Pendências
+                </Link>
+                <Link href="/admin/midia" className="inline-flex min-h-11 items-center hover:text-white">
+                  Imagens
+                </Link>
                 <Link href="/admin/mensagens" className="inline-flex min-h-11 items-center hover:text-white">
                   Caixa
                 </Link>

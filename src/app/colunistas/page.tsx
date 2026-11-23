@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ColumnistAvatar } from "@/components/ColumnistAvatar";
 import { getColumnists } from "@/lib/articles";
 import { pageMetadata } from "@/lib/seo";
 
@@ -34,13 +35,11 @@ export default async function ColumnistsPage() {
             href={`/colunistas/${columnist.slug}`}
             className="group rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-7 transition-colors hover:border-gold/50"
           >
-            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold font-display text-lg text-[var(--text)]">
-              {columnist.name
-                .split(" ")
-                .slice(0, 2)
-                .map((n) => n[0])
-                .join("")}
-            </div>
+            <ColumnistAvatar
+              name={columnist.name}
+              avatarUrl={columnist.avatarUrl}
+              className="mb-5"
+            />
             <h2 className="font-sans text-2xl font-bold tracking-tight text-[var(--text)] transition-colors group-hover:text-gold">
               {columnist.name}
             </h2>

@@ -19,6 +19,9 @@ import {
   sectionMeta,
 } from "@/lib/sections";
 import { slugify } from "@/lib/slug";
+import { BodyField } from "@/components/admin/BodyField";
+import { GalleryFields } from "@/components/admin/GalleryFields";
+import type { GalleryItem } from "@/lib/gallery";
 
 type ArticleStatusValue = "DRAFT" | "PENDING" | "PUBLISHED";
 
@@ -38,6 +41,8 @@ type ArticleFormValues = {
   noindex: boolean;
   isOpinion: boolean;
   slug: string;
+  secondarySections: string[];
+  gallery: GalleryItem[];
 };
 
 type Props = {
@@ -278,8 +283,22 @@ export function ArticleForm({
               ...form,
               section,
               isOpinion: sectionDefaultsToOpinion(section),
+              secondarySections: form.secondarySections.filter(
+                (item) => item !== section
+              ),
             })
           }
+        />
+
+        <SecondarySections
+          primary={form.section}
+          values={form.secondarySections}
+          onChange={(secondarySections) => setForm({ ...form, secondarySections })}
+        />
+
+        <GalleryFields
+          items={form.gallery}
+          onChange={(gallery) => setForm({ ...form, gallery })}
         />
 
         {isAdmin && (
@@ -293,26 +312,19 @@ export function ArticleForm({
               }
             />
             <span>
-              Esta matéria também vai para a página inicial como principal.
+              Manchete grande da capa.
               <span className="mt-1 block text-xs text-mist-dim">
-                Ocupa o destaque grande da capa quando estiver publicada. A
-                seção da matéria continua no ar.
+                Ocupa o destaque grande da página inicial quando estiver
+                publicada. A seção da matéria continua no ar.
               </span>
             </span>
           </label>
         )}
 
-        <label className="block">
-          <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
-            Texto (parágrafos separados por linha em branco)
-          </span>
-          <textarea
-            value={form.body}
-            onChange={(e) => setForm({ ...form, body: e.target.value })}
-            rows={14}
-            className="mt-2 w-full border border-white/15 bg-black/40 px-4 py-3 font-serif text-base leading-relaxed text-white outline-none focus:border-mist/50"
-          />
-        </label>
+        <BodyField
+          value={form.body}
+          onChange={(body) => setForm({ ...form, body })}
+        />
 
         <div>
           <p className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
@@ -480,26 +492,35 @@ export function ArticleForm({
         </div>
 
         {isAdmin && (
-          <div className="flex flex-wrap gap-6">
-            <label className="flex items-center gap-2 text-sm text-mist-muted">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="flex items-start gap-2 text-sm text-mist-muted">
               <input
                 type="checkbox"
+                className="mt-1"
                 checked={form.featured}
                 onChange={(e) =>
                   setForm({ ...form, featured: e.target.checked })
                 }
               />
-              Destaque na capa
+              <span>
+                Faixa do topo da capa.
+                <span className="mt-1 block text-xs text-mist-dim">
+                  Aparece na faixa acima da manchete. Só uma matéria publicada
+                  ocupa esse lugar. Sem nenhuma marcada, a faixa mostra a
+                  notícia mais nova.
+                </span>
+              </span>
             </label>
-            <label className="flex items-center gap-2 text-sm text-mist-muted">
+            <label className="flex items-start gap-2 text-sm text-mist-muted">
               <input
                 type="checkbox"
+                className="mt-1"
                 checked={form.breaking}
                 onChange={(e) =>
                   setForm({ ...form, breaking: e.target.checked })
                 }
               />
-              Em destaque (selo)
+              <span>Selo “Em destaque” na manchete grande.</span>
             </label>
           </div>
         )}
@@ -626,7 +647,7 @@ function SectionPicker({
   return (
     <div ref={rootRef} className="relative">
       <span className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
-        Seção
+        Categoria principal
       </span>
       <button
         type="button"
@@ -667,6 +688,72 @@ function SectionPicker({
             );
           })}
         </ul>
+      )}
+    </div>
+  );
+}
+
+function SecondarySections({
+  primary,
+  values,
+  onChange,
+}: {
+  primary: string;
+  values: string[];
+  onChange: (values: string[]) => void;
+}) {
+  const options = SECTIONS.filter((slug) => slug !== primary && !values.includes(slug));
+  const [picked, setPicked] = useState("");
+  const next = options.includes(picked as (typeof SECTIONS)[number])
+    ? picked
+    : options[0] || "";
+
+  return (
+    <div className="border border-white/10 p-4">
+      <p className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
+        Categorias secundárias
+      </p>
+      <p className="mt-2 text-xs text-mist-dim">
+        A principal continua no menu e no endereço. A matéria também aparece nas
+        seções acrescentadas aqui.
+      </p>
+      <ul className="mt-3 flex flex-wrap gap-2">
+        {values.map((slug) => (
+          <li key={slug}>
+            <button
+              type="button"
+              onClick={() => onChange(values.filter((item) => item !== slug))}
+              className="border border-white/20 px-3 py-1.5 text-xs text-white hover:border-red-300/60"
+            >
+              {sectionLabel(slug)} ×
+            </button>
+          </li>
+        ))}
+      </ul>
+      {options.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          <select
+            value={next}
+            onChange={(event) => setPicked(event.target.value)}
+            className="border border-white/15 bg-black/40 px-3 py-2 text-sm text-white"
+          >
+            {options.map((slug) => (
+              <option key={slug} value={slug}>
+                {sectionLabel(slug)}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => {
+              if (!next || values.includes(next)) return;
+              onChange([...values, next]);
+            }}
+            className="border border-white/20 px-3 text-[11px] uppercase tracking-[0.14em] text-mist hover:text-white"
+          >
+            Adicionar
+          </button>
+        </div>
       )}
     </div>
   );

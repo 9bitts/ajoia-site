@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { ArticleTable, type ArticleRow } from "@/components/admin/ArticleTable";
 import { AdminSearch, StatusFilters } from "@/components/admin/AdminSearch";
+import { ColumnistProfileForm } from "@/components/admin/ColumnistProfileForm";
 import { UserAccessRow } from "@/components/admin/UserAccessRow";
 import { prisma } from "@/lib/db";
 import { articleStatuses, type ArticleStatusValue } from "@/lib/editorial";
@@ -81,6 +82,17 @@ export default async function ColumnistDeskPage({ params, searchParams }: Props)
             </a>
           </p>
         </div>
+      </div>
+
+      <div className="mt-6">
+        <ColumnistProfileForm
+          userId={user.id}
+          name={user.name}
+          bio={user.bio}
+          roleLabel={user.roleLabel}
+          avatarUrl={user.avatarUrl}
+          canEditRole
+        />
       </div>
 
       <ul className="mt-6">

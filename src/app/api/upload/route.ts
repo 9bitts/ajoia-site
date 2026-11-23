@@ -31,35 +31,39 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Arquivo obrigatório" }, { status: 400 });
   }
 
-  if (!file.type.startsWith("image/")) {
+  if (!file.type.startsWith("image/") && file.type !== "video/mp4" && file.type !== "video/webm") {
     return NextResponse.json(
-      { error: "Envie uma imagem (JPG, PNG ou WebP)" },
+      { error: "Envie uma imagem (JPG, PNG ou WebP) ou um vídeo MP4/WebM" },
       { status: 400 }
     );
   }
 
-  if (file.size > 8 * 1024 * 1024) {
+  const video = file.type.startsWith("video/");
+  const max = video ? 30 * 1024 * 1024 : 8 * 1024 * 1024;
+  if (file.size > max) {
     return NextResponse.json(
-      { error: "Imagem deve ter no máximo 8MB" },
+      { error: video ? "O vídeo deve ter no máximo 30MB" : "Imagem deve ter no máximo 8MB" },
       { status: 400 }
     );
   }
 
   if (await uploadOverQuota(id, file.size)) {
     return NextResponse.json(
-      { error: "Cota diária de imagens esgotada (15 arquivos ou 40 MB)." },
+      { error: "Cota diária de envios esgotada (15 arquivos ou 40 MB)." },
       { status: 429 }
     );
   }
 
   try {
-    const { saveUploadedImage } = await import("@/lib/upload");
-    const url = await saveUploadedImage(file);
+    const { saveUploadedImage, saveUploadedVideo } = await import("@/lib/upload");
+    const { recordMedia } = await import("@/lib/media");
+    const url = video ? await saveUploadedVideo(file) : await saveUploadedImage(file);
     await recordUpload(id, file.size);
+    await recordMedia({ url, bytes: file.size, userId: id });
     return NextResponse.json({ url });
   } catch {
     return NextResponse.json(
-      { error: "Falha ao processar imagem" },
+      { error: "Falha ao processar o arquivo" },
       { status: 500 }
     );
   }

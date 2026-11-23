@@ -1,9 +1,10 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
+import { PageNumbers } from "@/components/PageNumbers";
 import { StoryCard } from "@/components/StoryCard";
 import { navSections, siteConfig } from "@/data/site";
-import { getArticlesBySection } from "@/lib/articles";
+import { archivePage, getPublishedPage } from "@/lib/articles";
 import { sectionJsonLd, shareImage } from "@/lib/seo";
 import {
   isSectionSlug,
@@ -11,7 +12,10 @@ import {
   type SectionSlug,
 } from "@/lib/sections";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
+};
 
 export const dynamic = "force-dynamic";
 
@@ -46,14 +50,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function SectionPage({ params }: Props) {
+export default async function SectionPage({ params, searchParams }: Props) {
   const { slug } = await params;
   if (!isSectionSlug(slug)) notFound();
   const section = slug as SectionSlug;
   const meta = sectionMeta[section];
-  const list = await getArticlesBySection(section);
-
-  const [lead, ...rest] = list;
+  const requested = archivePage((await searchParams).page);
+  const result = await getPublishedPage({ page: requested, section });
+  const path = `/secao/${section}`;
+  if (requested > result.pages) {
+    redirect(result.pages <= 1 ? path : `${path}?page=${result.pages}`);
+  }
 
   return (
     <div className="mx-auto max-w-content px-4 py-10 sm:px-5 md:py-14">
@@ -68,22 +75,18 @@ export default async function SectionPage({ params }: Props) {
         </p>
       </header>
 
-      {lead ? (
-        <div className="mt-8 grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <StoryCard article={lead} size="lg" showDek />
-          </div>
-          <div className="divide-y divide-[var(--line)] lg:col-span-7">
-            {rest.map((article) => (
-              <StoryCard key={article.slug} article={article} variant="row" />
-            ))}
-          </div>
+      {result.articles.length > 0 ? (
+        <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {result.articles.map((article) => (
+            <StoryCard key={article.slug} article={article} />
+          ))}
         </div>
       ) : (
         <p className="mt-10 text-mist-muted">
           Em breve, novos conteúdos nesta seção.
         </p>
       )}
+      <PageNumbers page={requested} pages={result.pages} path={path} />
     </div>
   );
 }

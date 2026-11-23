@@ -66,7 +66,7 @@ export function HeroFeature({ lead, side, latest }: Props) {
           </h2>
           <div className="mt-2 divide-y divide-[var(--line)]">
             {rail.map((article) => (
-              <StoryCard key={article.slug} article={article} variant="line" />
+              <StoryCard key={article.slug} article={article} variant="rail" />
             ))}
           </div>
           <Link

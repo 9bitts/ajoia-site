@@ -26,6 +26,7 @@ model User {
   slug         String    @unique
   role         Role      @default(COLUMNIST)
   bio          String    @default("")
+  avatarUrl    String?
   roleLabel    String    @default("Colunista")
   featured     Boolean   @default(false)
   active              Boolean  @default(true)
@@ -56,6 +57,7 @@ model Article {
   seoDescription String        @default("")
   noindex        Boolean       @default(false)
   isOpinion      Boolean?
+  secondarySections String[] @default([])
   authorId       String
   author         User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   publishedAt    DateTime?
@@ -64,6 +66,7 @@ model Article {
 
   revision ArticleRevision?
   socialPosts SocialPublication[]
+  gallery ArticleGalleryImage[]
 
   @@index([status, publishedAt])
   @@index([status, noindex, publishedAt])
@@ -85,8 +88,30 @@ model ArticleRevision {
   seoTitle       String   @default("")
   seoDescription String   @default("")
   isOpinion      Boolean?
+  secondarySections String[] @default([])
+  galleryJson       String   @default("[]")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model ArticleGalleryImage {
+  id        String  @id @default(cuid())
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  url       String
+  caption   String  @default("")
+  position  Int
+
+  @@index([articleId, position])
+}
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  alt       String   @default("")
+  bytes     Int      @default(0)
+  userId    String?
+  createdAt DateTime @default(now())
 }
 
 model Redirect {

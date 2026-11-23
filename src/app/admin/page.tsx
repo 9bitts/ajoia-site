@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { ArticleTable, type ArticleRow } from "@/components/admin/ArticleTable";
 import { AdminSearch, StatusFilters } from "@/components/admin/AdminSearch";
+import { ColumnistProfileForm } from "@/components/admin/ColumnistProfileForm";
 import { redirect } from "next/navigation";
 import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
@@ -30,14 +31,20 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
   if (!id) redirect("/admin/login");
 
   if (!isAdmin) {
-    const articles = await prisma.article.findMany({
-      where: {
-        authorId: id,
-        ...(status ? { status } : {}),
-        ...(q ? { title: { contains: q, mode: "insensitive" } } : {}),
-      },
-      orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }],
-    });
+    const [articles, me] = await Promise.all([
+      prisma.article.findMany({
+        where: {
+          authorId: id,
+          ...(status ? { status } : {}),
+          ...(q ? { title: { contains: q, mode: "insensitive" } } : {}),
+        },
+        orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }],
+      }),
+      prisma.user.findUnique({
+        where: { id },
+        select: { name: true, bio: true, avatarUrl: true, roleLabel: true },
+      }),
+    ]);
     const rows: ArticleRow[] = articles.map((article) => ({
       id: article.id,
       title: article.title,
@@ -69,6 +76,17 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
             Nova matéria
           </Link>
         </div>
+        {me && (
+          <div className="mt-8">
+            <ColumnistProfileForm
+              userId={id}
+              name={me.name}
+              bio={me.bio}
+              roleLabel={me.roleLabel}
+              avatarUrl={me.avatarUrl}
+            />
+          </div>
+        )}
         <div className="mt-8 space-y-4">
           <AdminSearch
             action="/admin"
@@ -92,6 +110,8 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
         id: true,
         name: true,
         slug: true,
+        bio: true,
+        avatarUrl: true,
         roleLabel: true,
         approved: true,
       },
@@ -204,11 +224,47 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
               empty="Nada na fila."
             />
             {pendingCount > pendingRows.length && (
-              <p className="mt-2 text-xs text-mist-dim">
-                Mostrando as {pendingRows.length} mais recentes.
-              </p>
+              <Link
+                href="/admin/pendencias"
+                className="mt-2 inline-flex text-xs uppercase tracking-[0.14em] text-gold"
+              >
+                Ver todas as {pendingCount} da fila
+              </Link>
             )}
           </div>
+        </section>
+      )}
+
+      <p className="mt-4">
+        <Link
+          href="/admin/pendencias"
+          className="text-xs uppercase tracking-[0.14em] text-mist-dim hover:text-white"
+        >
+          Ver pendências e matérias não publicadas
+        </Link>
+      </p>
+
+      {columnists.some((user) => !user.avatarUrl || !user.bio.trim()) && (
+        <section className="mt-8">
+          <h2 className="text-[11px] uppercase tracking-[0.16em] text-mist-dim">
+            Foto ou bio faltando
+          </h2>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {columnists
+              .filter((user) => !user.avatarUrl || !user.bio.trim())
+              .map((user) => (
+                <li key={user.id}>
+                  <Link
+                    href={`/admin/colunistas/${user.slug}`}
+                    className="inline-flex border border-white/15 px-3 py-1.5 text-sm text-mist hover:text-white"
+                  >
+                    {user.name}
+                    {!user.avatarUrl ? " · sem foto" : ""}
+                    {!user.bio.trim() ? " · sem bio" : ""}
+                  </Link>
+                </li>
+              ))}
+          </ul>
         </section>
       )}
 
@@ -253,9 +309,18 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                     href={`/admin/colunistas/${user.slug}`}
                     className="flex h-full gap-3 border border-white/10 px-4 py-4 hover:border-gold/50"
                   >
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/40 text-xs font-semibold text-gold">
-                      {initials}
-                    </span>
+                    {user.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={user.avatarUrl}
+                        alt=""
+                        className="h-11 w-11 shrink-0 rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/40 text-xs font-semibold text-gold">
+                        {initials}
+                      </span>
+                    )}
                     <span className="min-w-0">
                       <span className="block truncate font-display text-xl text-white">
                         {user.name}

@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { PageNumbers } from "@/components/PageNumbers";
 import { StoryCard } from "@/components/StoryCard";
-import { getLatestArticles } from "@/lib/articles";
+import { archivePage, getPublishedPage } from "@/lib/articles";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -11,10 +13,12 @@ export const metadata = pageMetadata({
 
 export const dynamic = "force-dynamic";
 
-export default async function UltimasPage() {
-  const list = await getLatestArticles(400);
+type Props = { searchParams: Promise<{ page?: string }> };
 
-  const [lead, ...rest] = list;
+export default async function UltimasPage({ searchParams }: Props) {
+  const requested = archivePage((await searchParams).page);
+  const result = await getPublishedPage({ page: requested });
+  if (requested > result.pages) redirect(result.pages <= 1 ? "/ultimas" : `/ultimas?page=${result.pages}`);
 
   return (
     <div className="mx-auto max-w-content px-4 py-10 sm:px-5 md:py-14">
@@ -33,18 +37,16 @@ export default async function UltimasPage() {
         </Link>
       </header>
 
-      {lead && (
-        <div className="mt-8 grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <StoryCard article={lead} size="lg" showDek />
-          </div>
-          <div className="divide-y divide-[var(--line)] lg:col-span-7">
-            {rest.map((article) => (
-              <StoryCard key={article.slug} article={article} variant="row" />
-            ))}
-          </div>
+      {result.articles.length > 0 ? (
+        <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {result.articles.map((article) => (
+            <StoryCard key={article.slug} article={article} />
+          ))}
         </div>
+      ) : (
+        <p className="mt-10 text-mist-muted">Em breve, novas publicações.</p>
       )}
+      <PageNumbers page={requested} pages={result.pages} path="/ultimas" />
     </div>
   );
 }

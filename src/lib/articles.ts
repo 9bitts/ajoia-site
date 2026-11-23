@@ -43,7 +43,17 @@ export type PublicColumnist = {
   name: string;
   role: string;
   bio: string;
+  avatarUrl?: string | null;
   featured?: boolean;
+};
+
+export type MoreArticleCard = {
+  slug: string;
+  title: string;
+  section: SectionSlug;
+  date: string;
+  image?: string;
+  imageAlt: string;
 };
 
 type ArticleWithAuthor = Article & { author: User };
@@ -93,6 +103,7 @@ export function mapColumnist(user: User): PublicColumnist {
     name: user.name,
     role: user.roleLabel,
     bio: user.bio,
+    avatarUrl: user.avatarUrl,
     featured: user.featured,
   };
 }
@@ -105,6 +116,61 @@ function coverImage(url: string | null, section: SectionSlug) {
   if (url.startsWith("/uploads/")) return url;
   const file = path.join(process.cwd(), "public", url);
   return existsSync(file) ? url : fallback;
+}
+
+export async function getTickerArticle() {
+  const featured = await prisma.article.findFirst({
+    where: { ...publicWhere, featured: true },
+    include: { author: true },
+    orderBy: { updatedAt: "desc" },
+  });
+  if (featured) return mapArticle(featured);
+  const latest = await getLatestArticles(1);
+  return latest[0] ?? null;
+}
+
+export async function getMoreArticles(offset: number, excludeSlug?: string) {
+  const take = 20;
+  const skip = Math.max(0, Math.min(offset, 5000));
+  const rows = await prisma.article.findMany({
+    where: {
+      ...publicWhere,
+      ...(excludeSlug ? { NOT: { slug: excludeSlug } } : {}),
+    },
+    select: {
+      slug: true,
+      title: true,
+      section: true,
+      imageUrl: true,
+      imageAlt: true,
+      publishedAt: true,
+      createdAt: true,
+    },
+    orderBy: { publishedAt: "desc" },
+    skip,
+    take: take + 1,
+  });
+  const hasMore = rows.length > take;
+  const articles: MoreArticleCard[] = rows.slice(0, take).map((article) => {
+    const section = isSectionSlug(article.section) ? article.section : "tema-livre";
+    return {
+      slug: article.slug,
+      title: article.title,
+      section,
+      date: toDateIso(article.publishedAt ?? article.createdAt),
+      image: coverImage(article.imageUrl, section),
+      imageAlt: article.imageAlt || article.title,
+    };
+  });
+  return { articles, hasMore };
+}
+
+export async function getArticleGallery(articleId: string) {
+  const rows = await prisma.articleGalleryImage.findMany({
+    where: { articleId },
+    orderBy: { position: "asc" },
+  });
+  return rows.map((row) => ({ url: row.url, caption: row.caption }));
 }
 
 export async function getLatestArticles(limit = 12) {
@@ -145,9 +211,82 @@ export async function getArticleBySlug(slug: string) {
   return row ? mapArticle(row) : null;
 }
 
+export const ARCHIVE_PAGE_SIZE = 30;
+
+export function archivePage(value: string | undefined) {
+  const page = Number(value);
+  if (!Number.isFinite(page) || page < 1) return 1;
+  return Math.min(Math.floor(page), 500);
+}
+
+export async function getPublishedPage(opts: {
+  page: number;
+  section?: SectionSlug;
+  authorSlug?: string;
+}) {
+  const where = opts.section
+    ? inSection(opts.section)
+    : opts.authorSlug
+      ? {
+          ...publicWhere,
+          author: { slug: opts.authorSlug, active: true },
+        }
+      : publicWhere;
+  const page = Math.max(1, opts.page);
+  const [total, rows] = await Promise.all([
+    prisma.article.count({ where }),
+    prisma.article.findMany({
+      where,
+      include: { author: true },
+      orderBy: { publishedAt: "desc" },
+      skip: (page - 1) * ARCHIVE_PAGE_SIZE,
+      take: ARCHIVE_PAGE_SIZE,
+    }),
+  ]);
+  const pages = Math.max(1, Math.ceil(total / ARCHIVE_PAGE_SIZE));
+  return { articles: rows.map(mapArticle), total, pages };
+}
+
+export type AuthorProfile = {
+  slug: string;
+  name: string;
+  role: string;
+  bio: string;
+  avatarUrl: string | null;
+};
+
+export async function getAuthorProfile(slug: string) {
+  const row = await prisma.user.findFirst({
+    where: { slug, active: true },
+    select: {
+      slug: true,
+      name: true,
+      roleLabel: true,
+      bio: true,
+      avatarUrl: true,
+    },
+  });
+  if (!row) return null;
+  const profile: AuthorProfile = {
+    slug: row.slug,
+    name: row.name,
+    role: row.roleLabel,
+    bio: row.bio.trim(),
+    avatarUrl: row.avatarUrl,
+  };
+  return profile;
+}
+
+function inSection(section: SectionSlug) {
+  return {
+    ...publicWhere,
+    OR: [{ section }, { secondarySections: { has: section } }],
+  };
+}
+
 export async function getArticlesBySection(section: SectionSlug) {
   const rows = await prisma.article.findMany({
-    where: { status: "PUBLISHED", noindex: false, section },
+    where: inSection(section),
     include: { author: true },
     orderBy: { publishedAt: "desc" },
   });
@@ -205,7 +344,7 @@ export async function getNewsSitemapArticles() {
 
 export async function getFeedArticles(section?: SectionSlug) {
   const rows = await prisma.article.findMany({
-    where: section ? { ...publicWhere, section } : publicWhere,
+    where: section ? inSection(section) : publicWhere,
     include: { author: true },
     orderBy: { publishedAt: "desc" },
     take: 30,

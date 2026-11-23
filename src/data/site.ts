@@ -40,6 +40,7 @@ export const navSections = [
 
 export const institutionalLinks = [
   { href: "/quem-somos", label: "Quem Somos" },
+  { href: "/responsabilidade-social", label: "Responsabilidade Social" },
   { href: "/diretrizes", label: "Diretrizes" },
   { href: "/expediente", label: "Expediente" },
   { href: "/midia-kit", label: "Mídia Kit" },

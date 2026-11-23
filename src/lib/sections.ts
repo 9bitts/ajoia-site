@@ -121,3 +121,26 @@ const opinionSections = new Set<SectionSlug>([
 export function sectionDefaultsToOpinion(section: string) {
   return opinionSections.has(section as SectionSlug);
 }
+
+export function secondarySectionsError(primary: string, values: string[] | undefined) {
+  const list = values ?? [];
+  if (list.length > 12) return "Use no máximo 12 categorias secundárias.";
+  for (const value of list) {
+    if (!isSectionSlug(value)) return "Categoria secundária inválida.";
+  }
+  if (list.includes(primary)) {
+    return "A categoria principal não entra de novo como secundária.";
+  }
+  return null;
+}
+
+export function normalizeSecondarySections(primary: string, values: string[] | undefined) {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const value of values ?? []) {
+    if (!isSectionSlug(value) || value === primary || seen.has(value)) continue;
+    seen.add(value);
+    out.push(value);
+  }
+  return out;
+}

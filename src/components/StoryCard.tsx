@@ -8,7 +8,7 @@ type Props = {
   article: PublicArticle;
   size?: "sm" | "md" | "lg";
   showDek?: boolean;
-  variant?: "media" | "row" | "line";
+  variant?: "media" | "row" | "line" | "rail";
 };
 
 export function StoryCard({
@@ -19,6 +19,31 @@ export function StoryCard({
 }: Props) {
   const section = sectionMeta[article.section];
   const image = article.image;
+
+  if (variant === "rail") {
+    return (
+      <Link href={`/artigo/${article.slug}`} className="group flex gap-3 py-3.5">
+        <div className="relative h-16 w-[4.5rem] shrink-0 overflow-hidden rounded-md bg-[var(--bg-soft)]">
+          {image && (
+            <Image
+              src={image}
+              alt={article.imageAlt}
+              fill
+              sizes="72px"
+              className="object-cover"
+            />
+          )}
+        </div>
+        <div className="min-w-0">
+          <p className="kicker">{section.label}</p>
+          <h3 className="mt-1 font-sans text-[15px] font-semibold leading-snug tracking-tight text-[var(--text)] transition-colors group-hover:text-gold">
+            {article.title}
+          </h3>
+          <p className="mt-1 text-xs text-mist-dim">{formatDate(article.date)}</p>
+        </div>
+      </Link>
+    );
+  }
 
   if (variant === "line") {
     return (

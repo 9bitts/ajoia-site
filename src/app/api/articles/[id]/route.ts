@@ -6,13 +6,14 @@ import { syncArticleSurfaces } from "@/lib/article-publish";
 import { recordAudit } from "@/lib/audit";
 import { prisma } from "@/lib/db";
 import { resolveArticleStatus } from "@/lib/editorial";
+import { replaceArticleGallery, galleryJson, sanitizeGallery } from "@/lib/gallery";
 import { imageUrlError } from "@/lib/image-url";
 import { sendPortalMail } from "@/lib/mail";
 import { clientIp } from "@/lib/rate-limit";
 import { rememberSlug } from "@/lib/redirects";
 import { rejectCrossOrigin } from "@/lib/same-origin";
 import { publishSeoError } from "@/lib/seo-rules";
-import { isSectionSlug } from "@/lib/sections";
+import { isSectionSlug, normalizeSecondarySections, secondarySectionsError } from "@/lib/sections";
 import { slugify } from "@/lib/slug";
 
 type Params = { params: Promise<{ id: string }> };
@@ -77,6 +78,18 @@ export async function PUT(req: Request, { params }: Params) {
   if (!isSectionSlug(data.section)) {
     return NextResponse.json({ error: "Seção inválida" }, { status: 400 });
   }
+  const secondaryError = secondarySectionsError(data.section, data.secondarySections);
+  if (secondaryError) {
+    return NextResponse.json({ error: secondaryError }, { status: 400 });
+  }
+  const secondarySections = normalizeSecondarySections(
+    data.section,
+    data.secondarySections ?? existing.secondarySections
+  );
+  const galleryResult = sanitizeGallery(data.gallery ?? null);
+  if (galleryResult.error) {
+    return NextResponse.json({ error: galleryResult.error }, { status: 400 });
+  }
 
   const body = sanitizeStoredBody(data.body);
   const proposedSlug = data.slug ? slugify(data.slug) : existing.slug;
@@ -96,6 +109,8 @@ export async function PUT(req: Request, { params }: Params) {
         seoTitle: data.seoTitle.trim(),
         seoDescription: data.seoDescription.trim(),
         isOpinion: Boolean(data.isOpinion),
+        secondarySections,
+        galleryJson: galleryJson(galleryResult.items),
       },
       update: {
         title: data.title,
@@ -108,6 +123,8 @@ export async function PUT(req: Request, { params }: Params) {
         seoTitle: data.seoTitle.trim(),
         seoDescription: data.seoDescription.trim(),
         isOpinion: Boolean(data.isOpinion),
+        secondarySections,
+        galleryJson: galleryJson(galleryResult.items),
       },
     });
     await recordAudit({
@@ -181,20 +198,26 @@ export async function PUT(req: Request, { params }: Params) {
         data: { principal: false },
       });
     }
-    return tx.article.update({
+    const featured =
+      session.user.role === "ADMIN" ? Boolean(data.featured) : existing.featured;
+    if (session.user.role === "ADMIN" && featured && resolved.status === "PUBLISHED") {
+      await tx.article.updateMany({
+        where: { featured: true, NOT: { id } },
+        data: { featured: false },
+      });
+    }
+    const updated = await tx.article.update({
       where: { id },
       data: {
         title: data.title,
         dek: data.dek,
         body,
         section: data.section,
+        secondarySections,
         status: resolved.status,
         slug,
         imageUrl: data.imageUrl ?? null,
-        featured:
-          session.user.role === "ADMIN"
-            ? Boolean(data.featured)
-            : existing.featured,
+        featured,
         principal:
           session.user.role === "ADMIN"
             ? Boolean(data.principal ?? existing.principal)
@@ -211,6 +234,10 @@ export async function PUT(req: Request, { params }: Params) {
         ...articleSeoData(data, session.user.role, existing.noindex),
       },
     });
+    if (data.gallery) {
+      await replaceArticleGallery(tx, id, galleryResult.items);
+    }
+    return updated;
   });
 
   await prisma.articleRevision.deleteMany({ where: { articleId: id } });
@@ -220,6 +247,8 @@ export async function PUT(req: Request, { params }: Params) {
     previousSlug: existing.slug,
     section: article.section,
     previousSection: existing.section,
+    sections: article.secondarySections,
+    previousSections: existing.secondarySections,
     authorSlug: existing.author.slug,
     status: article.status,
   });
@@ -285,6 +314,7 @@ export async function DELETE(req: Request, { params }: Params) {
   syncArticleSurfaces({
     slug: existing.slug,
     section: existing.section,
+    sections: existing.secondarySections,
     authorSlug: existing.author.slug,
     status: "DRAFT",
   });

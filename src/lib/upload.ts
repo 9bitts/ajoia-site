@@ -22,3 +22,13 @@ export async function saveUploadedImage(file: File) {
 
   return `/uploads/${filename}`;
 }
+
+export async function saveUploadedVideo(file: File) {
+  const ext = file.type === "video/webm" ? "webm" : "mp4";
+  const bytes = Buffer.from(await file.arrayBuffer());
+  const dir = getUploadDir();
+  await mkdir(dir, { recursive: true });
+  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  await writeFile(path.join(dir, filename), bytes);
+  return `/uploads/${filename}`;
+}

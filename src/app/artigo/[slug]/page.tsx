@@ -5,11 +5,16 @@ import type { Metadata } from "next";
 import { AdSlot, AdStack } from "@/components/AdSlot";
 import { ArticleAnalytics } from "@/components/ArticleAnalytics";
 import { JsonLd } from "@/components/JsonLd";
-import { StoryCard } from "@/components/StoryCard";
 import { sidebarAds } from "@/data/ads";
+import { AuthorNote } from "@/components/AuthorNote";
+import { ArticleGallery } from "@/components/ArticleGallery";
+import { MoreArticles } from "@/components/MoreArticles";
 import {
   getArticleBySlug,
+  getArticleGallery,
+  getAuthorProfile,
   getLatestArticles,
+  getMoreArticles,
 } from "@/lib/articles";
 import { formatDateLong, saoPauloDay } from "@/lib/format";
 import { findRedirectTarget } from "@/lib/redirects";
@@ -36,9 +41,13 @@ export default async function ArticlePage({ params }: Props) {
     notFound();
   }
 
-  const related = (await getLatestArticles(4)).filter(
-    (a) => a.slug !== article.slug
-  );
+  const [related, gallery, more, author] = await Promise.all([
+    getLatestArticles(4),
+    getArticleGallery(article.id),
+    getMoreArticles(0, article.slug),
+    getAuthorProfile(article.authorSlug),
+  ]);
+  const relatedItems = related.filter((item) => item.slug !== article.slug);
   const section = sectionMeta[article.section];
   const image = article.image;
   const publishedDay = saoPauloDay(article.publishedAt);
@@ -115,6 +124,8 @@ export default async function ArticlePage({ params }: Props) {
                 <p key={paragraph.slice(0, 80)}>{paragraph}</p>
               ))
             )}
+            <ArticleGallery items={gallery} />
+            {author && <AuthorNote author={author} />}
             <div className="mt-10 border-t border-[var(--line)] pt-6 text-sm text-mist-dim">
               <p>
                 Aviso: artigos e opiniões publicados são de inteira
@@ -133,7 +144,7 @@ export default async function ArticlePage({ params }: Props) {
               Continue lendo
             </p>
             <div className="mt-2 divide-y divide-[var(--line)]">
-              {related.slice(0, 4).map((item) => (
+              {relatedItems.slice(0, 4).map((item) => (
                 <Link
                   key={item.slug}
                   href={`/artigo/${item.slug}`}
@@ -155,16 +166,11 @@ export default async function ArticlePage({ params }: Props) {
         </aside>
       </div>
 
-      <section className="mx-auto max-w-content px-4 pb-16 sm:px-5">
-        <h2 className="mb-8 border-b-2 border-gold pb-1 font-display text-2xl text-[var(--text)]">
-          Mais da Ajoia
-        </h2>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {related.slice(0, 3).map((item) => (
-            <StoryCard key={item.slug} article={item} />
-          ))}
-        </div>
-      </section>
+      <MoreArticles
+        excludeSlug={article.slug}
+        initial={more.articles}
+        initialHasMore={more.hasMore}
+      />
     </article>
   );
 }

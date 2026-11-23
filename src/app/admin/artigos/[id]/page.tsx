@@ -5,6 +5,7 @@ import { ArticleForm } from "@/components/admin/ArticleForm";
 import { SocialPublish } from "@/components/admin/SocialPublish";
 import { prisma } from "@/lib/db";
 import { sectionDefaultsToOpinion } from "@/lib/sections";
+import { parseGalleryJson } from "@/lib/gallery";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -20,6 +21,7 @@ export default async function EditArticlePage({ params }: Props) {
     where: { id },
     include: {
       author: { select: { name: true, email: true, approved: true } },
+      gallery: { orderBy: { position: "asc" } },
     },
   });
   if (!article) notFound();
@@ -71,6 +73,13 @@ export default async function EditArticlePage({ params }: Props) {
             isOpinion:
               source.isOpinion ?? sectionDefaultsToOpinion(source.section),
             slug: source.slug,
+            secondarySections: source.secondarySections,
+            gallery: revision
+              ? parseGalleryJson(revision.galleryJson)
+              : article.gallery.map((item) => ({
+                  url: item.url,
+                  caption: item.caption,
+                })),
           }}
         />
       </div>

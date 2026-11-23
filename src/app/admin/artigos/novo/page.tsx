@@ -41,6 +41,8 @@ export default async function NewArticlePage() {
             noindex: false,
             isOpinion: false,
             slug: "",
+            secondarySections: [],
+            gallery: [],
           }}
         />
       </div>

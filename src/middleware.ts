@@ -30,7 +30,6 @@ const legacyPaths: Record<string, string> = {
   "/conselhos": "/artigo/conselhos",
   "/fundadores": "/artigo/fundadores",
   "/redacao": "/expediente",
-  "/responsabilidade-social": "/quem-somos",
   "/1a-conferencia-ajoia-brasil-sao-paulo-2026":
     "/artigo/1a-conferencia-ajoia-brasil-sao-paulo-2026",
 };

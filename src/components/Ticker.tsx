@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getLatestArticles } from "@/lib/articles";
+import { getTickerArticle } from "@/lib/articles";
 
 export async function Ticker() {
-  const items = await getLatestArticles(1);
-  const article = items[0];
+  const article = await getTickerArticle();
   if (!article) return null;
 
   return (
@@ -14,7 +13,7 @@ export async function Ticker() {
         className="group flex items-center gap-4 rounded-xl border border-[var(--line)] px-3 py-3 transition-colors hover:border-gold/50 sm:px-4"
       >
         <span className="kicker shrink-0 rounded-md border border-gold/40 px-2 py-1">
-          {article.breaking ? "Em destaque" : "Última"}
+          Em destaque
         </span>
         {article.image && (
           <div className="relative hidden h-14 w-24 shrink-0 overflow-hidden rounded-md sm:block">
@@ -31,7 +30,7 @@ export async function Ticker() {
           <p className="truncate font-sans text-sm font-bold tracking-tight text-[var(--text)] group-hover:text-gold sm:text-base">
             {article.title}
           </p>
-          <p className="mt-0.5 line-clamp-1 text-sm text-mist-muted">{article.dek}</p>
+          <p className="mt-0.5 truncate text-sm text-mist-muted">{article.authorName}</p>
         </div>
       </Link>
     </div>

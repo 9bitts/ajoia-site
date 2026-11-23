@@ -275,7 +275,12 @@ html[data-theme="light"] .on-dark .brand-logo-img {
 .prose-ajoia iframe,
 .prose-ajoia video,
 .prose-ajoia embed {
+  display: block;
+  width: 100%;
   max-width: 100%;
+  margin: 1.5rem 0;
+  border-radius: 1rem;
+  background: #111;
 }
 
 .prose-ajoia p,
@@ -294,9 +299,20 @@ html[data-theme="light"] .on-dark .brand-logo-img {
 .prose-ajoia h3,
 .prose-ajoia h4 {
   margin: 2rem 0 0.8rem;
-  font-family: var(--font-display), serif;
-  line-height: 1.15;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
   color: var(--text);
+}
+
+.prose-ajoia h2 {
+  font-size: 1.5rem;
+}
+
+.prose-ajoia h3,
+.prose-ajoia h4 {
+  font-size: 1.25rem;
 }
 
 .prose-ajoia a {

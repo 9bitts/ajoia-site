@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ColumnistAvatar } from "@/components/ColumnistAvatar";
 import { getColumnists } from "@/lib/articles";
 
 export async function ColumnistRail() {
@@ -29,13 +30,12 @@ export async function ColumnistRail() {
               href={`/colunistas/${columnist.slug}`}
               className="group rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-5 transition-colors hover:border-gold/50"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold font-display text-sm text-[var(--text)]">
-                {columnist.name
-                  .split(" ")
-                  .slice(0, 2)
-                  .map((n) => n[0])
-                  .join("")}
-              </div>
+              <ColumnistAvatar
+                name={columnist.name}
+                avatarUrl={columnist.avatarUrl}
+                size="sm"
+                className="mb-4"
+              />
               <h3 className="font-sans text-lg font-bold tracking-tight text-[var(--text)] group-hover:text-gold">
                 {columnist.name}
               </h3>

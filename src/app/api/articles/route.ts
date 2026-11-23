@@ -7,12 +7,13 @@ import { recordAudit } from "@/lib/audit";
 import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 import { resolveArticleStatus } from "@/lib/editorial";
+import { replaceArticleGallery, sanitizeGallery } from "@/lib/gallery";
 import { imageUrlError } from "@/lib/image-url";
 import { sendPortalMail } from "@/lib/mail";
 import { clientIp } from "@/lib/rate-limit";
 import { rejectCrossOrigin } from "@/lib/same-origin";
 import { publishSeoError } from "@/lib/seo-rules";
-import { isSectionSlug } from "@/lib/sections";
+import { isSectionSlug, normalizeSecondarySections, secondarySectionsError } from "@/lib/sections";
 import { uniqueSlug } from "@/lib/slug";
 
 export async function GET() {
@@ -60,6 +61,15 @@ export async function POST(req: Request) {
   if (!isSectionSlug(data.section)) {
     return NextResponse.json({ error: "Seção inválida" }, { status: 400 });
   }
+  const secondaryError = secondarySectionsError(data.section, data.secondarySections);
+  if (secondaryError) {
+    return NextResponse.json({ error: secondaryError }, { status: 400 });
+  }
+  const secondarySections = normalizeSecondarySections(data.section, data.secondarySections);
+  const galleryResult = sanitizeGallery(data.gallery ?? []);
+  if (galleryResult.error) {
+    return NextResponse.json({ error: galleryResult.error }, { status: 400 });
+  }
 
   const resolved = await resolveArticleStatus({
     role: session.user.role,
@@ -97,6 +107,7 @@ export async function POST(req: Request) {
   });
 
   const principal = session.user.role === "ADMIN" && Boolean(data.principal);
+  const featured = session.user.role === "ADMIN" && Boolean(data.featured);
 
   const article = await prisma.$transaction(async (tx) => {
     if (principal && resolved.status === "PUBLISHED") {
@@ -105,14 +116,21 @@ export async function POST(req: Request) {
         data: { principal: false },
       });
     }
-    return tx.article.create({
+    if (featured && resolved.status === "PUBLISHED") {
+      await tx.article.updateMany({
+        where: { featured: true },
+        data: { featured: false },
+      });
+    }
+    const created = await tx.article.create({
       data: {
         title: data.title,
         dek: data.dek,
         body: sanitizeStoredBody(data.body),
         section: data.section,
+        secondarySections,
         status: resolved.status,
-        featured: session.user.role === "ADMIN" ? Boolean(data.featured) : false,
+        featured,
         principal,
         breaking: session.user.role === "ADMIN" ? Boolean(data.breaking) : false,
         imageUrl: data.imageUrl || null,
@@ -123,11 +141,14 @@ export async function POST(req: Request) {
       },
       include: { author: { select: { slug: true } } },
     });
+    await replaceArticleGallery(tx, created.id, galleryResult.items);
+    return created;
   });
 
   syncArticleSurfaces({
     slug: article.slug,
     section: article.section,
+    sections: article.secondarySections,
     authorSlug: article.author.slug,
     status: article.status,
   });

@@ -16,6 +16,16 @@ export const articleInputSchema = z.object({
   noindex: z.boolean().optional(),
   isOpinion: z.boolean().optional(),
   slug: z.string().optional(),
+  secondarySections: z.array(z.string().max(40)).max(12).optional(),
+  gallery: z
+    .array(
+      z.object({
+        url: z.string().max(300),
+        caption: z.string().max(300).optional().default(""),
+      })
+    )
+    .max(40)
+    .optional(),
 });
 
 export type ArticleInput = z.infer<typeof articleInputSchema>;

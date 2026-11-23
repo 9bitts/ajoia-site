@@ -298,11 +298,13 @@ export function sanitizeArticleHtml(html: string, imageAltFallback = "") {
       "figure",
       "figcaption",
       "iframe",
+      "video",
     ],
     allowedAttributes: {
       a: ["href", "name", "target", "rel"],
       img: ["src", "alt", "title", "width", "height", "loading", "decoding"],
       iframe: ["src", "title", "allow", "allowfullscreen", "loading"],
+      video: ["src", "controls", "preload"],
     },
     allowedSchemes: ["http", "https", "mailto"],
     allowedIframeHostnames: ["www.youtube.com", "www.youtube-nocookie.com"],
@@ -318,6 +320,19 @@ export function sanitizeArticleHtml(html: string, imageAltFallback = "") {
           decoding: "async",
         },
       }),
+      video: (_tagName, attribs) => {
+        const src = attribs.src || "";
+        const local = /^\/uploads\/[a-zA-Z0-9._-]+\.(mp4|webm)$/.test(src);
+        if (!local) return { tagName: "span", attribs: {} as Record<string, string> };
+        return {
+          tagName: "video",
+          attribs: {
+            src,
+            controls: "controls",
+            preload: "metadata",
+          } as Record<string, string>,
+        };
+      },
       a: (tagName, attribs) => {
         const external = isExternalHref(attribs.href || "");
         const next: Record<string, string> = {};
