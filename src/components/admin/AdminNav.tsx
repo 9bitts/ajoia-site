@@ -20,17 +20,28 @@ export async function AdminNav() {
             </Link>
           </div>
           <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.16em] text-mist-muted">
-            <Link href="/admin" className="inline-flex min-h-11 items-center hover:text-white">
-              {session.user.role === "ADMIN" ? "Colunistas" : "Minhas matérias"}
-            </Link>
-            <Link href="/admin/artigos/novo" className="inline-flex min-h-11 items-center hover:text-white">
-              Nova matéria
-            </Link>
+            {session.user.role === "LIVREIRO" ? (
+              <Link href="/admin/livraria" className="inline-flex min-h-11 items-center hover:text-white">
+                Livraria
+              </Link>
+            ) : (
+              <>
+                <Link href="/admin" className="inline-flex min-h-11 items-center hover:text-white">
+                  {session.user.role === "ADMIN" ? "Colunistas" : "Minhas matérias"}
+                </Link>
+                <Link href="/admin/artigos/novo" className="inline-flex min-h-11 items-center hover:text-white">
+                  Nova matéria
+                </Link>
+              </>
+            )}
             <Link href="/admin/senha" className="inline-flex min-h-11 items-center hover:text-white">
               Senha
             </Link>
             {session.user.role === "ADMIN" && (
               <>
+                <Link href="/admin/livraria" className="inline-flex min-h-11 items-center hover:text-white">
+                  Livraria
+                </Link>
                 <Link href="/admin/usuarios" className="inline-flex min-h-11 items-center hover:text-white">
                   Contas
                 </Link>

@@ -180,6 +180,13 @@ export function Header() {
               </Link>
             );
           })}
+          <Link
+            href="/livraria"
+            data-active={pathname.startsWith("/livraria")}
+            className="nav-link whitespace-nowrap text-[13px] font-semibold text-[#e8c56b] hover:text-white"
+          >
+            Livraria
+          </Link>
         </div>
       </nav>
 
@@ -201,6 +208,12 @@ export function Header() {
                 {section.label}
               </Link>
             ))}
+            <Link
+              href="/livraria"
+              className="flex min-h-11 items-center border-t border-[var(--line)] text-sm font-semibold text-gold"
+            >
+              Livraria
+            </Link>
             {institutionalLinks.map((link) => (
               <Link
                 key={link.href}

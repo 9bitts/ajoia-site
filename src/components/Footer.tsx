@@ -32,6 +32,14 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/livraria"
+                className="flex min-h-11 items-center text-sm font-semibold text-[#e8c56b]"
+              >
+                Livraria
+              </Link>
+            </li>
           </ul>
         </div>
 

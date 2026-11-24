@@ -23,6 +23,16 @@ export default async function AdminLayout({
     if (session.user.mustChangePassword && pathname !== "/admin/senha") {
       redirect("/admin/senha");
     }
+    const onBookstore =
+      pathname === "/admin/livraria" || pathname.startsWith("/admin/livraria/");
+    if (
+      pathname &&
+      session.user.role === "LIVREIRO" &&
+      pathname !== "/admin/senha" &&
+      !onBookstore
+    ) {
+      redirect("/admin/livraria");
+    }
   }
 
   return (

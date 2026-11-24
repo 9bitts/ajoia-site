@@ -10,6 +10,7 @@ datasource db {
 enum Role {
   ADMIN
   COLUMNIST
+  LIVREIRO
 }
 
 enum ArticleStatus {
@@ -206,4 +207,111 @@ model AuditLog {
 
   @@index([createdAt])
   @@index([action])
+}
+
+enum StoreItemKind {
+  LIVRO
+  OUTRO
+}
+
+enum StoreItemStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum BookBinding {
+  BROCHURA
+  DURA
+  POCKET
+}
+
+enum StoreOrderStatus {
+  AGUARDANDO_PAGAMENTO
+  PAGO
+  ENVIADO
+  ENTREGUE
+  CANCELADO
+}
+
+model StoreCategory {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  description String      @default("")
+  position    Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  items       StoreItem[]
+}
+
+model StoreItem {
+  id          String          @id @default(cuid())
+  kind        StoreItemKind
+  slug        String          @unique
+  name        String
+  synopsis    String          @default("")
+  description String          @default("")
+  priceCents  Int
+  stock       Int             @default(0)
+  coverUrl    String?
+  coverAlt    String          @default("")
+  status      StoreItemStatus @default(DRAFT)
+  featured    Boolean         @default(false)
+  weightGrams Int             @default(0)
+  widthCm     Int             @default(0)
+  heightCm    Int             @default(0)
+  depthCm     Int             @default(0)
+  isbn13      String?         @unique
+  authors     String          @default("")
+  publisher   String          @default("")
+  edition     String          @default("")
+  year        Int?
+  pages       Int?
+  language    String          @default("")
+  binding     BookBinding?
+  categoryId  String?
+  category    StoreCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  orderLines  StoreOrderLine[]
+
+  @@index([status, featured])
+  @@index([status, createdAt])
+  @@index([categoryId])
+  @@index([kind])
+}
+
+model StoreOrder {
+  id            String           @id @default(cuid())
+  code          String           @unique
+  status        StoreOrderStatus @default(AGUARDANDO_PAGAMENTO)
+  buyerName     String
+  buyerEmail    String
+  buyerPhone    String           @default("")
+  addressLine   String           @default("")
+  addressCity   String           @default("")
+  addressState  String           @default("")
+  addressZip    String           @default("")
+  subtotalCents Int
+  freightCents  Int              @default(0)
+  totalCents    Int
+  paymentRef    String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  lines         StoreOrderLine[]
+
+  @@index([status, createdAt])
+}
+
+model StoreOrderLine {
+  id        String      @id @default(cuid())
+  orderId   String
+  order     StoreOrder  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  itemId    String?
+  item      StoreItem?  @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  name      String
+  unitCents Int
+  quantity  Int
+
+  @@index([orderId])
 }

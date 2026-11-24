@@ -143,7 +143,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.credentialVersion = user.credentialVersion;
         token.mustChangePassword = user.mustChangePassword;
         token.invalid = false;
-        const ttl = user.role === "ADMIN" ? ADMIN_SESSION_MS : COLUMNIST_SESSION_MS;
+        const ttl = user.role === "COLUMNIST" ? COLUMNIST_SESSION_MS : ADMIN_SESSION_MS;
         token.sessionEndsAt = Date.now() + ttl;
         return token;
       }

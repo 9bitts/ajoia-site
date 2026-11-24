@@ -132,6 +132,37 @@ export default auth((req) => {
     return withSecurity(NextResponse.redirect(new URL("/admin/senha", req.nextUrl)), csp);
   }
 
+  if (req.auth?.user?.role === "LIVREIRO") {
+    const livreiroPath = barePath(pathname);
+    if (livreiroPath.startsWith("/api/")) {
+      const allowedApi =
+        livreiroPath.startsWith("/api/livraria") ||
+        livreiroPath.startsWith("/api/upload") ||
+        livreiroPath.startsWith("/api/auth") ||
+        livreiroPath === "/api/account/password" ||
+        livreiroPath === "/api/me";
+      if (!allowedApi) {
+        return withSecurity(
+          NextResponse.json({ error: "Sem permissão" }, { status: 403 }),
+          csp,
+        );
+      }
+    }
+    if (livreiroPath.startsWith("/admin")) {
+      const allowedPage =
+        livreiroPath.startsWith("/admin/livraria") ||
+        livreiroPath === "/admin/senha" ||
+        livreiroPath.startsWith("/admin/login") ||
+        livreiroPath.startsWith("/admin/cadastro");
+      if (!allowedPage) {
+        return withSecurity(
+          NextResponse.redirect(new URL("/admin/livraria", req.nextUrl)),
+          csp,
+        );
+      }
+    }
+  }
+
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("x-pathname", pathname);
