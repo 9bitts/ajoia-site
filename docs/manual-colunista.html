@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Manual do colunista — Ajoia Brasil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,620&family=Manrope:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet" />
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #d8d2c6; }
+    body {
+      font-family: "Source Serif 4", Georgia, "Palatino Linotype", serif;
+      color: #1c1914;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .sheet {
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
+      position: relative;
+      page-break-after: always;
+      break-after: page;
+      background: #f7f4ee;
+    }
+    .sheet:last-child { page-break-after: auto; break-after: auto; }
+
+    .cover {
+      background: #070708;
+      color: #f4f1ea;
+      padding: 18mm 18mm 16mm;
+    }
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #c6a35a;
+    }
+    .cover-logo {
+      width: 92mm;
+      height: auto;
+      display: block;
+      margin-top: 28mm;
+    }
+    .cover h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 500;
+      font-size: 54px;
+      line-height: 0.96;
+      letter-spacing: -0.03em;
+      margin: 16mm 0 0;
+      max-width: 150mm;
+    }
+    .cover h1 em {
+      font-style: italic;
+      font-weight: 500;
+      color: #e7d7b0;
+    }
+    .cover-lead {
+      margin-top: 8mm;
+      max-width: 128mm;
+      font-size: 15.5px;
+      line-height: 1.45;
+      color: #d5d0c6;
+    }
+    .cover-rule {
+      width: 28mm;
+      height: 1.5px;
+      background: #c6a35a;
+      margin: 10mm 0 6mm;
+    }
+    .cover-meta {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b7b2a8;
+    }
+    .cover-index {
+      position: absolute;
+      left: 18mm;
+      right: 18mm;
+      bottom: 32mm;
+    }
+    .cover-index p {
+      margin: 0 0 3.5mm;
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #c6a35a;
+    }
+    .cover-index ol {
+      list-style: none;
+      margin: 0;
+      padding: 4mm 0 0;
+      border-top: 1px solid rgba(198, 163, 90, 0.35);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 12mm;
+      row-gap: 2.2mm;
+    }
+    .cover-index li {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 11.5px;
+      color: #ece7de;
+    }
+    .cover-index b {
+      display: inline-block;
+      width: 7mm;
+      color: #c6a35a;
+      font-weight: 700;
+    }
+    .cover-foot {
+      position: absolute;
+      left: 18mm;
+      right: 18mm;
+      bottom: 14mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(198, 163, 90, 0.45);
+      padding-top: 5mm;
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #c6a35a;
+    }
+    .sample {
+      margin: 2mm 0 0;
+      background: #fffdf8;
+      border: 1px solid #e4dccf;
+      border-left: 2.5px solid #8d6a2f;
+      padding: 3.2mm 4mm;
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 11.2px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      color: #1c1914;
+    }
+
+    .inner { padding: 12mm 16mm 14mm; height: 100%; }
+    .run {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 8.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8d6a2f;
+      border-bottom: 1px solid #d9d0c2;
+      padding-bottom: 2.5mm;
+    }
+    .kicker {
+      margin: 6.5mm 0 0;
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8d6a2f;
+    }
+    h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 1.5mm 0 0;
+    }
+    .deck {
+      margin: 3mm 0 0;
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: #3f3a32;
+    }
+    h3 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 620;
+      font-size: 15px;
+      margin: 5mm 0 1.5mm;
+    }
+    p { margin: 0 0 2.4mm; font-size: 11.4px; line-height: 1.42; }
+    .muted { color: #5c564c; }
+    a { color: #6e5224; text-decoration: none; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm;
+      margin-top: 5mm;
+    }
+    .step {
+      background: #fffdf8;
+      border: 1px solid #e4dccf;
+      border-top: 2.5px solid #8d6a2f;
+      padding: 3.2mm 3.5mm 3.4mm;
+      min-height: 28mm;
+    }
+    .num {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 18px;
+      color: #8d6a2f;
+      line-height: 1;
+    }
+    .step strong, .card strong, .pocket strong {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.01em;
+    }
+    .step p, .card p { font-size: 10.8px; margin: 1.2mm 0 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 3.5mm;
+      font-size: 10.8px;
+      line-height: 1.35;
+    }
+    th {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 8.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: left;
+      color: #8d6a2f;
+      font-weight: 700;
+      border-bottom: 1px solid #c6a35a;
+      padding: 0 2.5mm 1.6mm 0;
+    }
+    td {
+      vertical-align: top;
+      border-bottom: 1px solid #e6dfd3;
+      padding: 2.1mm 2.5mm 2.1mm 0;
+    }
+    td:first-child {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-weight: 700;
+      font-size: 10.5px;
+      width: 42mm;
+    }
+
+    .note {
+      margin-top: 4mm;
+      background: #1c1914;
+      color: #f4f1ea;
+      padding: 3.6mm 4.2mm;
+    }
+    .note strong {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #e7d7b0;
+      font-weight: 700;
+    }
+    .note p { color: #f4f1ea; font-size: 11.2px; margin: 1.2mm 0 0; }
+
+    .goldbox {
+      margin-top: 4mm;
+      border: 1px solid #c6a35a;
+      background: #fffdf8;
+      padding: 3.4mm 4mm;
+    }
+    .goldbox p { margin: 0; }
+
+    ul.clean, ol.clean { margin: 1mm 0 0; padding: 0 0 0 4.2mm; }
+    ul.clean li, ol.clean li { font-size: 11.2px; line-height: 1.38; margin: 0 0 1.3mm; }
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+      margin-top: 3.5mm;
+    }
+    .card {
+      background: #fffdf8;
+      border: 1px solid #e4dccf;
+      padding: 3.2mm 3.4mm 3mm;
+    }
+    .card h3 { margin: 0 0 1.4mm; font-size: 14px; }
+    .url {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.01em;
+      color: #1c1914;
+    }
+
+    .foot {
+      position: absolute;
+      left: 16mm;
+      right: 16mm;
+      bottom: 7mm;
+      display: flex;
+      justify-content: space-between;
+      font-family: Manrope, "Segoe UI", sans-serif;
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8a8174;
+      border-top: 1px solid #e4dccf;
+      padding-top: 2.2mm;
+    }
+
+    .check { list-style: none; padding: 0; margin: 2mm 0 0; }
+    .check li {
+      font-size: 11.2px;
+      line-height: 1.35;
+      margin: 0 0 1.5mm;
+      padding-left: 5.5mm;
+      position: relative;
+    }
+    .check li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.1mm;
+      width: 3.1mm;
+      height: 3.1mm;
+      border: 1.25px solid #8d6a2f;
+    }
+
+    .pocket {
+      margin-top: 4mm;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm;
+    }
+    .pocket .card { min-height: 0; }
+    .pocket ol { margin: 1.5mm 0 0; padding-left: 4.2mm; }
+    .pocket li { font-size: 10.8px; line-height: 1.35; margin: 0 0 1mm; }
+    .endnote {
+      margin-top: 4.5mm;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #3f3a32;
+    }
+  </style>
+</head>
+<body>
+
+<section class="sheet cover">
+  <div class="cover-top">
+    <span>Redação</span>
+    <span>Uso interno · Novembro de 2026</span>
+  </div>
+  <img class="cover-logo" src="../public/images/logo-ajoia.png" alt="Ajoia Brasil" />
+  <h1>Manual do<br /><em>colunista</em></h1>
+  <p class="cover-lead">Como entrar no painel, escrever a coluna, enviar para avaliação e corrigir o que já está no ar.</p>
+  <div class="cover-rule"></div>
+  <p class="cover-meta">A nova ferramenta da redação</p>
+  <div class="cover-index">
+    <p>Neste manual</p>
+    <ol>
+      <li><b>02</b> Como o texto chega ao ar</li>
+      <li><b>03</b> Entrar na redação</li>
+      <li><b>04</b> A primeira tela</li>
+      <li><b>05</b> Os campos da matéria</li>
+      <li><b>06</b> Imagem, endereço e busca</li>
+      <li><b>07</b> Do rascunho ao site</li>
+      <li><b>08</b> Como escrever no campo</li>
+      <li><b>09</b> Dúvidas do primeiro dia</li>
+      <li><b>10</b> Folha de bolso</li>
+    </ol>
+  </div>
+  <div class="cover-foot">
+    <span>ajoiabrasil.com.br/admin</span>
+    <span>01</span>
+  </div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">01 · Apresentação</p>
+    <h2>O texto passa por você. O ar, pela redação.</h2>
+    <p class="deck">O painel substitui o envio de arquivo solto. A coluna fica guardada, com autoria, seção e situação visíveis. Você acompanha cada etapa.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <strong>Entrar</strong>
+        <p>Com o e-mail e a senha da sua conta, em ajoiabrasil.com.br/admin.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <strong>Escrever</strong>
+        <p>Título, linha-fina, seção, texto e imagem. Salve o rascunho quantas vezes precisar.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <strong>Enviar para avaliação</strong>
+        <p>O texto entra na fila. Ainda não aparece no site.</p>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <strong>Publicação</strong>
+        <p>A administração lê e publica. Aí a coluna ganha endereço no portal.</p>
+      </div>
+    </div>
+
+    <h3>As três situações de uma matéria</h3>
+    <table>
+      <thead>
+        <tr><th>No painel</th><th>O que significa</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Rascunho</td>
+          <td>Só você e a administração veem. Pode reescrever à vontade. O site permanece igual.</td>
+        </tr>
+        <tr>
+          <td>Aguardando avaliação</td>
+          <td>Está na fila. A administração lê antes de publicar. Enquanto isso, a matéria fica fora do ar.</td>
+        </tr>
+        <tr>
+          <td>Publicado</td>
+          <td>Está no site, no seu nome. Um novo salvamento vira revisão: o texto no ar só muda quando a administração publicar a versão nova.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>O que fica com a administração</strong>
+      <p>Publicar, escolher o destaque da capa, o selo e a publicação nas redes. A sua tela tem Salvar rascunho e Enviar para avaliação. A capa e as redes entram depois, na redação.</p>
+    </div>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>02</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">02 · Acesso</p>
+    <h2>Entrar na redação</h2>
+    <p class="deck">O painel abre no navegador, no computador ou no celular. Texto longo fica mais confortável na tela grande.</p>
+
+    <h3>Endereço</h3>
+    <p class="url">https://ajoiabrasil.com.br/admin</p>
+    <p class="muted">A tela de entrada também está em /admin/login. Quem ainda não tem conta usa o link Criar conta, na mesma página.</p>
+
+    <div class="cols">
+      <div class="card">
+        <h3>Conta nova</h3>
+        <p>Preencha nome, e-mail, senha, função e uma bio curta. A senha pede no mínimo 10 caracteres, com letras e números.</p>
+        <p>O pedido fica parado até a administração liberar. Sem essa liberação, o login não abre. A mensagem de confirmação é: “Pedido recebido. A administração precisa liberar a conta antes do primeiro acesso.”</p>
+      </div>
+      <div class="card">
+        <h3>Conta já aberta</h3>
+        <p>Entre com e-mail e senha. Se a redação criou a conta para você, o primeiro acesso pede a troca da senha antes de qualquer outra tela. Depois da troca, entre de novo.</p>
+        <p>Muitas tentativas seguidas travam a entrada por alguns minutos. Espere e tente outra vez.</p>
+      </div>
+    </div>
+
+    <h3>Trocar a senha depois</h3>
+    <p>No menu, clique em <strong>Senha</strong>. Informe a senha atual e a nova: mínimo de 10 caracteres, com letras e números. Ao confirmar, a sessão se encerra. Entre outra vez com a senha nova. As outras sessões dessa conta deixam de valer.</p>
+
+    <div class="goldbox">
+      <p>No computador compartilhado, termine em <strong>Sair</strong>, no canto superior direito. O menu também leva a <strong>Ver site</strong>, para abrir o portal na hora.</p>
+    </div>
+
+    <h3>Se a senha se perder</h3>
+    <p>Não há botão de “esqueci a senha”. Escreva para <a href="mailto:portal.ajoiabrasil@gmail.com">portal.ajoiabrasil@gmail.com</a>. A redação gera uma senha provisória, e o acesso seguinte pede a troca.</p>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>03</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">03 · Painel</p>
+    <h2>A primeira tela é a sua</h2>
+    <p class="deck">Depois do login, a página se chama Minhas matérias. Ali estão só os seus textos, do mais recente ao mais antigo.</p>
+
+    <h3>Menu do alto</h3>
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Para que serve</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Minhas matérias</td><td>A lista do que você escreveu, com busca e filtro.</td></tr>
+        <tr><td>Nova matéria</td><td>Abre um texto em branco.</td></tr>
+        <tr><td>Senha</td><td>Troca a senha da conta.</td></tr>
+        <tr><td>Ver site</td><td>Abre o portal público.</td></tr>
+        <tr><td>Sair</td><td>Encerra a sessão neste navegador.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Achar um texto</h3>
+    <p>A busca olha o título. Os filtros ao lado separam a lista: <strong>Todas</strong>, <strong>Publicadas</strong>, <strong>Na fila</strong> e <strong>Rascunhos</strong>. <strong>Limpar</strong> volta à lista completa.</p>
+    <p>Cada linha mostra título, seção, situação e data. Clique na linha para abrir e editar. Quando a matéria já está no ar, aparece o link <strong>ver</strong>: ele abre a página pública em outra aba.</p>
+
+    <div class="note">
+      <strong>Sua lista é só sua</strong>
+      <p>O colunista vê e edita as próprias matérias. A visão de todos os autores, a fila geral e as contas ficam na administração.</p>
+    </div>
+
+    <div class="goldbox">
+      <p>O botão <strong>Nova matéria</strong>, à direita do título da página, é o começo de cada coluna. O mesmo caminho está no menu.</p>
+    </div>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>04</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">04 · Escrever</p>
+    <h2>Os campos da matéria</h2>
+    <p class="deck">Preencha de cima para baixo. O contador debaixo do título e da linha-fina mostra o tamanho ideal para a busca. Número em âmbar avisa que saiu da faixa. O texto salva mesmo assim.</p>
+
+    <table>
+      <thead>
+        <tr><th>Campo</th><th>Como preencher</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Título</td>
+          <td>A manchete da página, com pelo menos 3 caracteres. O contador mede essa manchete já com “ · Ajoia Brasil” no fim. A faixa ideal é 50 a 70 caracteres. A manchete da página pode ser mais longa: o Google recebe a versão que cabe.</td>
+        </tr>
+        <tr>
+          <td>Linha-fina</td>
+          <td>A frase embaixo da manchete. Diga do que trata a coluna, em uma ou duas sentenças. O ideal é 120 a 160 caracteres. Sem linha-fina, a administração não consegue publicar.</td>
+        </tr>
+        <tr>
+          <td>Seção</td>
+          <td>Abra a lista e escolha uma. Opinião, Editorial e Tema Livre já nascem marcadas como opinião.</td>
+        </tr>
+        <tr>
+          <td>Texto</td>
+          <td>O corpo da coluna. Separe os parágrafos com uma linha em branco. O campo pede algum texto antes de salvar.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Qual seção usar</h3>
+    <table>
+      <thead>
+        <tr><th>Seção</th><th>Quando cabe</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Colunistas</td><td>A coluna assinada, de responsabilidade do autor.</td></tr>
+        <tr><td>Opinião</td><td>Análise e posicionamento. O rótulo já está no nome da seção.</td></tr>
+        <tr><td>Tema Livre</td><td>Crônica, painel e texto fora do noticiário do dia.</td></tr>
+        <tr><td>Editorial</td><td>A voz institucional da Ajoia Brasil. Use quando o texto for da associação.</td></tr>
+        <tr><td>As demais</td><td>Política, Nacional, Internacional, Economia, Cultura, Saúde e Últimas, conforme o assunto.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="goldbox">
+      <p><strong>Exemplo.</strong> Título: “O plenário votou de madrugada, e a conta ficou para o ano.” Linha-fina: “A sessão acabou sem o texto final. O que muda para o leitor é o prazo, não o anúncio da véspera.” Seção: Política. Opinião desmarcada, porque o texto apura um fato.</p>
+    </div>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>05</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">05 · Imagem, endereço e busca</p>
+    <h2>O que o leitor vê antes de ler</h2>
+    <p class="deck">Capa, endereço e cartão do Google saem dos campos de baixo. Vale conferir a prévia antes de enviar.</p>
+
+    <div class="cols">
+      <div class="card">
+        <h3>Imagem de capa</h3>
+        <p>Envie JPG, PNG ou WebP, de até 8 MB. A foto é reduzida e guardada em JPEG. A prévia é horizontal.</p>
+        <p>Espere o aviso “Enviando imagem…” sumir antes de salvar. Há um teto diário de 15 arquivos ou 40 MB. <strong>Remover imagem</strong> tira a capa desta matéria.</p>
+      </div>
+      <div class="card">
+        <h3>Descrição da imagem</h3>
+        <p>É o texto alternativo da foto: quem está nela, onde e o que acontece, em uma frase. Sem essa descrição, a administração não publica.</p>
+        <p>Se não houver foto própria, a seção usa uma imagem padrão. Descreva o que o leitor vê. Crédito de divulgação entra no corpo do texto.</p>
+        <p>Fraca: “foto”. Útil: “Plenário do Senado durante a votação, em Brasília.”</p>
+      </div>
+    </div>
+
+    <h3>Endereço</h3>
+    <p>Na matéria nova, o endereço nasce do título. Ele aparece quando você reabre o texto, no campo <strong>Endereço</strong>, no formato ajoiabrasil.com.br/artigo/… Depois de publicada, evite trocar: o link antigo passa a redirecionar para o novo, e o aviso em âmbar lembra isso.</p>
+
+    <h3>Busca e redes</h3>
+    <p><strong>Título no Google</strong> e <strong>Descrição no Google</strong> são opcionais. Vazios, a busca usa a manchete (ajustada para caber com a marca) e a linha-fina. A manchete da página continua inteira.</p>
+    <p>A caixa <strong>Esta matéria é opinião</strong> coloca o rótulo Opinião na página. Opinião, Editorial e Tema Livre já nascem marcadas. Na seção Opinião, o nome da seção basta.</p>
+    <p>O quadro branco no fim do bloco é a prévia do cartão de busca: endereço, título e descrição. Leia esse quadro como o leitor leria no Google.</p>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>06</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">06 · Enviar e corrigir</p>
+    <h2>Do rascunho ao site</h2>
+    <p class="deck">Dois botões, no pé do formulário. Espere a imagem terminar de subir. Título curto demais ou texto vazio impedem o salvamento, e o aviso aparece em vermelho.</p>
+
+    <table>
+      <thead>
+        <tr><th>Botão</th><th>O que acontece</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Salvar rascunho</td>
+          <td>Guarda o texto. A mensagem fica verde: “Rascunho salvo.” Na primeira vez, o painel abre a página de edição dessa matéria. Dali em diante, cada salvamento atualiza o mesmo registro.</td>
+        </tr>
+        <tr>
+          <td>Enviar para avaliação</td>
+          <td>Coloca o texto na fila. A mensagem confirma: a matéria só entra no ar quando a administração publicar. A situação passa a “Aguardando avaliação”.</td>
+        </tr>
+        <tr>
+          <td>Excluir</td>
+          <td>Apaga rascunho ou texto que ainda está na fila, depois de uma confirmação. Matéria publicada não tem esse botão na conta do colunista.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Corrigir o que já está no ar</h3>
+    <p>Abra a matéria publicada, altere o que for preciso e salve. A mensagem é direta: “Revisão guardada. O texto no ar não mudou. A administração publica a revisão quando aprovar.” O leitor continua vendo a versão antiga até essa publicação.</p>
+    <p>Erro de fato se corrige no mesmo endereço, com a data de atualização visível. A opinião assinada é do autor. Se a correção for urgente, avise a redação em <a href="mailto:portal.ajoiabrasil@gmail.com">portal.ajoiabrasil@gmail.com</a>, com o link da matéria.</p>
+
+    <div class="note">
+      <strong>Conta ainda sem liberação</strong>
+      <p>Se a administração ainda não autorizou o envio, o botão de avaliação fica desligado. Dá para escrever e guardar rascunho. O envio abre quando a conta for liberada.</p>
+    </div>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>07</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">07 · O texto no campo</p>
+    <h2>Como o parágrafo chega à página</h2>
+    <p class="deck">O campo de texto é simples de propósito. A página monta os parágrafos a partir das linhas em branco.</p>
+
+    <div class="cols">
+      <div class="card">
+        <h3>Parágrafos</h3>
+        <p>Escreva o parágrafo. Pule uma linha. Escreva o seguinte. Essa linha em branco é o que separa um bloco do outro na página.</p>
+        <p>Uma quebra simples, sem linha em branco, continua no mesmo parágrafo.</p>
+      </div>
+      <div class="card">
+        <h3>Lista</h3>
+        <p>Comece cada item com • , um abaixo do outro, sem linha em branco entre eles. Deixe uma linha em branco antes da lista e outra depois.</p>
+        <p>Dois itens ou mais, nesse bloco, viram lista na página.</p>
+      </div>
+    </div>
+
+    <h3>Exemplo no campo</h3>
+    <pre class="sample">A coluna começa pelo argumento, em frase completa.
+
+O parágrafo seguinte nasce depois de uma linha em branco.
+
+• Um item curto
+• Outro item, na linha de baixo
+• Sem linha em branco entre os itens</pre>
+
+    <h3>Ao colar de outro programa</h3>
+    <p>Cole sem formatação: no Windows, Ctrl+Shift+V. Estilo de Word, cor e tamanho de letra não precisam vir juntos. O caminho seguro é texto limpo, com os parágrafos separados por linha em branco. O título fica no campo Título. Não o repita no começo do corpo.</p>
+    <p>Feche as frases com ponto. Uma frase longa sem pontuação final ganha um ponto na página. Vale reler o texto salvo, pelo link <strong>ver</strong>, assim que ele estiver publicado — e, antes disso, reler no próprio campo.</p>
+
+    <h3>Antes de enviar para avaliação</h3>
+    <ul class="check">
+      <li>A manchete diz o fato ou o argumento, e o contador está perto da faixa de 50 a 70.</li>
+      <li>A linha-fina resume a coluna em 120 a 160 caracteres e está preenchida.</li>
+      <li>A seção combina com o texto. Opinião está marcada quando for o caso.</li>
+      <li>Os parágrafos estão separados por linha em branco.</li>
+      <li>A foto subiu, e a descrição diz o que se vê.</li>
+      <li>A prévia branca do Google foi lida do começo ao fim.</li>
+    </ul>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>08</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">08 · Dúvidas</p>
+    <h2>O que costuma travar no primeiro dia</h2>
+
+    <table>
+      <thead>
+        <tr><th>Situação</th><th>O que fazer</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Enviei e não está no site</td>
+          <td>Está na fila. A situação “Aguardando avaliação” confirma isso. A página pública nasce quando a administração publica.</td>
+        </tr>
+        <tr>
+          <td>Salvei uma publicada e o site não mudou</td>
+          <td>É a revisão. O texto antigo permanece até a administração publicar a versão nova.</td>
+        </tr>
+        <tr>
+          <td>Quero apagar uma publicada</td>
+          <td>Peça à redação. Na sua conta, Excluir só aparece em rascunho e em texto ainda na fila.</td>
+        </tr>
+        <tr>
+          <td>A conta nova não entra</td>
+          <td>O pedido espera liberação. O login abre depois da autorização.</td>
+        </tr>
+        <tr>
+          <td>O contador ficou âmbar</td>
+          <td>O tamanho saiu da faixa ideal de busca. Ajuste se quiser. O salvamento segue disponível.</td>
+        </tr>
+        <tr>
+          <td>A imagem falhou</td>
+          <td>Use JPG, PNG ou WebP de até 8 MB. Espere o envio terminar. Se o dia já teve muitas fotos, o teto é 15 arquivos ou 40 MB.</td>
+        </tr>
+        <tr>
+          <td>Esqueci a senha</td>
+          <td>Escreva para portal.ajoiabrasil@gmail.com. A senha nova pede troca no acesso seguinte.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Responsabilidade do texto</strong>
+      <p>Coluna e opinião saem em nome do autor. Erro de fato se corrige no mesmo endereço. Grafia, título ou informação que mude o sentido entram no corpo, de forma visível. Para apontar um erro, o leitor escreve para o mesmo e-mail da redação, com o link da matéria.</p>
+    </div>
+
+    <p class="endnote">Diretrizes, correções e o expediente do portal estão no site: ajoiabrasil.com.br/diretrizes e ajoiabrasil.com.br/correcoes.</p>
+  </div>
+  <div class="foot"><span>ajoiabrasil.com.br/admin</span><span>09</span></div>
+</section>
+
+<section class="sheet">
+  <div class="inner">
+    <div class="run"><span>Ajoia Brasil</span><span>Manual do colunista</span></div>
+    <p class="kicker">09 · Folha de bolso</p>
+    <h2>Uma coluna, do login ao ar</h2>
+    <p class="deck">Página para guardar. O caminho inteiro cabe aqui.</p>
+
+    <div class="pocket">
+      <div class="card">
+        <h3>Entrar</h3>
+        <ol>
+          <li>Abra ajoiabrasil.com.br/admin</li>
+          <li>E-mail e senha. Conta nova espera liberação.</li>
+          <li>Se pedirem, troque a senha e entre de novo.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Escrever</h3>
+        <ol>
+          <li>Nova matéria.</li>
+          <li>Título, linha-fina, seção e texto.</li>
+          <li>Foto, descrição da imagem e prévia da busca.</li>
+          <li>Salvar rascunho enquanto trabalha.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Enviar</h3>
+        <ol>
+          <li>Confira a lista do fim da página 08.</li>
+          <li>Enviar para avaliação.</li>
+          <li>A situação fica “Aguardando avaliação”.</li>
+          <li>O site muda quando a administração publica.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Corrigir</h3>
+        <ol>
+          <li>Abra a matéria em Minhas matérias.</li>
+          <li>Altere e salve. Isso cria uma revisão.</li>
+          <li>O texto no ar espera a publicação nova.</li>
+          <li>Urgência: avise portal.ajoiabrasil@gmail.com</li>
+        </ol>
+      </div>
+    </div>
+
+    <h3>Medidas que evitam volta</h3>
+    <table>
+      <thead>
+        <tr><th>Peça</th><th>Medida</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Título no Google</td><td>50 a 70 caracteres, já com “ · Ajoia Brasil”.</td></tr>
+        <tr><td>Linha-fina</td><td>120 a 160 caracteres. Obrigatória para publicar.</td></tr>
+        <tr><td>Senha</td><td>10 caracteres ou mais, com letras e números.</td></tr>
+        <tr><td>Foto</td><td>JPG, PNG ou WebP, até 8 MB. Descreva a cena.</td></tr>
+        <tr><td>Parágrafos</td><td>Uma linha em branco entre um e outro.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="goldbox">
+      <p><strong>Redação.</strong> portal.ajoiabrasil@gmail.com · ajoiabrasil.com.br/admin · Este manual descreve o painel em novembro de 2026.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Ajoia Brasil · Manual do colunista</span><span>10</span></div>
+</section>
+
+</body>
+</html>
