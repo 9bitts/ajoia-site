@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ColumnistAvatar } from "@/components/ColumnistAvatar";
+import { uploadMedia } from "@/lib/upload-client";
 
 type Props = {
   userId: string;
@@ -33,12 +34,8 @@ export function ColumnistProfileForm({
     setUploading(true);
     setError("");
     try {
-      const data = new FormData();
-      data.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: data });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Falha no upload");
-      setForm((current) => ({ ...current, avatarUrl: json.url }));
+      const url = await uploadMedia(file);
+      setForm((current) => ({ ...current, avatarUrl: url }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro no upload");
     } finally {

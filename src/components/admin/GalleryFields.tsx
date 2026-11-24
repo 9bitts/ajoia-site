@@ -2,16 +2,9 @@
 
 import { useState } from "react";
 import type { GalleryItem } from "@/lib/gallery";
+import { fileTooLargeMessage } from "@/lib/upload-limits";
+import { uploadMedia } from "@/lib/upload-client";
 import { MediaBrowser, type MediaAsset } from "@/components/admin/MediaBrowser";
-
-async function uploadFile(file: File) {
-  const data = new FormData();
-  data.append("file", file);
-  const res = await fetch("/api/upload", { method: "POST", body: data });
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.error || "Falha no upload");
-  return String(json.url || "");
-}
 
 export function GalleryFields({
   items,
@@ -30,12 +23,18 @@ export function GalleryFields({
 
   async function addFiles(list: FileList | null) {
     if (!list?.length) return;
+    const files = Array.from(list);
+    const tooLarge = files.map((file) => fileTooLargeMessage(file)).find(Boolean);
+    if (tooLarge) {
+      setError(tooLarge);
+      return;
+    }
     setBusy(true);
     setError("");
     try {
       const added: GalleryItem[] = [];
-      for (const file of Array.from(list)) {
-        added.push({ url: await uploadFile(file), caption: "" });
+      for (const file of files) {
+        added.push({ url: await uploadMedia(file), caption: "" });
       }
       update([...items, ...added].slice(0, 40));
     } catch (e) {
@@ -99,7 +98,11 @@ export function GalleryFields({
         </button>
       </div>
       {busy && <p className="text-xs text-mist-dim">Enviando…</p>}
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-300" role="alert">
+          {error}
+        </p>
+      )}
       <ul className="space-y-3">
         {items.map((item, index) => (
           <li key={`${item.url}-${index}`} className="flex gap-3 border border-white/10 p-3">

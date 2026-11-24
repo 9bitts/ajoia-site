@@ -2,8 +2,11 @@ import sanitizeHtml from "sanitize-html";
 
 const HTML_TAG = /<\/?[a-z][\s\S]*>/i;
 function blockPattern() {
-  return /<(h[1-6]|ul|ol|blockquote|table|pre|figure|iframe|p)\b[^>]*>[\s\S]*?<\/\1>|<hr\b[^>]*\/?>/gi;
+  return /<(h[1-6]|ul|ol|blockquote|table|pre|figure|iframe|video|p)\b[^>]*>[\s\S]*?<\/\1>|<hr\b[^>]*\/?>/gi;
 }
+
+const MEDIA_SPLIT =
+  /(<(?:figure|iframe|video)\b[^>]*>[\s\S]*?<\/(?:figure|iframe|video)>)/gi;
 
 export function isHtmlBody(body: string) {
   return HTML_TAG.test(body);
@@ -121,8 +124,24 @@ function splitJoinedFacts(inner: string) {
   return items.length >= 2 ? items : null;
 }
 
+function repairAroundMedia(inner: string) {
+  if (!/<(?:figure|iframe|video)\b/i.test(inner)) return "";
+  return inner
+    .split(MEDIA_SPLIT)
+    .map((part) => {
+      if (/^<(?:figure|iframe|video)\b/i.test(part)) return part;
+      const lines = linesOf(part);
+      if (!lines.length) return "";
+      return blocksFromLines(lines);
+    })
+    .filter(Boolean)
+    .join("\n");
+}
+
 function repairParagraph(block: string) {
   const inner = block.replace(/^<p\b[^>]*>/i, "").replace(/<\/p>\s*$/i, "");
+  const aroundMedia = repairAroundMedia(inner);
+  if (aroundMedia) return aroundMedia;
   const lines = linesOf(inner);
   if (!lines.length) return "";
   const itemCount = lines.filter((line) => lineKind(line) === "item").length;

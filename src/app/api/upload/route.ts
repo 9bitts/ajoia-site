@@ -3,6 +3,14 @@ import { auth } from "@/auth";
 import { accountId } from "@/lib/account-id";
 import { clientIp, isRateLimited, recordUpload, uploadOverQuota } from "@/lib/rate-limit";
 import { rejectCrossOrigin } from "@/lib/same-origin";
+import {
+  BODY_TOO_LARGE,
+  IMAGE_MAX_BYTES,
+  IMAGE_MAX_LABEL,
+  VIDEO_MAX_BYTES,
+  VIDEO_MAX_LABEL,
+  fileTooLargeMessage,
+} from "@/lib/upload-limits";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,7 +33,12 @@ export async function POST(req: Request) {
     );
   }
 
-  const form = await req.formData();
+  let form: FormData;
+  try {
+    form = await req.formData();
+  } catch {
+    return NextResponse.json({ error: BODY_TOO_LARGE }, { status: 413 });
+  }
   const file = form.get("file");
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "Arquivo obrigatório" }, { status: 400 });
@@ -39,17 +52,23 @@ export async function POST(req: Request) {
   }
 
   const video = file.type.startsWith("video/");
-  const max = video ? 30 * 1024 * 1024 : 8 * 1024 * 1024;
+  const max = video ? VIDEO_MAX_BYTES : IMAGE_MAX_BYTES;
   if (file.size > max) {
     return NextResponse.json(
-      { error: video ? "O vídeo deve ter no máximo 30MB" : "Imagem deve ter no máximo 8MB" },
+      {
+        error:
+          fileTooLargeMessage(file) ||
+          (video
+            ? `O vídeo deve ter no máximo ${VIDEO_MAX_LABEL}`
+            : `A foto deve ter no máximo ${IMAGE_MAX_LABEL}`),
+      },
       { status: 400 }
     );
   }
 
   if (await uploadOverQuota(id, file.size)) {
     return NextResponse.json(
-      { error: "Cota diária de envios esgotada (15 arquivos ou 40 MB)." },
+      { error: "Cota diária de envios esgotada (15 arquivos ou 160 MB). Escolha um arquivo menor ou tente amanhã." },
       { status: 429 }
     );
   }

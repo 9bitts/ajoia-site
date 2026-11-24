@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { youtubeEmbedUrl } from "@/lib/youtube";
+import { IMAGE_MAX_LABEL, VIDEO_MAX_LABEL, fileTooLargeMessage } from "@/lib/upload-limits";
+import { uploadMedia } from "@/lib/upload-client";
 import { MediaBrowser, type MediaAsset } from "@/components/admin/MediaBrowser";
 
 function escapeHtml(value: string) {
@@ -10,15 +12,6 @@ function escapeHtml(value: string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-}
-
-async function uploadFile(file: File) {
-  const data = new FormData();
-  data.append("file", file);
-  const res = await fetch("/api/upload", { method: "POST", body: data });
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.error || "Falha no upload");
-  return String(json.url || "");
 }
 
 function figure(url: string, caption: string) {
@@ -63,18 +56,25 @@ export function BodyField({
 
   async function onPhotos(list: FileList | null) {
     if (!list?.length) return;
+    const files = Array.from(list);
+    const tooLarge = files.map((file) => fileTooLargeMessage(file)).find(Boolean);
+    if (tooLarge) {
+      setError(`${tooLarge} O texto da matéria não foi alterado.`);
+      return;
+    }
     setBusy(true);
     setError("");
     try {
       const blocks: string[] = [];
-      for (const file of Array.from(list)) {
-        const url = await uploadFile(file);
-        blocks.push(figure(url, list.length === 1 ? caption.trim() : ""));
+      for (const file of files) {
+        const url = await uploadMedia(file);
+        blocks.push(figure(url, files.length === 1 ? caption.trim() : ""));
       }
       insert(blocks.join(""));
       setCaption("");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erro no upload");
+      const message = e instanceof Error ? e.message : "Erro no upload";
+      setError(`${message} O texto da matéria não foi alterado.`);
     } finally {
       setBusy(false);
     }
@@ -82,12 +82,18 @@ export function BodyField({
 
   async function onVideoFile(file: File | undefined) {
     if (!file) return;
+    const tooLarge = fileTooLargeMessage(file);
+    if (tooLarge) {
+      setError(`${tooLarge} O texto da matéria não foi alterado.`);
+      return;
+    }
     setBusy(true);
     setError("");
     try {
-      insert(videoTag(await uploadFile(file)));
+      insert(videoTag(await uploadMedia(file)));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erro no upload");
+      const message = e instanceof Error ? e.message : "Erro no upload";
+      setError(`${message} O texto da matéria não foi alterado.`);
     } finally {
       setBusy(false);
     }
@@ -131,8 +137,10 @@ export function BodyField({
           No meio do texto
         </p>
         <p className="text-xs text-mist-dim">
-          A foto ou o vídeo entra onde estiver o cursor. Várias fotos de uma vez
-          ficam sem legenda; para legenda, envie uma por vez.
+          A foto ou o vídeo entra onde estiver o cursor. Foto até {IMAGE_MAX_LABEL}.
+          Vídeo enviado até {VIDEO_MAX_LABEL}; um vídeo maior entra pelo link do
+          YouTube. Várias fotos de uma vez ficam sem legenda; para legenda, envie
+          uma por vez.
         </p>
         <input
           value={caption}
@@ -193,7 +201,11 @@ export function BodyField({
           </label>
         </div>
         {busy && <p className="text-xs text-mist-dim">Enviando…</p>}
-        {error && <p className="text-sm text-red-300">{error}</p>}
+        {error && (
+          <p className="text-sm text-red-300" role="alert">
+            {error}
+          </p>
+        )}
       </div>
       {library && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 p-4 sm:p-8">

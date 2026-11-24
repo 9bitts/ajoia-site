@@ -374,6 +374,59 @@ html[data-theme="light"] .on-dark .brand-logo-img {
   border-radius: 1rem;
 }
 
+.prose-ajoia .yt-play {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 1.5rem 0;
+  padding: 0;
+  border: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  background: #111;
+}
+
+.prose-ajoia .yt-play img {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.prose-ajoia .yt-play-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 68px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  border-radius: 14px;
+  background: #ff0033;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.prose-ajoia .yt-play-icon::before {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: 14px;
+  border-style: solid;
+  border-width: 10px 0 10px 16px;
+  border-color: transparent transparent transparent #fff;
+}
+
+.prose-ajoia .yt-play:hover .yt-play-icon {
+  background: #ff3355;
+}
+
+.prose-ajoia .yt-play:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
 @media (min-width: 640px) {
   .prose-ajoia p {
     font-size: 1.125rem;

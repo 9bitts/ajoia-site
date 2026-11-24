@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { sidebarAds } from "@/data/ads";
 import { AuthorNote } from "@/components/AuthorNote";
 import { ArticleGallery } from "@/components/ArticleGallery";
+import { ArticleHtml } from "@/components/ArticleHtml";
 import { MoreArticles } from "@/components/MoreArticles";
 import {
   getArticleBySlug,
@@ -118,7 +119,7 @@ export default async function ArticlePage({ params }: Props) {
 
           <div className="prose-ajoia mt-8">
             {article.html ? (
-              <div dangerouslySetInnerHTML={{ __html: article.html }} />
+              <ArticleHtml html={article.html} />
             ) : (
               article.body.map((paragraph) => (
                 <p key={paragraph.slice(0, 80)}>{paragraph}</p>

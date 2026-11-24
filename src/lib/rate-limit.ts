@@ -43,7 +43,7 @@ export async function isRateLimited(key: string, limit = 5, windowMs = 10 * 60 *
 }
 
 const UPLOAD_MAX_COUNT = 15;
-const UPLOAD_MAX_BYTES = 40 * 1024 * 1024;
+const UPLOAD_MAX_BYTES = 160 * 1024 * 1024;
 
 export async function uploadOverQuota(userId: string, bytes: number) {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);

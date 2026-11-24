@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   skipTrailingSlashRedirect: true,
+  experimental: {
+    middlewareClientMaxBodySize: "30mb",
+  },
   serverExternalPackages: ["sharp", "@prisma/client", "bcryptjs", "nodemailer"],
   images: {
     loader: "custom",

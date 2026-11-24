@@ -19,6 +19,7 @@ import {
   sectionMeta,
 } from "@/lib/sections";
 import { slugify } from "@/lib/slug";
+import { uploadMedia } from "@/lib/upload-client";
 import { BodyField } from "@/components/admin/BodyField";
 import { GalleryFields } from "@/components/admin/GalleryFields";
 import type { GalleryItem } from "@/lib/gallery";
@@ -75,12 +76,8 @@ export function ArticleForm({
     setUploading(true);
     setError("");
     try {
-      const data = new FormData();
-      data.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: data });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Falha no upload");
-      setForm((f) => ({ ...f, imageUrl: json.url }));
+      const url = await uploadMedia(file);
+      setForm((f) => ({ ...f, imageUrl: url }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro no upload");
     } finally {
