@@ -6,6 +6,7 @@ import { recordAudit } from "@/lib/audit";
 import { accountId } from "@/lib/account-id";
 import { prisma } from "@/lib/db";
 import { passwordError } from "@/lib/password";
+import { passwordChangeLocked } from "@/lib/password-lock";
 import { clientIp } from "@/lib/rate-limit";
 import { rejectCrossOrigin } from "@/lib/same-origin";
 
@@ -22,6 +23,18 @@ export async function POST(req: Request) {
   const id = accountId(session);
   if (!session?.user || !id) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
+
+  if (passwordChangeLocked(session.user.email)) {
+    await recordAudit({
+      action: "user.password_change_blocked",
+      actorId: id,
+      actorEmail: session.user.email,
+      targetType: "user",
+      targetId: id,
+      ip: clientIp(req),
+    });
+    return NextResponse.json({ error: "Esta senha não pode ser alterada." }, { status: 403 });
   }
 
   const json = await req.json().catch(() => null);

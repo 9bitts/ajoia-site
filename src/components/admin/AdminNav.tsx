@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { BrandLogo } from "@/components/BrandLogo";
+import { passwordChangeLocked } from "@/lib/password-lock";
 
 export async function AdminNav() {
   const session = await auth();
@@ -34,9 +35,11 @@ export async function AdminNav() {
                 </Link>
               </>
             )}
-            <Link href="/admin/senha" className="inline-flex min-h-11 items-center hover:text-white">
-              Senha
-            </Link>
+            {!passwordChangeLocked(session.user.email) && (
+              <Link href="/admin/senha" className="inline-flex min-h-11 items-center hover:text-white">
+                Senha
+              </Link>
+            )}
             {session.user.role === "ADMIN" && (
               <>
                 <Link href="/admin/livraria" className="inline-flex min-h-11 items-center hover:text-white">

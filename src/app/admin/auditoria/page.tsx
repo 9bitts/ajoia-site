@@ -17,6 +17,7 @@ const labels: Record<string, string> = {
   "user.profile": "Atualizou foto ou bio",
   "user.password_reset": "Redefiniu senha",
   "user.password_change": "Trocou a própria senha",
+  "user.password_change_blocked": "Tentou trocar a senha fixa",
   "media.delete": "Apagou imagem",
   "totp.enable": "Ligou segundo fator",
   "totp.disable": "Desligou segundo fator",
