@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { accountId } from "@/lib/account-id";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LoginForm } from "@/components/admin/LoginForm";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default async function AdminLoginPage() {
   const session = await auth();
@@ -11,7 +12,10 @@ export default async function AdminLoginPage() {
 
   return (
     <div className="mx-auto max-w-md py-8">
-      <BrandLogo href="/" size="lg" priority />
+      <div className="flex items-start justify-between gap-4">
+        <BrandLogo href="/" size="lg" priority />
+        <ThemeToggle className="inline-flex min-h-11 items-center text-[11px] tracking-[0.14em] text-mist-dim" />
+      </div>
       <p className="mt-6 text-[11px] uppercase tracking-[0.22em] text-mist-dim">
         Redação
       </p>

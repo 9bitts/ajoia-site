@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { BrandLogo } from "@/components/BrandLogo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { passwordChangeLocked } from "@/lib/password-lock";
 
 export async function AdminNav() {
@@ -74,6 +75,7 @@ export async function AdminNav() {
           </nav>
         </div>
         <div className="flex items-center gap-3 text-sm text-mist-muted">
+          <ThemeToggle className="inline-flex min-h-11 items-center text-[11px] tracking-[0.14em] text-mist" />
           <span className="hidden sm:inline">{session.user.name}</span>
           <form
             action={async () => {
