@@ -9,13 +9,21 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { headerAds } from "@/data/ads";
 import { institutionalLinks, navSections, sectionHref, siteConfig } from "@/data/site";
 
+const goldButton =
+  "inline-flex h-11 items-center border border-[#c6a35a] bg-[#111113] px-3 text-[11px] font-bold tracking-[0.16em] text-[#e8c56b] sm:px-4";
+
 function SubscribeLink() {
   return (
-    <Link
-      href="/assine"
-      className="inline-flex h-11 items-center border border-[#c6a35a] bg-[#111113] px-3 text-[11px] font-bold tracking-[0.16em] text-[#e8c56b] sm:px-4"
-    >
+    <Link href="/assine" className={goldButton}>
       ASSINE
+    </Link>
+  );
+}
+
+function MediaKitLink() {
+  return (
+    <Link href="/midia-kit" className={goldButton}>
+      MÍDIA KIT
     </Link>
   );
 }
@@ -128,24 +136,29 @@ export function Header() {
             </div>
           </div>
 
-          <div className="hidden items-center gap-8 lg:flex">
+          <div className="hidden min-w-0 items-center gap-6 lg:flex">
             <BrandLogo
               href="/"
               size="md"
               priority
               className="!h-24 !w-auto max-w-none shrink-0"
             />
-            <div className="min-w-0 flex-1">
-              {headerAds[0] && <AdSlot ad={headerAds[0]} variant="leaderboard" />}
-              <div className="mt-2.5 flex items-center justify-center gap-5">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-mist-dim">
-                  {siteConfig.city}
-                  {today ? ` · ${today}` : ""}
-                </p>
+            {headerAds[0] && (
+              <div className="min-w-0 flex-1">
+                <AdSlot ad={headerAds[0]} variant="leaderboard" showCta={false} />
+              </div>
+            )}
+            <div className="flex shrink-0 flex-col items-end gap-2.5">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-mist-dim">
+                {siteConfig.city}
+                {today ? ` · ${today}` : ""}
+              </p>
+              <div className="flex items-center gap-3">
                 <ThemeToggle
                   compact
                   className="text-[10px] tracking-[0.14em] text-mist-dim"
                 />
+                <MediaKitLink />
                 <SubscribeLink />
               </div>
             </div>

@@ -32,7 +32,7 @@ function AdLink({
   );
 }
 
-function HouseLeaderboard({ ad }: { ad: AdCreative }) {
+function HouseLeaderboard({ ad, showCta = true }: { ad: AdCreative; showCta?: boolean }) {
   return (
     <div className="flex h-[68px] items-center gap-3 px-3.5 sm:h-[76px] sm:gap-4 sm:px-5">
       <div className="hidden h-9 w-px shrink-0 bg-[#c6a35a] sm:block" />
@@ -44,9 +44,11 @@ function HouseLeaderboard({ ad }: { ad: AdCreative }) {
           {ad.title}
         </p>
       </div>
-      <span className="shrink-0 border border-[#c6a35a] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#e8c56b]">
-        {ad.cta}
-      </span>
+      {showCta && (
+        <span className="shrink-0 border border-[#c6a35a] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#e8c56b]">
+          {ad.cta}
+        </span>
+      )}
     </div>
   );
 }
@@ -74,14 +76,16 @@ export function AdSlot({
   ad,
   variant = "rectangle",
   showLabel = false,
+  showCta = true,
 }: {
   ad: AdCreative;
   variant?: Variant;
   showLabel?: boolean;
+  showCta?: boolean;
 }) {
   const frame =
     variant === "leaderboard"
-      ? "on-dark block overflow-hidden rounded-md bg-[#111113] text-white transition-opacity hover:opacity-90"
+      ? "on-dark block w-full overflow-hidden rounded-md bg-[#111113] text-white transition-opacity hover:opacity-90"
       : "on-dark block overflow-hidden rounded-xl bg-[#111113] text-white shadow-[0_10px_30px_rgba(0,0,0,0.12)] transition-opacity hover:opacity-90";
 
   return (
@@ -97,7 +101,7 @@ export function AdSlot({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={ad.image} alt={ad.alt} className="h-auto w-full" />
         ) : variant === "leaderboard" ? (
-          <HouseLeaderboard ad={ad} />
+          <HouseLeaderboard ad={ad} showCta={showCta} />
         ) : (
           <HouseRectangle ad={ad} />
         )}
