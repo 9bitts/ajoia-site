@@ -27,6 +27,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/scripts/link-columnist-photos.js ./scripts/link-columnist-photos.js
 COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/src/lib/image-loader.ts ./src/lib/image-loader.ts
 
@@ -35,4 +36,4 @@ EXPOSE 3000
 ENV HOSTNAME=0.0.0.0
 ENV UPLOAD_DIR=/data/uploads
 
-CMD ["sh", "-c", "npx prisma db push --skip-generate --accept-data-loss && npm run start -- -p ${PORT:-3000}"]
+CMD ["sh", "-c", "npx prisma db push --skip-generate --accept-data-loss && node scripts/link-columnist-photos.js && npm run start -- -p ${PORT:-3000}"]
