@@ -10,13 +10,19 @@ export const siteConfig = {
   president: "José Aparecido Ribeiro",
   email: "portal.ajoiabrasil@gmail.com",
   social: {
-    facebook: "https://facebook.com",
-    twitter: "https://x.com",
+    facebook: "https://www.facebook.com/ajoiabrasil",
+    twitter: "https://x.com/AjoiaBrasil",
     linkedin: "https://linkedin.com",
     youtube: "https://youtube.com",
-    instagram: "https://instagram.com",
+    instagram: "https://www.instagram.com/ajoiabr/",
   },
 };
+
+export const followLinks = [
+  { id: "x", label: "X", href: "https://x.com/AjoiaBrasil" },
+  { id: "instagram", label: "Instagram", href: "https://www.instagram.com/ajoiabr/" },
+  { id: "facebook", label: "Facebook", href: "https://www.facebook.com/ajoiabrasil" },
+] as const;
 
 export function sectionHref(slug: string) {
   if (slug === "colunistas") return "/colunistas";

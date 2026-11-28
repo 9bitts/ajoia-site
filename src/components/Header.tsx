@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AdSlot } from "@/components/AdSlot";
 import { BrandLogo } from "@/components/BrandLogo";
+import { SocialFollow } from "@/components/SocialFollow";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { headerAds } from "@/data/ads";
 import { institutionalLinks, navSections, sectionHref, siteConfig } from "@/data/site";
@@ -203,6 +204,12 @@ export function Header() {
         </div>
       </nav>
 
+      <div className="border-b border-[var(--line)] bg-[var(--bg)]">
+        <div className="mx-auto max-w-content px-4 sm:px-5">
+          <SocialFollow />
+        </div>
+      </div>
+
       {open && (
         <div
           className="fixed inset-x-0 bottom-0 z-[60] overflow-y-auto overscroll-contain border-t border-[var(--line)] bg-[var(--bg)] px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 lg:hidden"
@@ -236,6 +243,9 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <div className="border-t border-[var(--line)] py-2">
+              <SocialFollow />
+            </div>
             <ThemeToggle className="flex min-h-11 w-full items-center border-t border-[var(--line)] text-left text-xs text-mist-muted" />
           </div>
         </div>

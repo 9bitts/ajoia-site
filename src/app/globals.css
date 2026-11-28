@@ -72,12 +72,12 @@ html {
   overflow-x: clip;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: calc(env(safe-area-inset-top) + 11rem);
+  scroll-padding-top: calc(env(safe-area-inset-top) + 13.5rem);
 }
 
 @media (min-width: 1024px) {
   html {
-    scroll-padding-top: calc(env(safe-area-inset-top) + 16rem);
+    scroll-padding-top: calc(env(safe-area-inset-top) + 18.5rem);
   }
 }
 
